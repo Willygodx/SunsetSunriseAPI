@@ -41,7 +41,7 @@ Make sure you have the following installed:
 1. Clone the repository:
 
     ```bash
-    https://github.com/Willygodx/SunsetSunriseAPI
+    git clone https://github.com/Willygodx/SunsetSunriseAPI
     ```
 
 2. Build the project:
