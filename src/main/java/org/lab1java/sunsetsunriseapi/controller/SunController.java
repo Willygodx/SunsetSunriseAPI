@@ -19,9 +19,9 @@ public class SunController {
 
     @GetMapping("/get-info")
     public SunInfoResponse getSunInfo(
-            @RequestParam(required = false) Double latitude,
-            @RequestParam(required = false) Double longitude,
-            @RequestParam(required = false) String date)  {
+            @RequestParam() Double latitude,
+            @RequestParam() Double longitude,
+            @RequestParam() String date) {
 
         return sunService.getSunInfo(new SunInfoRequest(latitude, longitude, LocalDate.parse(date)));
     }
