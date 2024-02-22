@@ -74,6 +74,7 @@ public class SunService {
                     utc0Zone
             );
 
+            assert timeZone != null;
             ZoneId utc9Zone = ZoneId.of(timeZone);
             ZonedDateTime zonedDateTimeUtc9 = zonedDateTimeUtc0.withZoneSameInstant(utc9Zone);
             ZonedDateTime zonedDateTimeUtc9z = zonedDateTimeUtc0z.withZoneSameInstant(utc9Zone);
