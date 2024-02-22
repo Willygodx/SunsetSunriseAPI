@@ -1,19 +1,19 @@
-package org.lab1java.sunsetsunriseapi.model;
+package org.lab1java.sunsetsunriseapi.dto;
 
 import java.time.LocalDate;
 
-public class SunInfoRequest {
+public class SunRequestDto {
     private double latitude;
     private double longitude;
     private LocalDate date;
 
-    public SunInfoRequest(double latitude, double longitude, LocalDate date) {
+    public SunRequestDto(double latitude, double longitude, LocalDate date) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.date = date;
     }
 
-    public SunInfoRequest() {
+    public SunRequestDto() {
     }
 
     public double getLatitude() {

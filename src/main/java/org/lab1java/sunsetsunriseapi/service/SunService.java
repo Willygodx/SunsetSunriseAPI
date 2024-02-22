@@ -4,14 +4,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.lab1java.sunsetsunriseapi.dao.SunRepo;
 import org.lab1java.sunsetsunriseapi.entity.SunEntity;
-import org.lab1java.sunsetsunriseapi.model.SunInfoRequest;
-import org.lab1java.sunsetsunriseapi.model.SunInfoResponse;
+import org.lab1java.sunsetsunriseapi.dto.SunRequestDto;
+import org.lab1java.sunsetsunriseapi.dto.SunResponseDto;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -24,6 +23,9 @@ public class SunService {
 
     private final SunRepo sunRepo;
 
+    @Value("${external.api.urlTimeZone}")
+    private String externalApiUrlTimeZone;
+
     public SunService(ApiService externalApiService, SunRepo sunRepo) {
         this.externalApiService = externalApiService;
         this.sunRepo = sunRepo;
@@ -33,71 +35,60 @@ public class SunService {
         return sunRepo.save(sun);
     }
 
-    private static String getTimeZone(double latitude, double longitude) {
+    private String getTimeZone(double latitude, double longitude) {
         try {
-            String apiUrl = "http://api.geonames.org/timezoneJSON?lat=" + latitude + "&lng=" + longitude + "&username=willygodx";
-
-            URL url = new URL(apiUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-
-            reader.close();
-
-            JsonObject jsonResponse = JsonParser.parseString(response.toString()).getAsJsonObject();
-
-            return jsonResponse.get("timezoneId").getAsString();
-
+            String apiUrl = String.format("%s?lat=%f&lng=%f&username=%s",
+                    externalApiUrlTimeZone, latitude, longitude, "willygodx");
+            ResponseEntity<String> apiResponseEntity = new RestTemplate().getForEntity(apiUrl, String.class);
+            return extractTimeZoneFromResponse(apiResponseEntity.getBody());
         } catch (Exception e) {
-
             return null;
         }
     }
 
-    public SunInfoResponse getSunInfo(SunInfoRequest request) {
+    private String extractTimeZoneFromResponse(String response) {
+        JsonObject jsonResponse = JsonParser.parseString(response).getAsJsonObject();
+        return jsonResponse.get("timezoneId").getAsString();
+    }
+
+    public SunResponseDto getSunInfo(SunRequestDto request) {
 
         Optional<SunEntity> optionalSunEntity = sunRepo.findByLatitudeAndLongitudeAndDate(request.getLatitude(), request.getLongitude(), request.getDate());
         if (optionalSunEntity.isPresent()) {
             SunEntity sunEntity = optionalSunEntity.get();
-            return new SunInfoResponse(sunEntity.getSunrise(), sunEntity.getSunset());
+            return new SunResponseDto(sunEntity.getSunrise(), sunEntity.getSunset());
         } else {
             String apiResponse = externalApiService.getApiResponse(request);
-            SunInfoResponse sunInfoResponse = externalApiService.extractSunInfoFromApiResponse(apiResponse);
+            SunResponseDto sunResponseDto = externalApiService.extractSunInfoFromApiResponse(apiResponse);
 
             String timeZone = getTimeZone(request.getLatitude(), request.getLongitude());
             ZoneId utc0Zone = ZoneId.of("UTC+0");
             ZonedDateTime zonedDateTimeUtc0 = ZonedDateTime.of(
                     ZonedDateTime.now(utc0Zone).toLocalDate(),
-                    sunInfoResponse.getSunrise(),
+                    sunResponseDto.getSunrise(),
                     utc0Zone
             );
             ZonedDateTime zonedDateTimeUtc0z = ZonedDateTime.of(
                     ZonedDateTime.now(utc0Zone).toLocalDate(),
-                    sunInfoResponse.getSunset(),
+                    sunResponseDto.getSunset(),
                     utc0Zone
             );
+
             ZoneId utc9Zone = ZoneId.of(timeZone);
             ZonedDateTime zonedDateTimeUtc9 = zonedDateTimeUtc0.withZoneSameInstant(utc9Zone);
             ZonedDateTime zonedDateTimeUtc9z = zonedDateTimeUtc0z.withZoneSameInstant(utc9Zone);
-            sunInfoResponse.setSunrise(zonedDateTimeUtc9.toLocalTime());
-            sunInfoResponse.setSunset(zonedDateTimeUtc9z.toLocalTime());
+            sunResponseDto.setSunrise(zonedDateTimeUtc9.toLocalTime());
+            sunResponseDto.setSunset(zonedDateTimeUtc9z.toLocalTime());
 
             SunEntity sunEntity = new SunEntity();
             sunEntity.setLatitude(request.getLatitude());
             sunEntity.setLongitude(request.getLongitude());
             sunEntity.setDate(request.getDate());
-            sunEntity.setSunrise(sunInfoResponse.getSunrise());
-            sunEntity.setSunset(sunInfoResponse.getSunset());
+            sunEntity.setSunrise(sunResponseDto.getSunrise());
+            sunEntity.setSunset(sunResponseDto.getSunset());
             sunRepo.save(sunEntity);
 
-            return sunInfoResponse;
+            return sunResponseDto;
         }
     }
 }

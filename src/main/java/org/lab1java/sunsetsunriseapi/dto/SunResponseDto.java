@@ -1,17 +1,17 @@
-package org.lab1java.sunsetsunriseapi.model;
+package org.lab1java.sunsetsunriseapi.dto;
 
 import java.time.LocalTime;
 
-public class SunInfoResponse {
+public class SunResponseDto {
     private LocalTime sunrise;
     private LocalTime sunset;
 
-    public SunInfoResponse(LocalTime sunrise, LocalTime sunset) {
+    public SunResponseDto(LocalTime sunrise, LocalTime sunset) {
         this.sunrise = sunrise;
         this.sunset = sunset;
     }
 
-    public SunInfoResponse() {
+    public SunResponseDto() {
     }
 
     public LocalTime getSunrise() {

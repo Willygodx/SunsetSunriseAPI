@@ -2,8 +2,8 @@ package org.lab1java.sunsetsunriseapi.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.lab1java.sunsetsunriseapi.model.SunInfoRequest;
-import org.lab1java.sunsetsunriseapi.model.SunInfoResponse;
+import org.lab1java.sunsetsunriseapi.dto.SunRequestDto;
+import org.lab1java.sunsetsunriseapi.dto.SunResponseDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,21 +18,21 @@ public class ApiService {
 
     private final ObjectMapper objectMapper;
 
-    @Value("${external.api.url}")
-    private String externalApiUrl;
+    @Value("${external.api.urlSunInfo}")
+    private String externalApiUrlSunsetSunriseInfo;
 
     public ApiService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 
-    public String getApiResponse(SunInfoRequest request) {
+    public String getApiResponse(SunRequestDto request) {
         String apiUrl = String.format("%s?lat=%f&lng=%f&date=%s",
-                externalApiUrl, request.getLatitude(), request.getLongitude(), request.getDate());
+                                      externalApiUrlSunsetSunriseInfo, request.getLatitude(), request.getLongitude(), request.getDate());
         ResponseEntity<String> apiResponseEntity = new RestTemplate().getForEntity(apiUrl, String.class);
         return apiResponseEntity.getBody();
     }
 
-    public SunInfoResponse extractSunInfoFromApiResponse(String apiResponse) {
+    public SunResponseDto extractSunInfoFromApiResponse(String apiResponse) {
         try {
             JsonNode jsonNode = objectMapper.readTree(apiResponse);
             JsonNode resultsNode = jsonNode.get("results");
@@ -41,7 +41,7 @@ public class ApiService {
                 LocalTime sunriseTime = parseTime(resultsNode, "sunrise");
                 LocalTime sunsetTime = parseTime(resultsNode, "sunset");
 
-                return new SunInfoResponse(sunriseTime, sunsetTime);
+                return new SunResponseDto(sunriseTime, sunsetTime);
 
             }
         } catch (IOException e) {
