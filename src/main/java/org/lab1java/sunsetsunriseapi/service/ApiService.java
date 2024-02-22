@@ -45,7 +45,7 @@ public class ApiService {
 
             }
         } catch (IOException e) {
-            e.printStackTrace();
+           return null;
         }
 
         return null;

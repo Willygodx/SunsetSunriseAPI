@@ -56,7 +56,7 @@ public class SunService {
             return jsonResponse.get("timezoneId").getAsString();
 
         } catch (Exception e) {
-            e.printStackTrace();
+
             return null;
         }
     }
