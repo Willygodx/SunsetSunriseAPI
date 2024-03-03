@@ -19,6 +19,33 @@ public class SunEntity {
     private LocalDate date;
     private LocalTime sunrise;
     private LocalTime sunset;
+    private String timeZone;
+    private String country;
+    private String city;
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
     public Long getId() {
         return id;
