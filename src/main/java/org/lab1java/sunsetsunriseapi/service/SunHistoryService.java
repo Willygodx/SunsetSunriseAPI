@@ -67,8 +67,8 @@ public class SunHistoryService {
 
             sunResponseDto.setSunrise(requestedZonedDateTimeSunrise.toLocalTime());
             sunResponseDto.setSunset(requestedZonedDateTimeSunset.toLocalTime());
-            sunResponseDto.setTimeZone(requestedTimeZone.toString());
             sunResponseDto.setCountry(countryName);
+            sunResponseDto.setTimeZone(timeZone);
             sunResponseDto.setCity(city);
 
             SunHistory sunHistory = getSunEntity(request, sunResponseDto);
@@ -82,12 +82,14 @@ public class SunHistoryService {
                 TimeZone temp = optionalTimeZone.orElseGet(() -> new TimeZone(timeZone));
 
                 user.getTimeZoneSet().add(temp);
-
                 temp.getUserList().add(user);
 
                 user.getSunHistoryList().add(sunHistory);
-
                 sunHistory.setUser(user);
+
+                temp.getSunHistoryList().add(sunHistory);
+                sunHistory.setTimeZone(temp);
+
 
                 sunHistoryRepository.save(sunHistory);
                 return sunResponseDto;
@@ -105,7 +107,6 @@ public class SunHistoryService {
         sunHistory.setDate(request.getDate());
         sunHistory.setSunrise(sunResponseDto.getSunrise());
         sunHistory.setSunset(sunResponseDto.getSunset());
-        sunHistory.setTimeZone(sunResponseDto.getTimeZone());
         sunHistory.setCountry(sunResponseDto.getCountry());
         sunHistory.setCity(sunResponseDto.getCity());
         return sunHistory;
@@ -115,7 +116,9 @@ public class SunHistoryService {
         Optional<SunHistory> optionalSunEntity = sunHistoryRepository.findByLatitudeAndLongitudeAndDate(latitude, longitude, date);
         if (optionalSunEntity.isPresent()) {
             SunHistory sunHistory = optionalSunEntity.get();
-            return new SunResponseDto(sunHistory.getSunrise(), sunHistory.getSunset(), sunHistory.getTimeZone(), sunHistory.getCountry(), sunHistory.getCity());
+            SunResponseDto dto = new SunResponseDto(sunHistory.getSunrise(), sunHistory.getSunset(), sunHistory.getTimeZone().getName(), sunHistory.getCountry(), sunHistory.getCity());
+            dto.setTimeZone(sunHistory.getTimeZone().getName());
+            return dto;
         } else {
             return null;
         }

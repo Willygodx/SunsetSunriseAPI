@@ -2,8 +2,6 @@ package org.lab1java.sunsetsunriseapi.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -20,14 +18,20 @@ public class SunHistory {
     private LocalDate date;
     private LocalTime sunrise;
     private LocalTime sunset;
-    private String timeZone;
     private String country;
     private String city;
-    @ManyToOne (cascade = {CascadeType.PERSIST})
-    @JoinColumn (name = "user_id", referencedColumnName = "id", nullable = true)
-    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @ManyToOne (cascade = CascadeType.PERSIST)
+    @JoinColumn (name = "user_id", referencedColumnName = "id", nullable = true,
+            foreignKey = @ForeignKey(name = "FK_USER",
+                    foreignKeyDefinition = "FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE SET NULL"))
     @JsonIgnore
     private User user;
+    @ManyToOne (cascade = CascadeType.PERSIST)
+    @JoinColumn (name = "time_zone", referencedColumnName = "name", nullable = true,
+            foreignKey = @ForeignKey(name = "FK_TIMEZONE",
+                    foreignKeyDefinition = "FOREIGN KEY (time_zone) REFERENCES time_zone(name) ON UPDATE CASCADE ON DELETE SET NULL"))
+    @JsonIgnore
+    private TimeZone timeZone;
 
     public SunHistory(double latitude, double longitude, LocalDate date, LocalTime sunrise, LocalTime sunset, String country, String city) {
         this.latitude = latitude;
@@ -41,6 +45,14 @@ public class SunHistory {
 
     public SunHistory() {
         // empty
+    }
+
+    public TimeZone getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(TimeZone timeZone) {
+        this.timeZone = timeZone;
     }
 
     public User getUser() {
@@ -57,14 +69,6 @@ public class SunHistory {
 
     public void setCity(String city) {
         this.city = city;
-    }
-
-    public String getTimeZone() {
-        return timeZone;
-    }
-
-    public void setTimeZone(String timeZone) {
-        this.timeZone = timeZone;
     }
 
     public String getCountry() {

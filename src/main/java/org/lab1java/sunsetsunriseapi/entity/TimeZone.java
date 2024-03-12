@@ -22,7 +22,19 @@ public class TimeZone {
     @JsonIgnore
     private List<User> userList = new ArrayList<>();
 
+    @OneToMany (mappedBy = "timeZone", cascade = CascadeType.PERSIST)
+    @JsonIgnore
+    private List<SunHistory> sunHistoryList = new ArrayList<>();
+
     public TimeZone() {
+    }
+
+    public List<SunHistory> getSunHistoryList() {
+        return sunHistoryList;
+    }
+
+    public void setSunHistoryList(List<SunHistory> sunHistoryList) {
+        this.sunHistoryList = sunHistoryList;
     }
 
     public TimeZone(String name) {
