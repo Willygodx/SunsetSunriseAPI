@@ -24,19 +24,20 @@ public class SunHistoryController {
         this.sunHistoryService = sunHistoryService;
     }
 
-    @GetMapping("/get-info")
-    public ResponseEntity<SunResponseDto> getSunHistory(@RequestParam() Double latitude,
+    @GetMapping("/get/{id}")
+    public ResponseEntity<SunResponseDto> getSunHistory(@PathVariable int id,
+                                                        @RequestParam() Double latitude,
                                                         @RequestParam() Double longitude,
                                                         @RequestParam() String date) {
         try {
-            return ResponseEntity.ok(sunHistoryService.getSunInfo(new SunRequestDto(latitude, longitude, LocalDate.parse(date))));
+            return ResponseEntity.ok(sunHistoryService.getSunInfo(id, (new SunRequestDto(latitude, longitude, LocalDate.parse(date)))));
         } catch (Exception e) {
             logger.error("Error while getting sun info!", e);
             return ResponseEntity.badRequest().body(null);
         }
     }
 
-    @GetMapping("/get-info-from-db")
+    @GetMapping("/get-from-db")
     public ResponseEntity<SunResponseDto> getSunHistoryFromDatabase(@RequestParam() Double latitude,
                                                                     @RequestParam() Double longitude,
                                                                     @RequestParam() String date) {
@@ -48,7 +49,7 @@ public class SunHistoryController {
         }
     }
 
-    @PostMapping("/add-info")
+    @PostMapping("/add")
     public ResponseEntity<SunHistory> addSunInfo(@RequestBody SunHistoryDto sunHistoryDto) {
         try {
             return ResponseEntity.ok(sunHistoryService.createSunHistory(sunHistoryDto));
@@ -58,7 +59,7 @@ public class SunHistoryController {
         }
     }
 
-    @PutMapping("/update-info/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<SunHistoryDto> updateSunInfo(@PathVariable Long id,
                                                        @RequestBody SunHistoryDto updateDto) {
         try {
@@ -70,7 +71,7 @@ public class SunHistoryController {
         }
     }
 
-    @DeleteMapping("/delete-info/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteSunInfo(@PathVariable Long id) {
         try {
             sunHistoryService.deleteSunInfoFromDatabase(id);

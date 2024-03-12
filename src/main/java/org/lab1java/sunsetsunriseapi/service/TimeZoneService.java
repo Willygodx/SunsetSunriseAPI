@@ -3,7 +3,10 @@ package org.lab1java.sunsetsunriseapi.service;
 import org.lab1java.sunsetsunriseapi.dao.TimeZoneRepository;
 import org.lab1java.sunsetsunriseapi.dto.TimeZoneDto;
 import org.lab1java.sunsetsunriseapi.entity.TimeZone;
+import org.lab1java.sunsetsunriseapi.entity.User;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class TimeZoneService {
@@ -15,6 +18,12 @@ public class TimeZoneService {
 
     public TimeZone getTimeZoneById(int id) {
         return timeZoneRepository.findById(id).orElse(null);
+    }
+
+    public List<User> getTimeZoneUsers(String timeZoneName) throws Exception {
+        TimeZone timeZone = timeZoneRepository.findByName(timeZoneName)
+                .orElseThrow(() -> new Exception("Time zone not found"));
+        return timeZone.getUserList();
     }
 
     public TimeZone createTimeZone(TimeZoneDto timeZoneDto) {

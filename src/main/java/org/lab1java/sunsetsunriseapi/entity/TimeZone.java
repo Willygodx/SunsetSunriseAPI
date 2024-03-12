@@ -3,8 +3,8 @@ package org.lab1java.sunsetsunriseapi.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table (name = "time_zone", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
@@ -20,7 +20,7 @@ public class TimeZone {
             joinColumns = @JoinColumn (name = "time_zone_id"),
             inverseJoinColumns = @JoinColumn (name = "user_id"))
     @JsonIgnore
-    private Set<User> userSet = new HashSet<>();
+    private List<User> userList = new ArrayList<>();
 
     public TimeZone() {
     }
@@ -45,11 +45,11 @@ public class TimeZone {
         this.name = timeZone;
     }
 
-    public Set<User> getUserSet() {
-        return userSet;
+    public List<User> getUserList() {
+        return userList;
     }
 
-    public void setUserSet(Set<User> userSet) {
-        this.userSet = userSet;
+    public void setUserList(List<User> userSet) {
+        this.userList = userSet;
     }
 }

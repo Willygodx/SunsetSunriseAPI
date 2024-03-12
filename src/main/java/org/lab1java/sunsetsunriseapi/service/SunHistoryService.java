@@ -35,7 +35,7 @@ public class SunHistoryService {
         this.timeZoneRepository = timeZoneRepository;
     }
 
-    public SunResponseDto getSunInfo(SunRequestDto request) {
+    public SunResponseDto getSunInfo(int id, SunRequestDto request) {
         try {
             String apiResponse = externalApiService.getApiResponse(request);
             SunResponseDto sunResponseDto = externalApiService.extractSunInfoFromApiResponse(apiResponse);
@@ -74,7 +74,6 @@ public class SunHistoryService {
             SunHistory sunHistory = getSunEntity(request, sunResponseDto);
 
 
-            int id = 1;
             Optional<User> optionalUser = userRepository.findById(id);
 
             if (optionalUser.isPresent()) {
@@ -84,7 +83,7 @@ public class SunHistoryService {
 
                 user.getTimeZoneSet().add(temp);
 
-                temp.getUserSet().add(user);
+                temp.getUserList().add(user);
 
                 user.getSunHistoryList().add(sunHistory);
 
@@ -93,11 +92,7 @@ public class SunHistoryService {
                 sunHistoryRepository.save(sunHistory);
                 return sunResponseDto;
             }
-
-            return sunResponseDto;
-
         } catch (Exception e) {
-
             logger.error("Error processing SunInfo", e);
         }
         return null;

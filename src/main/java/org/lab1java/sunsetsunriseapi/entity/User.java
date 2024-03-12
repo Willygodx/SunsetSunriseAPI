@@ -1,5 +1,6 @@
 package org.lab1java.sunsetsunriseapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -18,19 +19,12 @@ public class User {
     private int id;
     private String email;
     private String nickname;
-    @ManyToMany (mappedBy = "userSet", cascade = CascadeType.PERSIST)
+    @ManyToMany (mappedBy = "userList", cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
     private Set<TimeZone> timeZoneSet;
-
-    public Set<TimeZone> getTimeZoneSet() {
-        return timeZoneSet;
-    }
-
-    public void setTimeZoneSet(Set<TimeZone> timeZoneSet) {
-        this.timeZoneSet = timeZoneSet;
-    }
-
-    @OneToMany (mappedBy = "user", cascade = {CascadeType.PERSIST})
+    @OneToMany (mappedBy = "user", cascade = CascadeType.PERSIST)
+    @JsonIgnore
     private List<SunHistory> sunHistoryList;
 
     public User(String email, String nickname) {
@@ -40,6 +34,14 @@ public class User {
 
     public User() {
         // empty
+    }
+
+    public Set<TimeZone> getTimeZoneSet() {
+        return timeZoneSet;
+    }
+
+    public void setTimeZoneSet(Set<TimeZone> timeZoneSet) {
+        this.timeZoneSet = timeZoneSet;
     }
 
     public List<SunHistory> getSunHistoryList() {
@@ -66,11 +68,11 @@ public class User {
         this.nickname = nickname;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
