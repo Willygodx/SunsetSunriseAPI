@@ -1,16 +1,9 @@
-package org.lab1java.sunsetsunriseapi.entity;
-
-import jakarta.persistence.*;
+package org.lab1java.sunsetsunriseapi.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Entity
-public class SunEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class SunHistoryDto {
     private double latitude;
     private double longitude;
     private LocalDate date;
@@ -20,40 +13,14 @@ public class SunEntity {
     private String country;
     private String city;
 
-    public SunEntity() {
-        // empty
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getTimeZone() {
-        return timeZone;
-    }
-
-    public void setTimeZone(String timeZone) {
-        this.timeZone = timeZone;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
+    public SunHistoryDto(double latitude, double longitude, LocalDate date, LocalTime sunrise, LocalTime sunset, String country, String city) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.date = date;
+        this.sunrise = sunrise;
+        this.sunset = sunset;
         this.country = country;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.city = city;
     }
 
     public double getLatitude() {
@@ -94,5 +61,29 @@ public class SunEntity {
 
     public void setSunset(LocalTime sunset) {
         this.sunset = sunset;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }
