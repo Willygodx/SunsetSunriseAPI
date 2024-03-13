@@ -6,7 +6,7 @@ import org.lab1java.sunsetsunriseapi.entity.TimeZone;
 import org.lab1java.sunsetsunriseapi.entity.User;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 public class TimeZoneService {
@@ -20,10 +20,10 @@ public class TimeZoneService {
         return timeZoneRepository.findById(id).orElse(null);
     }
 
-    public List<User> getTimeZoneUsers(String timeZoneName) throws Exception {
+    public Set<User> getTimeZoneUsers(String timeZoneName) throws Exception {
         TimeZone timeZone = timeZoneRepository.findByName(timeZoneName)
                 .orElseThrow(() -> new Exception("Time zone not found"));
-        return timeZone.getUserList();
+        return timeZone.getUserSet();
     }
 
     public TimeZone createTimeZone(TimeZoneDto timeZoneDto) {

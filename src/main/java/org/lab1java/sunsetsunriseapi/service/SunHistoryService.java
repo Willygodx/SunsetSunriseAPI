@@ -82,7 +82,7 @@ public class SunHistoryService {
                 TimeZone temp = optionalTimeZone.orElseGet(() -> new TimeZone(timeZone));
 
                 user.getTimeZoneSet().add(temp);
-                temp.getUserList().add(user);
+                temp.getUserSet().add(user);
 
                 user.getSunHistoryList().add(sunHistory);
                 sunHistory.setUser(user);

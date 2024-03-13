@@ -20,6 +20,7 @@ public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
     private static final String DELETE_ERROR_MESSAGE = "Error deleting user!";
     private static final String DELETE_SUCCESS_MESSAGE = "Deleted successfully!";
+    private static final String UPDATE_ERROR_MESSAGE = "Error while updating sun info!";
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -85,19 +86,43 @@ public class UserController {
         }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable int id,
-                                           @RequestBody UserDto updateDto) {
+    @PutMapping("/update-by-id/{id}")
+    public ResponseEntity<User> updateUserById(@PathVariable int id,
+                                               @RequestBody UserDto updateDto) {
         try {
-            User updatedUser = userService.updateUser(id, updateDto);
+            User updatedUser = userService.updateUserById(id, updateDto);
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
-            logger.error("Error while updating sun info", e);
+            logger.error(UPDATE_ERROR_MESSAGE, e);
             return ResponseEntity.badRequest().body(null);
         }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PutMapping("/update-by-email/{email}")
+    public ResponseEntity<User> updateUserByEmail(@PathVariable String email,
+                                                  @RequestBody UserDto updateDto) {
+        try {
+            User updatedUser = userService.updateUserByEmail(email, updateDto);
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            logger.error(UPDATE_ERROR_MESSAGE, e);
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @PutMapping("/update-by-nickname/{nickname}")
+    public ResponseEntity<User> updateUserByNickname(@PathVariable String nickname,
+                                                     @RequestBody UserDto updateDto) {
+        try {
+            User updatedUser = userService.updateUserByNickname(nickname, updateDto);
+            return ResponseEntity.ok(updatedUser);
+        } catch (Exception e) {
+            logger.error(UPDATE_ERROR_MESSAGE, e);
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @DeleteMapping("/delete-by-id/{id}")
     public ResponseEntity<String> deleteTimeZoneById(@PathVariable int id) {
         try {
             userService.deleteUserFromDatabaseById(id);

@@ -51,8 +51,30 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(int id, UserDto updateDto) throws Exception {
+    public User updateUserById(int id, UserDto updateDto) throws Exception {
         User user = userRepository.findById(id)
+                .orElseThrow(() -> new Exception(USER_NOT_FOUND_MESSAGE));
+
+        user.setNickname(updateDto.getNickname());
+        user.setEmail(updateDto.getEmail());
+
+        userRepository.save(user);
+        return user;
+    }
+
+    public User updateUserByEmail(String email, UserDto updateDto) throws Exception {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new Exception(USER_NOT_FOUND_MESSAGE));
+
+        user.setNickname(updateDto.getNickname());
+        user.setEmail(updateDto.getEmail());
+
+        userRepository.save(user);
+        return user;
+    }
+
+    public User updateUserByNickname(String nickname, UserDto updateDto) throws Exception {
+        User user = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new Exception(USER_NOT_FOUND_MESSAGE));
 
         user.setNickname(updateDto.getNickname());
@@ -66,7 +88,7 @@ public class UserService {
         try {
             userRepository.deleteById(id);
         } catch (Exception e) {
-            logger.error("Error! " + USER_NOT_FOUND_MESSAGE, e);
+            logger.error(USER_NOT_FOUND_MESSAGE, e);
         }
     }
 }

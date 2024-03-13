@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/time-zone")
@@ -33,7 +33,7 @@ public class TimeZoneController {
     }
 
     @GetMapping("/get-users")
-    public ResponseEntity<List<User>> getTimeZoneUsers(@RequestParam() String name) {
+    public ResponseEntity<Set<User>> getTimeZoneUsers(@RequestParam() String name) {
         try {
             return ResponseEntity.ok(timeZoneService.getTimeZoneUsers(name));
         } catch (Exception e) {

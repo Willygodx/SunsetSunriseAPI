@@ -19,7 +19,7 @@ public class User {
     private int id;
     private String email;
     private String nickname;
-    @ManyToMany (mappedBy = "userList", cascade = CascadeType.PERSIST)
+    @ManyToMany (mappedBy = "userSet", cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Set<TimeZone> timeZoneSet;
