@@ -46,9 +46,9 @@ public class UserService {
         return user.getTimeZoneSet();
     }
 
-    public User createUser(UserDto userDto) {
+    public void createUser(UserDto userDto) {
         User user = new User(userDto.getEmail(), userDto.getNickname());
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public User updateUserById(int id, UserDto updateDto) throws Exception {

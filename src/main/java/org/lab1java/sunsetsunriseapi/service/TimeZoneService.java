@@ -26,9 +26,9 @@ public class TimeZoneService {
         return timeZone.getUserSet();
     }
 
-    public TimeZone createTimeZone(TimeZoneDto timeZoneDto) {
+    public void createTimeZone(TimeZoneDto timeZoneDto) {
         TimeZone timeZone = new TimeZone(timeZoneDto.getTimeZone());
-        return timeZoneRepository.save(timeZone);
+        timeZoneRepository.save(timeZone);
     }
 
     public TimeZone updateTimeZone(int id, TimeZoneDto updateDto) throws Exception{

@@ -146,9 +146,9 @@ public class SunHistoryService {
         return new SunHistoryDto(sunHistory.getLatitude(), sunHistory.getLongitude(), sunHistory.getDate(), sunHistory.getSunrise(), sunHistory.getSunset(), sunHistory.getCountry(), sunHistory.getCity());
     }
 
-    public SunHistory createSunHistory(SunHistoryDto sunHistoryDto) {
+    public void createSunHistory(SunHistoryDto sunHistoryDto) {
         SunHistory sunHistory = new SunHistory(sunHistoryDto.getLatitude(), sunHistoryDto.getLongitude(), sunHistoryDto.getDate(), sunHistoryDto.getSunrise(), sunHistoryDto.getSunset(), sunHistoryDto.getCountry(), sunHistoryDto.getCity());
-        return sunHistoryRepository.save(sunHistory);
+        sunHistoryRepository.save(sunHistory);
     }
 
 }
