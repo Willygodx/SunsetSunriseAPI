@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -112,15 +114,21 @@ public class SunHistoryService {
         return sunHistory;
     }
 
-    public SunResponseDto getSunInfoFromDatabase(double latitude, double longitude, LocalDate date) {
-        Optional<SunHistory> optionalSunEntity = sunHistoryRepository.findByLatitudeAndLongitudeAndDate(latitude, longitude, date);
-        if (optionalSunEntity.isPresent()) {
-            SunHistory sunHistory = optionalSunEntity.get();
-            SunResponseDto dto = new SunResponseDto(sunHistory.getSunrise(), sunHistory.getSunset(), sunHistory.getTimeZone().getName(), sunHistory.getCountry(), sunHistory.getCity());
-            dto.setTimeZone(sunHistory.getTimeZone().getName());
-            return dto;
+    public List<SunHistory> getSunInfoFromDatabase(double latitude, double longitude, LocalDate date) {
+        List<SunHistory> sunHistoryList = sunHistoryRepository.findByLatitudeAndLongitudeAndDate(latitude, longitude, date);
+        if (!sunHistoryList.isEmpty()) {
+            return sunHistoryList;
         } else {
-            return null;
+            return Collections.emptyList();
+        }
+    }
+
+    public List<SunHistory> findSunHistoryByCountryStartingWithPrefix(String prefix) {
+        List<SunHistory> sunHistoryList = sunHistoryRepository.findByCountryStartingWith(prefix);
+        if (!sunHistoryList.isEmpty()) {
+            return sunHistoryList;
+        } else {
+            return Collections.emptyList();
         }
     }
 
@@ -150,5 +158,4 @@ public class SunHistoryService {
         SunHistory sunHistory = new SunHistory(sunHistoryDto.getLatitude(), sunHistoryDto.getLongitude(), sunHistoryDto.getDate(), sunHistoryDto.getSunrise(), sunHistoryDto.getSunset(), sunHistoryDto.getCountry(), sunHistoryDto.getCity());
         sunHistoryRepository.save(sunHistory);
     }
-
 }

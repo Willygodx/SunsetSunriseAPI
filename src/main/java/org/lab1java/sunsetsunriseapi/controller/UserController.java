@@ -1,5 +1,6 @@
 package org.lab1java.sunsetsunriseapi.controller;
 
+import org.lab1java.sunsetsunriseapi.cache.EntityCache;
 import org.lab1java.sunsetsunriseapi.dto.UserDto;
 import org.lab1java.sunsetsunriseapi.entity.SunHistory;
 import org.lab1java.sunsetsunriseapi.entity.TimeZone;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @RestController
@@ -18,20 +20,35 @@ import java.util.Set;
 public class UserController {
     private final UserService userService;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private static final String DELETE_ERROR_MESSAGE = "Error deleting user!";
+    private final EntityCache<Integer, Object> cacheMap;
+    private static final String DELETE_ERROR_MESSAGE = "Error while deleting!";
     private static final String DELETE_SUCCESS_MESSAGE = "Deleted successfully!";
-    private static final String UPDATE_ERROR_MESSAGE = "Error while updating sun info!";
+    private static final String UPDATE_ERROR_MESSAGE = "Error while updating!";
+    private static final String GET_ERROR_MESSAGE = "Error while getting!";
+    private static final String CREATE_ERROR_MESSAGE = "Error while creating!";
+    private static final String CREATE_SUCCESS_MESSAGE = "Created successfully!";
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, EntityCache<Integer, Object> cacheMap) {
         this.userService = userService;
+        this.cacheMap = cacheMap;
     }
 
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         try {
-            return ResponseEntity.ok(userService.getUserById(id));
+            Object cachedData = cacheMap.get(Objects.hash(id, 2 * 31));
+
+            if (cachedData != null) {
+                return ResponseEntity.ok((User)cachedData);
+            } else {
+                User user = userService.getUserById(id);
+                cacheMap.put(Objects.hash(id), user);
+
+                return ResponseEntity.ok(user);
+            }
+
         } catch (Exception e) {
-            logger.error("Error while getting user by id!", e);
+            logger.error(GET_ERROR_MESSAGE, e);
             return ResponseEntity.badRequest().build();
         }
     }
@@ -39,9 +56,18 @@ public class UserController {
     @GetMapping("/get-by-email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         try {
-            return ResponseEntity.ok(userService.getUserByEmail(email));
+            Object cachedData = cacheMap.get(Objects.hash(email, 3 * 32));
+
+            if (cachedData != null) {
+                return ResponseEntity.ok((User) cachedData);
+            } else {
+                User user = userService.getUserByEmail(email);
+                cacheMap.put(Objects.hash(email), user);
+
+                return ResponseEntity.ok(user);
+            }
         } catch (Exception e) {
-            logger.error("Error while getting user by email!", e);
+            logger.error(GET_ERROR_MESSAGE, e);
             return ResponseEntity.badRequest().build();
         }
     }
@@ -49,9 +75,19 @@ public class UserController {
     @GetMapping("/get-by-nickname/{nickname}")
     public ResponseEntity<User> getUserByNickname(@PathVariable String nickname) {
         try {
-            return ResponseEntity.ok(userService.getUserByNickname(nickname));
+            int hashCode = Objects.hash(nickname, 4 * 33);
+            Object cachedData = cacheMap.get(hashCode);
+
+            if (cachedData != null) {
+                return ResponseEntity.ok((User) cachedData);
+            } else {
+                User user = userService.getUserByNickname(nickname);
+                cacheMap.put(hashCode, user);
+
+                return ResponseEntity.ok(user);
+            }
         } catch (Exception e) {
-            logger.error("Error while getting user by id!", e);
+            logger.error(GET_ERROR_MESSAGE, e);
             return ResponseEntity.badRequest().build();
         }
     }
@@ -59,9 +95,19 @@ public class UserController {
     @GetMapping("/get-history/{nickname}")
     public ResponseEntity<List<SunHistory>> getUserSunHistoryList(@PathVariable String nickname) {
         try {
-            return ResponseEntity.ok(userService.getUserSunHistoryByNickname(nickname));
+            int hashCode = Objects.hash(nickname, 5 * 34);
+            Object cachedData = cacheMap.get(hashCode);
+
+            if (cachedData != null) {
+                return ResponseEntity.ok((List<SunHistory>) cachedData);
+            } else {
+                List<SunHistory> sunHistoryList = userService.getUserSunHistoryByNickname(nickname);
+                cacheMap.put(hashCode, sunHistoryList);
+
+                return ResponseEntity.ok(sunHistoryList);
+            }
         } catch (Exception e) {
-            logger.error("Error while getting user's sun history by nickname!", e);
+            logger.error(GET_ERROR_MESSAGE, e);
             return ResponseEntity.badRequest().build();
         }
     }
@@ -69,9 +115,19 @@ public class UserController {
     @GetMapping("/get-time-zones/{nickname}")
     public ResponseEntity<Set<TimeZone>> getUserTimeZoneSet(@PathVariable String nickname) {
         try {
-            return ResponseEntity.ok(userService.getUserTimeZoneByNickname(nickname));
+            int hashCode = Objects.hash(nickname, 6 * 35);
+            Object cachedData = cacheMap.get(hashCode);
+
+            if (cachedData != null) {
+                return ResponseEntity.ok((Set<TimeZone>) cachedData);
+            } else {
+                Set<TimeZone> timeZoneSet = userService.getUserTimeZoneByNickname(nickname);
+                cacheMap.put(hashCode, timeZoneSet);
+
+                return ResponseEntity.ok(timeZoneSet);
+            }
         } catch (Exception e) {
-            logger.error("Error while getting user's time zones by nickname!", e);
+            logger.error(GET_ERROR_MESSAGE, e);
             return ResponseEntity.badRequest().build();
         }
     }
@@ -80,10 +136,10 @@ public class UserController {
     public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
         try {
             userService.createUser(userDto);
-            return ResponseEntity.ok("User was added successfully!");
+            return ResponseEntity.ok(CREATE_SUCCESS_MESSAGE);
         } catch (Exception e) {
-            logger.error("Error while creating user!", e);
-            return ResponseEntity.badRequest().build();
+            logger.error(CREATE_ERROR_MESSAGE, e);
+            return ResponseEntity.badRequest().body(CREATE_ERROR_MESSAGE);
         }
     }
 
@@ -95,7 +151,7 @@ public class UserController {
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
             logger.error(UPDATE_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -107,7 +163,7 @@ public class UserController {
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
             logger.error(UPDATE_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -119,7 +175,7 @@ public class UserController {
             return ResponseEntity.ok(updatedUser);
         } catch (Exception e) {
             logger.error(UPDATE_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -129,7 +185,7 @@ public class UserController {
             userService.deleteUserFromDatabaseById(id);
             return ResponseEntity.ok(DELETE_SUCCESS_MESSAGE);
         } catch (Exception e) {
-            logger.error("Error while deleting user by id!", e);
+            logger.error(DELETE_ERROR_MESSAGE, e);
             return ResponseEntity.badRequest().body(DELETE_ERROR_MESSAGE);
         }
     }
