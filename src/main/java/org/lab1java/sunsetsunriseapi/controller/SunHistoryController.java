@@ -3,7 +3,6 @@ package org.lab1java.sunsetsunriseapi.controller;
 import org.lab1java.sunsetsunriseapi.dto.SunHistoryDto;
 import org.lab1java.sunsetsunriseapi.dto.SunRequestDto;
 import org.lab1java.sunsetsunriseapi.dto.SunResponseDto;
-import org.lab1java.sunsetsunriseapi.entity.SunHistory;
 import org.lab1java.sunsetsunriseapi.service.SunHistoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,12 +49,13 @@ public class SunHistoryController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<SunHistory> addSunInfo(@RequestBody SunHistoryDto sunHistoryDto) {
+    public ResponseEntity<String> addSunInfo(@RequestBody SunHistoryDto sunHistoryDto) {
         try {
-            return ResponseEntity.ok(sunHistoryService.createSunHistory(sunHistoryDto));
+            sunHistoryService.createSunHistory(sunHistoryDto);
+            return ResponseEntity.ok("Sun history row was added successfully!");
         } catch (Exception e) {
-            logger.error("Error while adding sun info!", e);
-            return ResponseEntity.badRequest().body(null);
+            logger.error("Error while adding sun history!", e);
+            return ResponseEntity.badRequest().body("Error adding sun history!");
         }
     }
 
@@ -63,8 +63,7 @@ public class SunHistoryController {
     public ResponseEntity<SunHistoryDto> updateSunInfo(@PathVariable Long id,
                                                        @RequestBody SunHistoryDto updateDto) {
         try {
-            SunHistoryDto updatedSunHistory = sunHistoryService.updateSunInfo(id, updateDto);
-            return ResponseEntity.ok(updatedSunHistory);
+            return ResponseEntity.ok(sunHistoryService.updateSunInfo(id, updateDto));
         } catch (Exception e) {
             logger.error("Error while updating sun info", e);
             return ResponseEntity.badRequest().body(null);

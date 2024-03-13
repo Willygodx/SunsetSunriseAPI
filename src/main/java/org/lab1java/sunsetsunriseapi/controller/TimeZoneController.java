@@ -43,9 +43,10 @@ public class TimeZoneController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<TimeZone> createTimeZone(@RequestBody TimeZoneDto timeZoneDto) {
+    public ResponseEntity<String> createTimeZone(@RequestBody TimeZoneDto timeZoneDto) {
         try {
-            return ResponseEntity.ok(timeZoneService.createTimeZone(timeZoneDto));
+            timeZoneService.createTimeZone(timeZoneDto);
+            return ResponseEntity.ok("Time zone was added successfully!");
         } catch (Exception e) {
             logger.error("Error while creating time zone!", e);
             return ResponseEntity.badRequest().build();
