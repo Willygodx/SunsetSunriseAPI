@@ -11,6 +11,7 @@ import java.util.Set;
 @Service
 public class TimeZoneService {
     private final TimeZoneRepository timeZoneRepository;
+    private static final String TIME_ZONE_NOT_FOUND_MESSAGE = "Time zone not found!";
 
     public TimeZoneService(TimeZoneRepository timeZoneRepository) {
         this.timeZoneRepository = timeZoneRepository;
@@ -22,7 +23,7 @@ public class TimeZoneService {
 
     public Set<User> getTimeZoneUsers(String timeZoneName) throws Exception {
         TimeZone timeZone = timeZoneRepository.findByName(timeZoneName)
-                .orElseThrow(() -> new Exception("Time zone not found"));
+                .orElseThrow(() -> new Exception(TIME_ZONE_NOT_FOUND_MESSAGE));
         return timeZone.getUserSet();
     }
 
@@ -33,7 +34,7 @@ public class TimeZoneService {
 
     public TimeZone updateTimeZone(int id, TimeZoneDto updateDto) throws Exception{
         TimeZone timeZone = timeZoneRepository.findById(id)
-                .orElseThrow(() -> new Exception("Time one not found"));
+                .orElseThrow(() -> new Exception(TIME_ZONE_NOT_FOUND_MESSAGE));
 
         timeZone.setName(updateDto.getTimeZone());
         timeZoneRepository.save(timeZone);
