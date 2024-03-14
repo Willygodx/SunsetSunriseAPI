@@ -35,7 +35,7 @@ public class TimeZoneController {
     @GetMapping("/get/{id}")
     public ResponseEntity<TimeZone> getTimeZone(@PathVariable int id) {
         try {
-            int hashCode = Objects.hash(id, 7 * 36);
+            int hashCode = Objects.hash(id, 30 * 31);
             Object cachedData = cacheMap.get(hashCode);
 
             if (cachedData != null) {
@@ -55,7 +55,7 @@ public class TimeZoneController {
     @GetMapping("/get-users")
     public ResponseEntity<Set<User>> getTimeZoneUsers(@RequestParam() String name) {
         try {
-            int hashCode = Objects.hash(name, 8 * 37);
+            int hashCode = Objects.hash(name, 31 * 32);
             Object cachedData = cacheMap.get(hashCode);
 
             if (cachedData != null) {

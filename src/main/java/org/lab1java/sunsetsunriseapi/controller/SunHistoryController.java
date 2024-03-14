@@ -54,7 +54,7 @@ public class SunHistoryController {
                                                                     @RequestParam() Double longitude,
                                                                     @RequestParam() String date) {
         try {
-            int hashCode = Objects.hash(latitude, longitude, date, 10 * 39);
+            int hashCode = Objects.hash(latitude, longitude, date, 60 * 31);
             Object cachedData = cacheMap.get(hashCode);
 
             if (cachedData != null) {
@@ -74,7 +74,7 @@ public class SunHistoryController {
     @GetMapping("/custom-get")
     public ResponseEntity<List<SunHistory>> getSunHistoryByCountryStartingWith(@RequestParam("prefix") String prefix) {
         try {
-            int hashCode = Objects.hash(prefix, 11 * 40);
+            int hashCode = Objects.hash(prefix, 61 * 32);
             Object cachedData = cacheMap.get(hashCode);
 
             if (cachedData != null) {
