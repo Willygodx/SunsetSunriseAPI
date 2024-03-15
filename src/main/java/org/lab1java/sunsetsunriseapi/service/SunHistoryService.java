@@ -12,7 +12,6 @@ import org.lab1java.sunsetsunriseapi.entity.TimeZone;
 import org.lab1java.sunsetsunriseapi.entity.User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -118,22 +117,22 @@ public class SunHistoryService {
         return sunHistory;
     }
 
-    public List<SunHistory> getSunInfoFromDatabase(double latitude, double longitude, LocalDate date) {
-        int hashCode = Objects.hash(latitude, longitude, date, 60 * 31);
-        Object cachedData = cacheMap.get(hashCode);
-
-        if (cachedData != null) {
-            return (List<SunHistory>) cachedData;
-        } else {
-            List<SunHistory> sunHistoryList = sunHistoryRepository.findByLatitudeAndLongitudeAndDate(latitude, longitude, date);
-            if (sunHistoryList.isEmpty())
-                return Collections.emptyList();
-
-            cacheMap.put(hashCode, sunHistoryList);
-
-            return sunHistoryList;
-        }
-    }
+//    public List<SunHistory> getSunInfoFromDatabase(double latitude, double longitude, LocalDate date) throws Exception {
+//        int hashCode = Objects.hash(latitude, longitude, date, 60 * 31);
+//        Object cachedData = cacheMap.get(hashCode);
+//
+//        if (cachedData != null) {
+//            return (List<SunHistory>) cachedData;
+//        } else {
+//            List<SunHistory> sunHistoryList = sunHistoryRepository.findByLatitudeAndLongitudeAndDate(latitude, longitude, date);
+//            if (sunHistoryList.isEmpty())
+//                throw new Exception();
+//
+//            cacheMap.put(hashCode, sunHistoryList);
+//
+//            return sunHistoryList;
+//        }
+//    }
 
     public List<SunHistory> findSunHistoryByCountryStartingWithPrefix(String prefix) {
         List<SunHistory> sunHistoryList = sunHistoryRepository.findByCountryStartingWith(prefix);

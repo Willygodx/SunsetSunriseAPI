@@ -7,6 +7,7 @@ import org.lab1java.sunsetsunriseapi.entity.User;
 import org.lab1java.sunsetsunriseapi.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
     private final UserService userService;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -33,11 +34,11 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable int id) {
         try {
 
-            return ResponseEntity.ok(userService.getUserById(id));
+            return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(GET_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -45,11 +46,11 @@ public class UserController {
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         try {
 
-            return ResponseEntity.ok(userService.getUserByEmail(email));
+            return new ResponseEntity<>(userService.getUserByEmail(email), HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(GET_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -57,11 +58,11 @@ public class UserController {
     public ResponseEntity<User> getUserByNickname(@PathVariable String nickname) {
         try {
 
-            return ResponseEntity.ok(userService.getUserByNickname(nickname));
+            return new ResponseEntity<>(userService.getUserByNickname(nickname), HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(GET_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -69,11 +70,11 @@ public class UserController {
     public ResponseEntity<List<SunHistory>> getUserSunHistoryList(@PathVariable String nickname) {
         try {
 
-            return ResponseEntity.ok(userService.getUserSunHistoryByNickname(nickname));
+            return new ResponseEntity<>(userService.getUserSunHistoryByNickname(nickname), HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(GET_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -81,22 +82,24 @@ public class UserController {
     public ResponseEntity<Set<TimeZone>> getUserTimeZoneSet(@PathVariable String nickname) {
         try {
 
-            return ResponseEntity.ok(userService.getUserTimeZoneByNickname(nickname));
+            return new ResponseEntity<>(userService.getUserTimeZoneByNickname(nickname), HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(GET_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PostMapping("/create")
     public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
         try {
+
             userService.createUser(userDto);
-            return ResponseEntity.ok(CREATE_SUCCESS_MESSAGE);
+            return new ResponseEntity<>(CREATE_SUCCESS_MESSAGE, HttpStatus.CREATED);
+
         } catch (Exception e) {
             logger.error(CREATE_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().body(CREATE_ERROR_MESSAGE);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -105,11 +108,11 @@ public class UserController {
                                                @RequestBody UserDto updateDto) {
         try {
 
-            return ResponseEntity.ok(userService.updateUserById(id, updateDto));
+            return new ResponseEntity<>(userService.updateUserById(id, updateDto), HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(UPDATE_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -118,11 +121,11 @@ public class UserController {
                                                   @RequestBody UserDto updateDto) {
         try {
 
-            return ResponseEntity.ok(userService.updateUserByEmail(email, updateDto));
+            return new ResponseEntity<>(userService.updateUserByEmail(email, updateDto), HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(UPDATE_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
@@ -131,22 +134,24 @@ public class UserController {
                                                      @RequestBody UserDto updateDto) {
         try {
 
-            return ResponseEntity.ok(userService.updateUserByNickname(nickname, updateDto));
+            return new ResponseEntity<>(userService.updateUserByNickname(nickname, updateDto), HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(UPDATE_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().build();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/delete-by-id/{id}")
     public ResponseEntity<String> deleteTimeZoneById(@PathVariable int id) {
         try {
+
             userService.deleteUserFromDatabaseById(id);
-            return ResponseEntity.ok(DELETE_SUCCESS_MESSAGE);
+            return new ResponseEntity<>(DELETE_SUCCESS_MESSAGE, HttpStatus.NO_CONTENT);
+
         } catch (Exception e) {
             logger.error(DELETE_ERROR_MESSAGE, e);
-            return ResponseEntity.badRequest().body(DELETE_ERROR_MESSAGE);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
