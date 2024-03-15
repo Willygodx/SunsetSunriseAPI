@@ -20,4 +20,16 @@ public class EntityCache<K, V> {
     public V get(K key) {
         return cacheMap.get(key);
     }
+
+    public void remove(K key) {
+        cacheMap.remove(key);
+    }
+
+    public void clear() {
+        cacheMap.clear();
+    }
+
+    public int getSize() {
+        return cacheMap.size();
+    }
 }

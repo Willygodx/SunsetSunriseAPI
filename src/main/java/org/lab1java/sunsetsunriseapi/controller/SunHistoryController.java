@@ -1,6 +1,5 @@
 package org.lab1java.sunsetsunriseapi.controller;
 
-import org.lab1java.sunsetsunriseapi.cache.EntityCache;
 import org.lab1java.sunsetsunriseapi.dto.SunHistoryDto;
 import org.lab1java.sunsetsunriseapi.dto.SunRequestDto;
 import org.lab1java.sunsetsunriseapi.dto.SunResponseDto;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +20,6 @@ import org.slf4j.LoggerFactory;
 public class SunHistoryController {
     private final SunHistoryService sunHistoryService;
     private final Logger logger = LoggerFactory.getLogger(SunHistoryController.class);
-    private final EntityCache<Integer, Object> cacheMap;
     private static final String DELETE_ERROR_MESSAGE = "Error while deleting!";
     private static final String DELETE_SUCCESS_MESSAGE = "Deleted successfully!";
     private static final String UPDATE_ERROR_MESSAGE = "Error while updating!";
@@ -30,9 +27,8 @@ public class SunHistoryController {
     private static final String CREATE_ERROR_MESSAGE = "Error while creating!";
     private static final String CREATE_SUCCESS_MESSAGE = "Created successfully!";
 
-    public SunHistoryController(SunHistoryService sunHistoryService, EntityCache<Integer, Object> cacheMap) {
+    public SunHistoryController(SunHistoryService sunHistoryService) {
         this.sunHistoryService = sunHistoryService;
-        this.cacheMap = cacheMap;
     }
 
     @GetMapping("/get/{id}")
@@ -41,6 +37,7 @@ public class SunHistoryController {
                                                         @RequestParam() Double longitude,
                                                         @RequestParam() String date) {
         try {
+
             return ResponseEntity.ok(sunHistoryService.getSunInfo(id, (new SunRequestDto(latitude, longitude, LocalDate.parse(date)))));
 
         } catch (Exception e) {
@@ -51,20 +48,12 @@ public class SunHistoryController {
 
     @GetMapping("/get-from-db")
     public ResponseEntity<List<SunHistory>> getSunHistoryFromDatabase(@RequestParam() Double latitude,
-                                                                    @RequestParam() Double longitude,
-                                                                    @RequestParam() String date) {
+                                                                      @RequestParam() Double longitude,
+                                                                      @RequestParam() String date) {
         try {
-            int hashCode = Objects.hash(latitude, longitude, date, 60 * 31);
-            Object cachedData = cacheMap.get(hashCode);
 
-            if (cachedData != null) {
-                return ResponseEntity.ok((List<SunHistory>) cachedData);
-            } else {
-                List<SunHistory> sunHistoryList = sunHistoryService.getSunInfoFromDatabase(latitude, longitude, LocalDate.parse(date));
-                cacheMap.put(hashCode, sunHistoryList);
+            return ResponseEntity.ok(sunHistoryService.getSunInfoFromDatabase(latitude, longitude, LocalDate.parse(date)));
 
-                return ResponseEntity.ok(sunHistoryList);
-            }
         } catch (Exception e) {
             logger.error(GET_ERROR_MESSAGE, e);
             return ResponseEntity.badRequest().build();
@@ -74,18 +63,9 @@ public class SunHistoryController {
     @GetMapping("/custom-get")
     public ResponseEntity<List<SunHistory>> getSunHistoryByCountryStartingWith(@RequestParam("prefix") String prefix) {
         try {
-            int hashCode = Objects.hash(prefix, 61 * 32);
-            Object cachedData = cacheMap.get(hashCode);
 
-            if (cachedData != null) {
-                return ResponseEntity.ok((List<SunHistory>) cachedData);
+            return ResponseEntity.ok(sunHistoryService.findSunHistoryByCountryStartingWithPrefix(prefix));
 
-            } else {
-                List<SunHistory> sunHistoryList = sunHistoryService.findSunHistoryByCountryStartingWithPrefix(prefix);
-                cacheMap.put(hashCode, sunHistoryList);
-
-                return ResponseEntity.ok(sunHistoryList);
-            }
         } catch (Exception e) {
             logger.error(GET_ERROR_MESSAGE, e);
             return ResponseEntity.badRequest().build();

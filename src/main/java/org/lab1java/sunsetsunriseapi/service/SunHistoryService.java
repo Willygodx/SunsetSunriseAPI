@@ -1,5 +1,6 @@
 package org.lab1java.sunsetsunriseapi.service;
 
+import org.lab1java.sunsetsunriseapi.cache.EntityCache;
 import org.lab1java.sunsetsunriseapi.dao.SunHistoryRepository;
 import org.lab1java.sunsetsunriseapi.dao.TimeZoneRepository;
 import org.lab1java.sunsetsunriseapi.dao.UserRepository;
@@ -16,6 +17,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -28,13 +30,15 @@ public class SunHistoryService {
     private final SunHistoryRepository sunHistoryRepository;
     private final UserRepository userRepository;
     private final TimeZoneRepository timeZoneRepository;
+    private final EntityCache<Integer, Object> cacheMap;
     private final Logger logger = LoggerFactory.getLogger(SunHistoryService.class);
 
-    public SunHistoryService(ApiService externalApiService, SunHistoryRepository sunHistoryRepository, UserRepository userRepository, TimeZoneRepository timeZoneRepository) {
+    public SunHistoryService(ApiService externalApiService, SunHistoryRepository sunHistoryRepository, UserRepository userRepository, TimeZoneRepository timeZoneRepository, EntityCache<Integer, Object> cacheMap) {
         this.externalApiService = externalApiService;
         this.sunHistoryRepository = sunHistoryRepository;
         this.userRepository = userRepository;
         this.timeZoneRepository = timeZoneRepository;
+        this.cacheMap = cacheMap;
     }
 
     public SunResponseDto getSunInfo(int id, SunRequestDto request) {
@@ -115,11 +119,19 @@ public class SunHistoryService {
     }
 
     public List<SunHistory> getSunInfoFromDatabase(double latitude, double longitude, LocalDate date) {
-        List<SunHistory> sunHistoryList = sunHistoryRepository.findByLatitudeAndLongitudeAndDate(latitude, longitude, date);
-        if (!sunHistoryList.isEmpty()) {
-            return sunHistoryList;
+        int hashCode = Objects.hash(latitude, longitude, date, 60 * 31);
+        Object cachedData = cacheMap.get(hashCode);
+
+        if (cachedData != null) {
+            return (List<SunHistory>) cachedData;
         } else {
-            return Collections.emptyList();
+            List<SunHistory> sunHistoryList = sunHistoryRepository.findByLatitudeAndLongitudeAndDate(latitude, longitude, date);
+            if (sunHistoryList.isEmpty())
+                return Collections.emptyList();
+
+            cacheMap.put(hashCode, sunHistoryList);
+
+            return sunHistoryList;
         }
     }
 
@@ -132,8 +144,11 @@ public class SunHistoryService {
         }
     }
 
-    public void deleteSunInfoFromDatabase(Long id) {
+    public void deleteSunInfoFromDatabase(Long id) throws Exception {
         if (sunHistoryRepository.existsById(id)) {
+            SunHistory sunHistory = sunHistoryRepository.findById(id)
+                    .orElseThrow(() -> new Exception("SunHistory not found"));
+            cacheMap.remove(Objects.hash(sunHistory.getLatitude(), sunHistory.getLongitude(), sunHistory.getDate(), 60 * 31));
             sunHistoryRepository.deleteById(id);
         }
     }
@@ -141,6 +156,9 @@ public class SunHistoryService {
     public SunHistoryDto updateSunInfo(Long id, SunHistoryDto updateDto) throws Exception {
         SunHistory sunHistory = sunHistoryRepository.findById(id)
                 .orElseThrow(() -> new Exception("SunHistory not found"));
+
+        int hashCode = Objects.hash(sunHistory.getLatitude(), sunHistory.getLongitude(), sunHistory.getDate(), 60 * 31);
+        cacheMap.remove(hashCode);
 
         sunHistory.setLatitude(updateDto.getLatitude());
         sunHistory.setLongitude(updateDto.getLongitude());
