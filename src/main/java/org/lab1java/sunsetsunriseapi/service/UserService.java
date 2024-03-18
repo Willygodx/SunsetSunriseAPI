@@ -1,57 +1,56 @@
 package org.lab1java.sunsetsunriseapi.service;
 
+import lombok.AllArgsConstructor;
 import org.lab1java.sunsetsunriseapi.cache.EntityCache;
 import org.lab1java.sunsetsunriseapi.dao.UserRepository;
 import org.lab1java.sunsetsunriseapi.dto.UserDto;
-import org.lab1java.sunsetsunriseapi.entity.SunHistory;
-import org.lab1java.sunsetsunriseapi.entity.TimeZone;
+import org.lab1java.sunsetsunriseapi.entity.Country;
 import org.lab1java.sunsetsunriseapi.entity.User;
+import org.lab1java.sunsetsunriseapi.exception.UserNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 @Service
+@AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+
     private final EntityCache<Integer, Object> cacheMap;
     private static final String USER_NOT_FOUND_MESSAGE = "User not found!";
 
-    public UserService(UserRepository userRepository, EntityCache<Integer, Object> cacheMap) {
-        this.userRepository = userRepository;
-        this.cacheMap = cacheMap;
-    }
-
-    public User getUserById(int id) throws Exception {
+    public User getUserById(int id) {
         Object cachedData = cacheMap.get(Objects.hash(id, 2 * 31));
 
         if (cachedData != null) {
             return (User)cachedData;
         } else {
             User user = userRepository.findById(id)
-                    .orElseThrow(() -> new Exception(USER_NOT_FOUND_MESSAGE));
+                    .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE));
             cacheMap.put(Objects.hash(id, 2 * 31), user);
 
             return user;
         }
     }
 
-    public User getUserByEmail(String email) throws Exception {
+    public User getUserByEmail(String email) {
         Object cachedData = cacheMap.get(Objects.hash(email, 3 * 32));
 
         if (cachedData != null) {
             return (User) cachedData;
         } else {
             User user = userRepository.findByEmail(email)
-                    .orElseThrow(() -> new Exception(USER_NOT_FOUND_MESSAGE));
+                    .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE));
             cacheMap.put(Objects.hash(email, 3 * 32), user);
 
             return user;
         }
     }
 
-    public User getUserByNickname(String nickname) throws Exception {
+    public User getUserByNickname(String nickname) {
         int hashCode = Objects.hash(nickname, 4 * 33);
         Object cachedData = cacheMap.get(hashCode);
 
@@ -59,45 +58,38 @@ public class UserService {
             return (User) cachedData;
         } else {
             User user = userRepository.findByNickname(nickname)
-                    .orElseThrow(() -> new Exception(USER_NOT_FOUND_MESSAGE));
+                    .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE));
             cacheMap.put(hashCode, user);
 
             return user;
         }
     }
 
-    public List<SunHistory> getUserSunHistoryByNickname(String nickname) throws Exception {
-        int hashCode = Objects.hash(nickname, 5 * 34);
-        Object cachedData = cacheMap.get(hashCode);
-
-        if (cachedData != null) {
-            return (List<SunHistory>) cachedData;
-        } else {
-            User user = userRepository.findByNickname(nickname)
-                    .orElseThrow(() -> new Exception(USER_NOT_FOUND_MESSAGE));
-
-            List<SunHistory> sunHistoryList = user.getSunHistoryList();
-            cacheMap.put(hashCode, sunHistoryList);
-
-            return sunHistoryList;
-        }
-    }
-
-    public Set<TimeZone> getUserTimeZoneByNickname(String nickname) throws Exception {
+    public Set<Country> getUserCountriesByNickname(String nickname) {
         int hashCode = Objects.hash(nickname, 6 * 35);
         Object cachedData = cacheMap.get(hashCode);
 
         if (cachedData != null) {
-            return (Set<TimeZone>) cachedData;
+            return (Set<Country>) cachedData;
         } else {
             User user = userRepository.findByNickname(nickname)
-                    .orElseThrow(() -> new Exception(USER_NOT_FOUND_MESSAGE));
+                    .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE));
 
-            Set<TimeZone> timeZoneSet = user.getTimeZoneSet();
-            cacheMap.put(hashCode, timeZoneSet);
+            Set<Country> countrySet = user.getCountrySet();
+            cacheMap.put(hashCode, countrySet);
 
-            return timeZoneSet;
+            return countrySet;
         }
+    }
+
+    public Page<User> getAllUsers(Integer pageNumber, Integer pageSize) {
+        if (pageNumber == null || pageNumber < 0) {
+            pageNumber = 0;
+        }
+        if(pageSize == null || pageSize < 1) {
+            pageSize = 10;
+        }
+        return userRepository.findAll(PageRequest.of(pageNumber, pageSize));
     }
 
     public void createUser(UserDto userDto) {
@@ -105,9 +97,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User updateUserById(int id, UserDto updateDto) throws Exception {
+    public User updateUserById(int id, UserDto updateDto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new Exception(USER_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE));
         clearUserCache(user);
 
         user.setNickname(updateDto.getNickname());
@@ -117,9 +109,9 @@ public class UserService {
         return user;
     }
 
-    public User updateUserByEmail(String email, UserDto updateDto) throws Exception {
+    public User updateUserByEmail(String email, UserDto updateDto) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new Exception(USER_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE));
         clearUserCache(user);
 
         user.setNickname(updateDto.getNickname());
@@ -129,9 +121,9 @@ public class UserService {
         return user;
     }
 
-    public User updateUserByNickname(String nickname, UserDto updateDto) throws Exception {
+    public User updateUserByNickname(String nickname, UserDto updateDto) {
         User user = userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new Exception(USER_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE));
         clearUserCache(user);
 
         user.setNickname(updateDto.getNickname());
@@ -141,14 +133,12 @@ public class UserService {
         return user;
     }
 
-    public void deleteUserFromDatabaseById(int id) throws Exception {
-        if (userRepository.existsById(id)) {
-            User user = userRepository.findById(id)
-                    .orElseThrow(() -> new Exception(USER_NOT_FOUND_MESSAGE));
-            clearUserCache(user);
+    public void deleteUserFromDatabaseById(int id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE));
+        clearUserCache(user);
 
-            userRepository.deleteById(id);
-        }
+        userRepository.deleteById(id);
     }
 
     private void clearUserCache(User user) {

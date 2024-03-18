@@ -296,7 +296,7 @@ Caused by: java.sql.SQLException: Column 'user_id' cannot be NOT NULL: needed in
 2024-03-12 01:45:11.826  INFO 55681 --- [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
 2024-03-12 01:45:20.531 ERROR 55681 --- [http-nio-8081-exec-3] o.l.s.service.SunHistoryService          : Error processing SunInfo
 
-org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.SunHistory.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
+org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.Coordinates.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
 	at org.springframework.orm.jpa.EntityManagerFactoryUtils.convertJpaAccessExceptionIfPossible(EntityManagerFactoryUtils.java:368) ~[spring-orm-6.1.3.jar:6.1.3]
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:246) ~[spring-orm-6.1.3.jar:6.1.3]
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:565) ~[spring-orm-6.1.3.jar:6.1.3]
@@ -314,8 +314,8 @@ org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.Transi
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy122.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -364,7 +364,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.Transi
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.18.jar:10.1.18]
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.18.jar:10.1.18]
 	at java.base/java.lang.Thread.run(Thread.java:1589) ~[na:na]
-Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.SunHistory.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
+Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.Coordinates.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:157) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:167) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:173) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
@@ -378,7 +378,7 @@ Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValue
 	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:561) ~[spring-orm-6.1.3.jar:6.1.3]
 	... 64 common frames omitted
-Caused by: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.SunHistory.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
+Caused by: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.Coordinates.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
 	at org.hibernate.engine.spi.CascadingActions$8.noCascade(CascadingActions.java:372) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.engine.internal.Cascade.cascade(Cascade.java:173) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.event.internal.AbstractSaveEventListener.cascadeBeforeSave(AbstractSaveEventListener.java:482) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
@@ -2108,8 +2108,8 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy122.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -2766,8 +2766,8 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy122.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -2937,8 +2937,8 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy122.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -3108,8 +3108,8 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy122.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -3279,8 +3279,8 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy122.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -3450,8 +3450,8 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy122.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -3621,8 +3621,8 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy122.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -3792,8 +3792,8 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy122.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -4261,8 +4261,8 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy120.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -4731,8 +4731,8 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy120.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -5132,7 +5132,7 @@ Caused by: java.sql.SQLSyntaxErrorException: Table 'db_example.time_zone_user' d
 2024-03-12 02:20:18.907  INFO 56073 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 5 ms
 2024-03-12 02:20:48.166 ERROR 56073 --- [http-nio-8081-exec-3] o.l.s.service.SunHistoryService          : Error processing SunInfo
 
-org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.SunHistory.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
+org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.Coordinates.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
 	at org.springframework.orm.jpa.EntityManagerFactoryUtils.convertJpaAccessExceptionIfPossible(EntityManagerFactoryUtils.java:368) ~[spring-orm-6.1.3.jar:6.1.3]
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:246) ~[spring-orm-6.1.3.jar:6.1.3]
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:565) ~[spring-orm-6.1.3.jar:6.1.3]
@@ -5150,8 +5150,8 @@ org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.Transi
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy122.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -5200,7 +5200,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.Transi
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.18.jar:10.1.18]
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.18.jar:10.1.18]
 	at java.base/java.lang.Thread.run(Thread.java:1589) ~[na:na]
-Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.SunHistory.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
+Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.Coordinates.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:157) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:167) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:173) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
@@ -5214,7 +5214,7 @@ Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValue
 	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:561) ~[spring-orm-6.1.3.jar:6.1.3]
 	... 64 common frames omitted
-Caused by: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.SunHistory.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
+Caused by: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.Coordinates.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
 	at org.hibernate.engine.spi.CascadingActions$8.noCascade(CascadingActions.java:372) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.engine.internal.Cascade.cascade(Cascade.java:173) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.event.internal.AbstractSaveEventListener.cascadeBeforeSave(AbstractSaveEventListener.java:482) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
@@ -5487,7 +5487,7 @@ Caused by: java.sql.SQLSyntaxErrorException: Table 'db_example.time_zone_user' d
 2024-03-12 02:23:16.576  INFO 56105 --- [http-nio-8081-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 7 ms
 2024-03-12 02:23:24.213 ERROR 56105 --- [http-nio-8081-exec-3] o.l.s.service.SunHistoryService          : Error processing SunInfo
 
-org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.SunHistory.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
+org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.Coordinates.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
 	at org.springframework.orm.jpa.EntityManagerFactoryUtils.convertJpaAccessExceptionIfPossible(EntityManagerFactoryUtils.java:368) ~[spring-orm-6.1.3.jar:6.1.3]
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:246) ~[spring-orm-6.1.3.jar:6.1.3]
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:565) ~[spring-orm-6.1.3.jar:6.1.3]
@@ -5505,8 +5505,8 @@ org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.Transi
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy122.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -5555,7 +5555,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.Transi
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.18.jar:10.1.18]
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.18.jar:10.1.18]
 	at java.base/java.lang.Thread.run(Thread.java:1589) ~[na:na]
-Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.SunHistory.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
+Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.Coordinates.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:157) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:167) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:173) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
@@ -5569,7 +5569,7 @@ Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValue
 	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:561) ~[spring-orm-6.1.3.jar:6.1.3]
 	... 64 common frames omitted
-Caused by: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.SunHistory.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
+Caused by: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.Coordinates.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
 	at org.hibernate.engine.spi.CascadingActions$8.noCascade(CascadingActions.java:372) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.engine.internal.Cascade.cascade(Cascade.java:173) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.event.internal.AbstractSaveEventListener.cascadeBeforeSave(AbstractSaveEventListener.java:482) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
@@ -5895,7 +5895,7 @@ Caused by: java.sql.SQLException: Failed to add the foreign key constraint. Miss
 2024-03-12 02:26:56.250  INFO 56130 --- [http-nio-8081-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 6 ms
 2024-03-12 02:27:01.827 ERROR 56130 --- [http-nio-8081-exec-3] o.l.s.service.SunHistoryService          : Error processing SunInfo
 
-org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.SunHistory.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
+org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.Coordinates.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
 	at org.springframework.orm.jpa.EntityManagerFactoryUtils.convertJpaAccessExceptionIfPossible(EntityManagerFactoryUtils.java:368) ~[spring-orm-6.1.3.jar:6.1.3]
 	at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:246) ~[spring-orm-6.1.3.jar:6.1.3]
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:565) ~[spring-orm-6.1.3.jar:6.1.3]
@@ -5913,8 +5913,8 @@ org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.Transi
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy120.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -5963,7 +5963,7 @@ org.springframework.dao.InvalidDataAccessApiUsageException: org.hibernate.Transi
 	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.18.jar:10.1.18]
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.18.jar:10.1.18]
 	at java.base/java.lang.Thread.run(Thread.java:1589) ~[na:na]
-Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.SunHistory.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
+Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.Coordinates.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:157) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:167) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:173) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
@@ -5977,7 +5977,7 @@ Caused by: java.lang.IllegalStateException: org.hibernate.TransientPropertyValue
 	at org.hibernate.engine.transaction.internal.TransactionImpl.commit(TransactionImpl.java:101) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.springframework.orm.jpa.JpaTransactionManager.doCommit(JpaTransactionManager.java:561) ~[spring-orm-6.1.3.jar:6.1.3]
 	... 64 common frames omitted
-Caused by: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.SunHistory.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
+Caused by: org.hibernate.TransientPropertyValueException: object references an unsaved transient instance - save the transient instance before flushing : org.lab1java.sunsetsunriseapi.entity.Coordinates.timeZone -> org.lab1java.sunsetsunriseapi.entity.TimeZone
 	at org.hibernate.engine.spi.CascadingActions$8.noCascade(CascadingActions.java:372) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.engine.internal.Cascade.cascade(Cascade.java:173) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
 	at org.hibernate.event.internal.AbstractSaveEventListener.cascadeBeforeSave(AbstractSaveEventListener.java:482) ~[hibernate-core-6.4.4.Final.jar:6.4.4.Final]
@@ -7291,8 +7291,8 @@ org.springframework.dao.DataIntegrityViolationException: could not execute state
 	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.1.3.jar:6.1.3]
 	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:220) ~[spring-aop-6.1.3.jar:6.1.3]
 	at jdk.proxy2/jdk.proxy2.$Proxy122.save(Unknown Source) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:102) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -7555,8 +7555,8 @@ Caused by: java.sql.SQLIntegrityConstraintViolationException: Duplicate entry 'E
 2024-03-12 03:33:04.070 ERROR 56729 --- [http-nio-8081-exec-5] o.l.s.service.SunHistoryService          : Error processing SunInfo
 
 java.lang.NullPointerException: Cannot invoke "java.util.Set.add(Object)" because the return value of "org.lab1java.sunsetsunriseapi.entity.TimeZone.getUserSet()" is null
-	at org.lab1java.sunsetsunriseapi.service.SunHistoryService.getSunInfo(SunHistoryService.java:118) ~[classes/:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getSunInfo(SunHistoryService.java:118) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]
@@ -7667,7 +7667,7 @@ java.time.format.DateTimeParseException: Text '2024-03-5' could not be parsed at
 	at java.base/java.time.format.DateTimeFormatter.parse(DateTimeFormatter.java:2008) ~[na:na]
 	at java.base/java.time.LocalDate.parse(LocalDate.java:435) ~[na:na]
 	at java.base/java.time.LocalDate.parse(LocalDate.java:420) ~[na:na]
-	at org.lab1java.sunsetsunriseapi.controller.SunHistoryController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getSunHistory(SunHistoryController.java:32) ~[classes/:na]
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[na:na]
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578) ~[na:na]
 	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261) ~[spring-web-6.1.3.jar:6.1.3]

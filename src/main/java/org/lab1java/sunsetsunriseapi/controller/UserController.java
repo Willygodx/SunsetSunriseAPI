@@ -1,21 +1,22 @@
 package org.lab1java.sunsetsunriseapi.controller;
 
+import lombok.AllArgsConstructor;
 import org.lab1java.sunsetsunriseapi.dto.UserDto;
-import org.lab1java.sunsetsunriseapi.entity.SunHistory;
-import org.lab1java.sunsetsunriseapi.entity.TimeZone;
+import org.lab1java.sunsetsunriseapi.entity.Country;
 import org.lab1java.sunsetsunriseapi.entity.User;
 import org.lab1java.sunsetsunriseapi.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
+@AllArgsConstructor
 public class UserController {
     private final UserService userService;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -25,10 +26,6 @@ public class UserController {
     private static final String GET_ERROR_MESSAGE = "Error while getting!";
     private static final String CREATE_ERROR_MESSAGE = "Error while creating!";
     private static final String CREATE_SUCCESS_MESSAGE = "Created successfully!";
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
@@ -66,11 +63,11 @@ public class UserController {
         }
     }
 
-    @GetMapping("/get-history/{nickname}")
-    public ResponseEntity<List<SunHistory>> getUserSunHistoryList(@PathVariable String nickname) {
+    @GetMapping("/get-countries/{nickname}")
+    public ResponseEntity<Set<Country>> getUserCountrySet(@PathVariable String nickname) {
         try {
 
-            return new ResponseEntity<>(userService.getUserSunHistoryByNickname(nickname), HttpStatus.OK);
+            return new ResponseEntity<>(userService.getUserCountriesByNickname(nickname), HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(GET_ERROR_MESSAGE, e);
@@ -78,11 +75,12 @@ public class UserController {
         }
     }
 
-    @GetMapping("/get-time-zones/{nickname}")
-    public ResponseEntity<Set<TimeZone>> getUserTimeZoneSet(@PathVariable String nickname) {
+    @GetMapping("/get-all-users")
+    public ResponseEntity<Page<User>> getAllUsers(@RequestParam(defaultValue = "0") Integer pageNumber,
+                                                  @RequestParam(defaultValue = "10") Integer pageSize) {
         try {
 
-            return new ResponseEntity<>(userService.getUserTimeZoneByNickname(nickname), HttpStatus.OK);
+            return new ResponseEntity<>(userService.getAllUsers(pageNumber, pageSize), HttpStatus.OK);
 
         } catch (Exception e) {
             logger.error(GET_ERROR_MESSAGE, e);

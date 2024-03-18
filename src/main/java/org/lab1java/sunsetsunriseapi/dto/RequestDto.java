@@ -5,12 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDto {
-    private String email;
+public class RequestDto {
+    private double latitude;
 
-    private String nickname;
+    private double longitude;
+
+    private LocalDate date;
 }
