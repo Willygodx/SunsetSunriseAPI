@@ -43,16 +43,15 @@ public class Coordinates {
     private String city;
 
     @ManyToOne (cascade = CascadeType.PERSIST)
-    @JoinColumn (name = "country", referencedColumnName = "name", nullable = true,
+    @JoinColumn (name = "country_id", referencedColumnName = "id", nullable = true,
             foreignKey = @ForeignKey(name = "FK_TIMEZONE",
-                    foreignKeyDefinition = "FOREIGN KEY (country) REFERENCES country(name) ON UPDATE CASCADE ON DELETE SET NULL"))
+                    foreignKeyDefinition = "FOREIGN KEY (country_id) REFERENCES country(id)"))
     private Country country;
 
     @ManyToMany (cascade = CascadeType.PERSIST)
-    @JoinTable (
-            name = "coordinates_user",
-            joinColumns = @JoinColumn(name = "coordinates_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @JoinTable (name = "coordinates_user",
+                joinColumns = @JoinColumn(name = "coordinates_id"),
+                inverseJoinColumns = @JoinColumn(name = "user_id"))
     @JsonIgnore
     private Set<User> userSet = new HashSet<>();
 

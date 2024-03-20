@@ -25,7 +25,7 @@ public class Country {
     @Column(name = "name", nullable = true)
     private String name;
 
-    @OneToMany (mappedBy = "country", cascade = CascadeType.PERSIST)
+    @OneToMany (mappedBy = "country", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JsonIgnore
     private List<Coordinates> coordinatesList = new ArrayList<>();
 
