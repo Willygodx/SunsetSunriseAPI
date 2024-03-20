@@ -29,7 +29,7 @@ public class UserService {
         Object cachedData = cacheMap.get(Objects.hash(id, 2 * 31));
 
         if (cachedData != null) {
-            return (User)cachedData;
+            return (User) cachedData;
         } else {
             User user = userRepository.findById(id)
                     .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
@@ -90,7 +90,7 @@ public class UserService {
             pageNumber = 0;
         }
 
-        if(pageSize == null || pageSize < 1) {
+        if (pageSize == null || pageSize < 1) {
             pageSize = 10;
         }
 

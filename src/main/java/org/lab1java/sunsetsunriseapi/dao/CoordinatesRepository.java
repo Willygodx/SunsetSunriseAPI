@@ -13,12 +13,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CoordinatesRepository extends JpaRepository<Coordinates, Long>{
+public interface CoordinatesRepository extends JpaRepository<Coordinates, Long> {
     Optional<Coordinates> findByLatitudeAndLongitudeAndDate(double latitude, double longitude, LocalDate date);
+
     Page<Coordinates> findByCountry(Country country, PageRequest pageRequest);
+
     @Query("SELECT sh FROM Coordinates sh WHERE HOUR(sh.sunrise) = :hour")
     List<Coordinates> findBySunriseStartingHour(int hour);
+
     @Query("SELECT sh FROM Coordinates sh WHERE HOUR(sh.sunset) = :hour")
     List<Coordinates> findBySunsetStartingHour(int hour);
+
     Page<Coordinates> findByUserSetContaining(User user, Pageable pageable);
 }

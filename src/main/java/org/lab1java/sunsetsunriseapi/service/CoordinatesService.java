@@ -60,8 +60,9 @@ public class CoordinatesService {
                     .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
             Set<Coordinates> coordinatesSet = user.getCoordinatesSet();
 
-            if (!coordinatesSet.contains(coordinates))
+            if (!coordinatesSet.contains(coordinates)) {
                 coordinatesSave(userId, getCountryName(request), coordinates);
+            }
 
             return new ResponseDto(coordinates.getSunrise(), coordinates.getSunset(), coordinates.getTimeZone(), coordinates.getCountry().getName(), coordinates.getCity());
         } else {
@@ -109,8 +110,10 @@ public class CoordinatesService {
 
     private String getCountryName(RequestDto request) {
         String countryCode = externalApiService.getCountry(request.getLatitude(), request.getLongitude());
-        if (countryCode == null)
+        if (countryCode == null) {
             throw new ResourceNotFoundException("Country not found!");
+        }
+
         String trimmedCode = countryCode.trim();
         return externalApiService.getCountryNameByCode(trimmedCode);
     }
@@ -128,7 +131,6 @@ public class CoordinatesService {
 
             country.getCoordinatesList().add(coordinates);
             coordinates.setCountry(country);
-
 
             coordinatesRepository.save(coordinates);
         } else {
@@ -189,7 +191,7 @@ public class CoordinatesService {
             pageNumber = 0;
         }
 
-        if(pageSize == null || pageSize < 1) {
+        if (pageSize == null || pageSize < 1) {
             pageSize = 10;
         }
 
@@ -207,7 +209,7 @@ public class CoordinatesService {
             pageNumber = 0;
         }
 
-        if(pageSize == null || pageSize < 1) {
+        if (pageSize == null || pageSize < 1) {
             pageSize = 10;
         }
 

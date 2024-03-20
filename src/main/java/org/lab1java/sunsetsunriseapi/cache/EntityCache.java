@@ -13,8 +13,9 @@ public class EntityCache<K, V> {
 
     public void put(K key, V value) {
         cacheMap.put(key, value);
-        if (cacheMap.size() >= MAX_SIZE)
+        if (cacheMap.size() >= MAX_SIZE) {
             cacheMap.clear();
+        }
     }
 
     public V get(K key) {

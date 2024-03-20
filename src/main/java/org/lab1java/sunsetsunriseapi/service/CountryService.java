@@ -44,7 +44,7 @@ public class CountryService {
             pageNumber = 0;
         }
 
-        if(pageSize == null || pageSize < 1) {
+        if (pageSize == null || pageSize < 1) {
             pageSize = 10;
         }
 
@@ -61,7 +61,7 @@ public class CountryService {
             pageNumber = 0;
         }
 
-        if(pageSize == null || pageSize < 1) {
+        if (pageSize == null || pageSize < 1) {
             pageSize = 10;
         }
         return countryRepository.findAll(PageRequest.of(pageNumber, pageSize));

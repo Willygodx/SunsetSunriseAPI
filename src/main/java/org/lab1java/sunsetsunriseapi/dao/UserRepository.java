@@ -12,7 +12,10 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
+
     Optional<User> findByNickname(String nickname);
+
     Optional<User> findById(int id);
+
     Page<User> findByCoordinatesSetContaining(Coordinates coordinates, Pageable pageable);
 }

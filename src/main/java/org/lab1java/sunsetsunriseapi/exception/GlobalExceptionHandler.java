@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ExceptionMessage> handleMethodNotAllowed(Exception exception) {
         logger.error(exception.getMessage());
-        return new ResponseEntity<>(new ExceptionMessage(HttpStatus.METHOD_NOT_ALLOWED.value(), exception.getMessage()), HttpStatus. METHOD_NOT_ALLOWED);
+        return new ResponseEntity<>(new ExceptionMessage(HttpStatus.METHOD_NOT_ALLOWED.value(), exception.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
