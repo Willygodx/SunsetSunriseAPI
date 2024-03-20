@@ -1,0 +1,168 @@
+[2024-03-20 16:04:59] INFO  - POST endpoint /users/create was called.
+[2024-03-20 16:04:59] INFO  - User information was created successfully.
+[2024-03-20 16:05:20] INFO  - POST endpoint /users/create was called.
+[2024-03-20 16:05:20] INFO  - User information was created successfully.
+[2024-03-20 16:06:35] INFO  - POST endpoint /users/create was called.
+[2024-03-20 16:06:35] INFO  - User information was created successfully.
+[2024-03-20 16:07:05] INFO  - POST endpoint /users/create was called.
+[2024-03-20 16:07:05] INFO  - User information was created successfully.
+[2024-03-20 16:07:49] INFO  - POST endpoint /users/create was called.
+[2024-03-20 16:07:49] INFO  - User information was created successfully.
+[2024-03-20 16:08:26] INFO  - POST endpoint /users/create was called.
+[2024-03-20 16:08:26] INFO  - User information was created successfully.
+[2024-03-20 16:10:56] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-20 16:10:59] INFO  - Coordinates information was retrieved successfully.
+[2024-03-20 16:11:35] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-20 16:11:54] INFO  - Coordinates information was retrieved successfully.
+[2024-03-20 16:12:16] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-20 16:12:16] INFO  - Coordinates information was retrieved successfully.
+[2024-03-20 16:12:37] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-20 16:12:37] INFO  - Coordinates information was retrieved successfully.
+[2024-03-20 16:13:05] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-20 16:15:07] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-20 16:15:08] INFO  - Coordinates information was retrieved successfully.
+[2024-03-20 16:17:06] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-20 16:17:08] INFO  - Coordinates information was retrieved successfully.
+[2024-03-20 16:17:34] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-20 16:17:36] INFO  - Coordinates information was retrieved successfully.
+[2024-03-20 16:18:15] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-20 16:18:16] INFO  - Coordinates information was retrieved successfully.
+[2024-03-20 16:18:42] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-20 16:18:44] INFO  - Coordinates information was retrieved successfully.
+[2024-03-20 16:19:13] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-20 16:19:13] ERROR - User not found!
+[2024-03-20 16:19:30] INFO  - GET endpoint /coordinates/get-info-sunrise-hour/{hour} was called.
+[2024-03-20 16:19:30] INFO  - Coordinates information was retrieved successfully.
+[2024-03-20 16:20:05] INFO  - GET endpoint /coordinates/get-info-sunrise-hour/{hour} was called.
+[2024-03-20 16:20:05] INFO  - Coordinates information was retrieved successfully.
+[2024-03-20 16:20:09] ERROR - 503 Service Unavailable: "<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><EOL><html><head><EOL><title>503 Service Unavailable</title><EOL></head><body><EOL><h1>Service Unavailable</h1><EOL><p>The server is temporarily unable to service your<EOL>request due to maintenance downtime or capacity<EOL>problems. Please try again later.</p><EOL></body></html><EOL>"
+[2024-03-20 16:20:09] ERROR - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: org.springframework.web.client.HttpServerErrorException$ServiceUnavailable: 503 Service Unavailable: "<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><EOL><html><head><EOL><title>503 Service Unavailable</title><EOL></head><body><EOL><h1>Service Unavailable</h1><EOL><p>The server is temporarily unable to service your<EOL>request due to maintenance downtime or capacity<EOL>problems. Please try again later.</p><EOL></body></html><EOL>"] with root cause
+org.springframework.web.client.HttpServerErrorException$ServiceUnavailable: 503 Service Unavailable: "<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN"><EOL><html><head><EOL><title>503 Service Unavailable</title><EOL></head><body><EOL><h1>Service Unavailable</h1><EOL><p>The server is temporarily unable to service your<EOL>request due to maintenance downtime or capacity<EOL>problems. Please try again later.</p><EOL></body></html><EOL>"
+	at org.springframework.web.client.HttpServerErrorException.create(HttpServerErrorException.java:111)
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:186)
+	at org.springframework.web.client.DefaultResponseErrorHandler.handleError(DefaultResponseErrorHandler.java:137)
+	at org.springframework.web.client.ResponseErrorHandler.handleError(ResponseErrorHandler.java:63)
+	at org.springframework.web.client.RestTemplate.handleResponse(RestTemplate.java:932)
+	at org.springframework.web.client.RestTemplate.doExecute(RestTemplate.java:881)
+	at org.springframework.web.client.RestTemplate.execute(RestTemplate.java:781)
+	at org.springframework.web.client.RestTemplate.getForEntity(RestTemplate.java:422)
+	at org.lab1java.sunsetsunriseapi.service.ApiService.getCountry(ApiService.java:44)
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getCountryName(CoordinatesService.java:112)
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getCheckedResponseFromApi(CoordinatesService.java:99)
+	at org.lab1java.sunsetsunriseapi.service.CoordinatesService.getCoordinatesInfo(CoordinatesService.java:69)
+	at org.lab1java.sunsetsunriseapi.controller.CoordinatesController.getCoordinatesInfo(CoordinatesController.java:39)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:261)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:189)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:917)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:829)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1589)
+[2024-03-20 16:20:16] INFO  - GET endpoint /coordinates/get-info-sunset-hour/{hour} was called.
+[2024-03-20 16:20:16] INFO  - Coordinates information was retrieved successfully.
+[2024-03-20 16:20:51] INFO  - GET endpoint /coordinates/get-users/{id} was called.
+[2024-03-20 16:20:51] INFO  - Coordinate's users information was retrieved successfully.
+[2024-03-20 16:21:04] INFO  - GET endpoint /coordinates/get-users/{id} was called.
+[2024-03-20 16:21:04] INFO  - Coordinate's users information was retrieved successfully.
+[2024-03-20 16:21:10] INFO  - GET endpoint /coordinates/get-users/{id} was called.
+[2024-03-20 16:21:10] INFO  - Coordinate's users information was retrieved successfully.
+[2024-03-20 16:21:29] INFO  - GET endpoint /coordinates/get-users/{id} was called.
+[2024-03-20 16:21:29] INFO  - Coordinate's users information was retrieved successfully.
+[2024-03-20 16:21:42] INFO  - GET endpoint /coordinates/get-users/{id} was called.
+[2024-03-20 16:21:42] INFO  - Coordinate's users information was retrieved successfully.
+[2024-03-20 16:21:52] INFO  - GET endpoint /coordinates/get-users/{id} was called.
+[2024-03-20 16:21:52] INFO  - Coordinate's users information was retrieved successfully.
+[2024-03-20 16:22:13] INFO  - GET endpoint /coordinates/get-all-coordinates-info was called.
+[2024-03-20 16:22:13] INFO  - All coordinates information was retrieved successfully.
+[2024-03-20 16:22:19] INFO  - GET endpoint /coordinates/get-all-coordinates-info was called.
+[2024-03-20 16:22:19] INFO  - All coordinates information was retrieved successfully.
+[2024-03-20 16:22:36] INFO  - POST endpoint /coordinates/create was called.
+[2024-03-20 16:22:38] INFO  - Coordinates information was created successfully.
+[2024-03-20 16:22:49] INFO  - POST endpoint /coordinates/create was called.
+[2024-03-20 16:22:51] ERROR - Duplicate entry 'Congo - Kinshasa' for key 'country.UKllidyp77h6xkeokpbmoy710d4'
+[2024-03-20 16:22:51] ERROR - This information already exists.
+[2024-03-20 16:27:57] INFO  - PUT endpoint /coordinates/update/{id} was called.
+[2024-03-20 16:27:57] INFO  - Coordinates information was updated successfully.
+[2024-03-20 16:28:25] INFO  - PUT endpoint /coordinates/update/{id} was called.
+[2024-03-20 16:28:25] ERROR - Duplicate entry 'Finland' for key 'country.UKllidyp77h6xkeokpbmoy710d4'
+[2024-03-20 16:28:25] ERROR - This information already exists.
+[2024-03-20 16:29:40] INFO  - PUT endpoint /coordinates/update/{id} was called.
+[2024-03-20 16:29:40] ERROR - This information already exists.
+[2024-03-20 16:30:14] INFO  - DELETE endpoint /coordinates/delete/{id} was called.
+[2024-03-20 16:30:14] INFO  - Coordinates information was deleted successfully.
+[2024-03-20 16:30:27] INFO  - GET endpoint /countries/get/{id} was called.
+[2024-03-20 16:30:27] INFO  - Country information was retrieved successfully.
+[2024-03-20 16:30:37] INFO  - GET endpoint /countries/get/{id} was called.
+[2024-03-20 16:30:37] ERROR - Country not found!
+[2024-03-20 16:30:40] INFO  - GET endpoint /countries/get/{id} was called.
+[2024-03-20 16:30:40] INFO  - Country information was retrieved successfully.
+[2024-03-20 16:30:43] INFO  - GET endpoint /countries/get/{id} was called.
+[2024-03-20 16:30:43] INFO  - Country information was retrieved successfully.
+[2024-03-20 16:30:48] INFO  - GET endpoint /countries/get/{id} was called.
+[2024-03-20 16:30:48] INFO  - Country information was retrieved successfully.
+[2024-03-20 16:31:06] INFO  - GET endpoint /countries/get-coordinates-info/{countryName} was called.
+[2024-03-20 16:31:06] INFO  - Country's coordinates information was retrieved successfully.
+[2024-03-20 16:31:11] INFO  - GET endpoint /countries/get-coordinates-info/{countryName} was called.
+[2024-03-20 16:31:11] INFO  - Country's coordinates information was retrieved successfully.
+[2024-03-20 16:31:18] INFO  - GET endpoint /countries/get-coordinates-info/{countryName} was called.
+[2024-03-20 16:31:18] INFO  - Country's coordinates information was retrieved successfully.
+[2024-03-20 16:31:44] INFO  - GET endpoint /countries/get-all was called.
+[2024-03-20 16:31:44] INFO  - All countries information was retrieved successfully.
+[2024-03-20 16:32:02] INFO  - GET endpoint /countries/create was called.
+[2024-03-20 16:32:02] INFO  - Country information was created successfully.
+[2024-03-20 16:32:10] INFO  - GET endpoint /countries/create was called.
+[2024-03-20 16:32:10] ERROR - Duplicate entry 'China' for key 'country.UKllidyp77h6xkeokpbmoy710d4'
+[2024-03-20 16:32:10] ERROR - This country already exists!
+[2024-03-20 16:32:21] INFO  - GET endpoint /countries/update/{id} was called.
+[2024-03-20 16:32:21] ERROR - Duplicate entry 'China' for key 'country.UKllidyp77h6xkeokpbmoy710d4'
+[2024-03-20 16:32:21] ERROR - This country already exists!
+[2024-03-20 16:32:40] INFO  - GET endpoint /countries/delete/{id} was called.
+[2024-03-20 16:32:40] INFO  - Country information was deleted successfully.
+[2024-03-20 16:32:46] INFO  - GET endpoint /users/get-by-id/{id} was called.
+[2024-03-20 16:32:46] INFO  - User information was retrieved successfully.
+[2024-03-20 16:33:04] INFO  - GET endpoint /users/get-coordinates/{userName} was called.
+[2024-03-20 16:33:04] INFO  - User's coordinates list was retrieved successfully.
+[2024-03-20 16:33:13] INFO  - GET endpoint /users/get-all-users was called.
+[2024-03-20 16:33:13] INFO  - All users list was retrieved successfully.
+[2024-03-20 16:33:29] INFO  - POST endpoint /users/create was called.
+[2024-03-20 16:33:29] ERROR - Duplicate entry 'ChampionGomes12-Leopold92_fross21@yandex.ru' for key 'user.UKs5t96dj7s1pg52053kca0n1ov'
+[2024-03-20 16:33:29] ERROR - User already exists!
+[2024-03-20 16:33:53] INFO  - DELETE endpoint /users/delete/{id} was called.
+[2024-03-20 16:33:53] INFO  - User information was deleted successfully.
+[2024-03-20 16:35:03] INFO  - GET endpoint /countries/delete/{id} was called.
+[2024-03-20 16:35:03] INFO  - Country information was deleted successfully.
+[2024-03-20 16:35:22] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-20 16:35:23] INFO  - Coordinates information was retrieved successfully.

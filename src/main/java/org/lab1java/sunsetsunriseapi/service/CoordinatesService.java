@@ -238,6 +238,7 @@ public class CoordinatesService {
         try {
             clearCache(coordinates);
 
+            Country country = new Country(updateDto.getCountry());
             coordinates.setLatitude(updateDto.getLatitude());
             coordinates.setLongitude(updateDto.getLongitude());
             coordinates.setDate(updateDto.getDate());
@@ -246,6 +247,8 @@ public class CoordinatesService {
             coordinates.setCity(updateDto.getCity());
             coordinates.setTimeZone(updateDto.getTimeZone());
 
+            country.getCoordinatesList().add(coordinates);
+            coordinates.setCountry(country);
             coordinatesRepository.save(coordinates);
             return coordinates;
         } catch (Exception e) {
