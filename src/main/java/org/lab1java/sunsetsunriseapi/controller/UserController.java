@@ -2,7 +2,7 @@ package org.lab1java.sunsetsunriseapi.controller;
 
 import lombok.AllArgsConstructor;
 import org.lab1java.sunsetsunriseapi.dto.UserDto;
-import org.lab1java.sunsetsunriseapi.entity.Country;
+import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.User;
 import org.lab1java.sunsetsunriseapi.service.UserService;
 import org.slf4j.Logger;
@@ -12,144 +12,120 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
-
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
 public class UserController {
     private final UserService userService;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
-    private static final String DELETE_ERROR_MESSAGE = "Error while deleting!";
     private static final String DELETE_SUCCESS_MESSAGE = "Deleted successfully!";
-    private static final String UPDATE_ERROR_MESSAGE = "Error while updating!";
-    private static final String GET_ERROR_MESSAGE = "Error while getting!";
-    private static final String CREATE_ERROR_MESSAGE = "Error while creating!";
     private static final String CREATE_SUCCESS_MESSAGE = "Created successfully!";
+    private static final String GET_SUCCESS_MESSAGE = "User information was retrieved successfully.";
+    private static final String PUT_SUCCESS_MESSAGE = "User information was updated successfully.";
 
     @GetMapping("/get-by-id/{id}")
     public ResponseEntity<User> getUserById(@PathVariable int id) {
-        try {
+        logger.info("GET endpoint /users/get-by-id/{id} was called.");
 
-            return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+        User user = userService.getUserById(id);
 
-        } catch (Exception e) {
-            logger.error(GET_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info(GET_SUCCESS_MESSAGE);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/get-by-email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        try {
+        logger.info("GET endpoint /users/get-by-email/{email} was called.");
 
-            return new ResponseEntity<>(userService.getUserByEmail(email), HttpStatus.OK);
+        User user = userService.getUserByEmail(email);
 
-        } catch (Exception e) {
-            logger.error(GET_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info(GET_SUCCESS_MESSAGE);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/get-by-nickname/{nickname}")
     public ResponseEntity<User> getUserByNickname(@PathVariable String nickname) {
-        try {
+        logger.info("GET endpoint /users/get-by-nickname/{nickname} was called.");
 
-            return new ResponseEntity<>(userService.getUserByNickname(nickname), HttpStatus.OK);
+        User user = userService.getUserByNickname(nickname);
 
-        } catch (Exception e) {
-            logger.error(GET_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info(GET_SUCCESS_MESSAGE);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/get-countries/{nickname}")
-    public ResponseEntity<Set<Country>> getUserCountrySet(@PathVariable String nickname) {
-        try {
+    @GetMapping("/get-coordinates/{userName}")
+    public ResponseEntity<Page<Coordinates>> getUserCoordinatesList(@PathVariable String userName,
+                                                               @RequestParam(defaultValue = "0") Integer pageNumber,
+                                                               @RequestParam(defaultValue = "10") Integer pageSize) {
+        logger.info("GET endpoint /users/get-coordinates/{userName} was called.");
 
-            return new ResponseEntity<>(userService.getUserCountriesByNickname(nickname), HttpStatus.OK);
+        Page<Coordinates> coordinatesPage = userService.getUserCoordinatesListByNickname(userName, pageNumber, pageSize);
 
-        } catch (Exception e) {
-            logger.error(GET_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info("User's coordinates list was retrieved successfully.");
+        return new ResponseEntity<>(coordinatesPage, HttpStatus.OK);
     }
 
     @GetMapping("/get-all-users")
     public ResponseEntity<Page<User>> getAllUsers(@RequestParam(defaultValue = "0") Integer pageNumber,
                                                   @RequestParam(defaultValue = "10") Integer pageSize) {
-        try {
+        logger.info("GET endpoint /users/get-all-users was called.");
 
-            return new ResponseEntity<>(userService.getAllUsers(pageNumber, pageSize), HttpStatus.OK);
+        Page<User> userPage = userService.getAllUsers(pageNumber, pageSize);
 
-        } catch (Exception e) {
-            logger.error(GET_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info("All users list was retrieved successfully.");
+        return new ResponseEntity<>(userPage, HttpStatus.OK);
     }
 
     @PostMapping("/create")
     public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
-        try {
+        logger.info("POST endpoint /users/create was called.");
 
-            userService.createUser(userDto);
-            return new ResponseEntity<>(CREATE_SUCCESS_MESSAGE, HttpStatus.CREATED);
+        userService.createUser(userDto);
 
-        } catch (Exception e) {
-            logger.error(CREATE_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        logger.info("User information was created successfully.");
+        return new ResponseEntity<>(CREATE_SUCCESS_MESSAGE, HttpStatus.CREATED);
     }
 
     @PutMapping("/update-by-id/{id}")
     public ResponseEntity<User> updateUserById(@PathVariable int id,
                                                @RequestBody UserDto updateDto) {
-        try {
+        logger.info("PUT endpoint /users/update-by-id/{id} was called.");
 
-            return new ResponseEntity<>(userService.updateUserById(id, updateDto), HttpStatus.OK);
+        User user = userService.updateUserById(id, updateDto);
 
-        } catch (Exception e) {
-            logger.error(UPDATE_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info(PUT_SUCCESS_MESSAGE);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("/update-by-email/{email}")
     public ResponseEntity<User> updateUserByEmail(@PathVariable String email,
                                                   @RequestBody UserDto updateDto) {
-        try {
+        logger.info("PUT endpoint /users/update-by-email/{email} was called.");
 
-            return new ResponseEntity<>(userService.updateUserByEmail(email, updateDto), HttpStatus.OK);
+        User user = userService.updateUserByEmail(email, updateDto);
 
-        } catch (Exception e) {
-            logger.error(UPDATE_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info(PUT_SUCCESS_MESSAGE);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PutMapping("/update-by-nickname/{nickname}")
     public ResponseEntity<User> updateUserByNickname(@PathVariable String nickname,
                                                      @RequestBody UserDto updateDto) {
-        try {
+        logger.info("PUT endpoint /users/update-by-nickname/{nickname} was called.");
 
-            return new ResponseEntity<>(userService.updateUserByNickname(nickname, updateDto), HttpStatus.OK);
+        User user = userService.updateUserByNickname(nickname, updateDto);
 
-        } catch (Exception e) {
-            logger.error(UPDATE_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info(PUT_SUCCESS_MESSAGE);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete-by-id/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteTimeZoneById(@PathVariable int id) {
-        try {
+        logger.info("DELETE endpoint /users/delete/{id} was called.");
 
-            userService.deleteUserFromDatabaseById(id);
-            return new ResponseEntity<>(DELETE_SUCCESS_MESSAGE, HttpStatus.NO_CONTENT);
+        userService.deleteUserFromDatabaseById(id);
 
-        } catch (Exception e) {
-            logger.error(DELETE_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info("User information was deleted successfully.");
+        return new ResponseEntity<>(DELETE_SUCCESS_MESSAGE, HttpStatus.NO_CONTENT);
     }
 }

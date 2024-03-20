@@ -1,5 +1,6 @@
 package org.lab1java.sunsetsunriseapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,10 +18,13 @@ public class CoordinatesDto {
 
     private double longitude;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime sunrise;
 
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime sunset;
 
     private String timeZone;

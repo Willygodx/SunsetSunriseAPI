@@ -32,7 +32,7 @@ public class User {
     @ManyToMany (mappedBy = "userSet", cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private Set<Country> countrySet;
+    private Set<Coordinates> coordinatesSet;
 
     public User(String email, String nickname) {
         this.email = email;

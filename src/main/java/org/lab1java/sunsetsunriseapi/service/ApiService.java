@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.lab1java.sunsetsunriseapi.dto.RequestDto;
 import org.lab1java.sunsetsunriseapi.dto.ResponseDto;
-import org.lab1java.sunsetsunriseapi.exception.ApiNotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -40,55 +39,46 @@ public class ApiService {
     }
 
     public String getCountry(double latitude, double longitude) {
-            String apiUrl = String.format("%s?lat=%f&lng=%f&username=%s",
-                    externalApiUrlCountry, latitude, longitude, "willygodx");
-            ResponseEntity<String> apiResponseEntity = new RestTemplate().getForEntity(apiUrl, String.class);
-            return apiResponseEntity.getBody();
+        String apiUrl = String.format("%s?lat=%f&lng=%f&username=%s",
+                externalApiUrlCountry, latitude, longitude, "willygodx");
+        ResponseEntity<String> apiResponseEntity = new RestTemplate().getForEntity(apiUrl, String.class);
+        return apiResponseEntity.getBody();
     }
 
     public String getTimeZone(double latitude, double longitude) {
-            String apiUrl = String.format("%s?lat=%f&lng=%f&username=%s",
-                    externalApiUrlTimeZone, latitude, longitude, "willygodx");
-            ResponseEntity<String> apiResponseEntity = new RestTemplate().getForEntity(apiUrl, String.class);
-            return extractTimeZoneFromResponse(apiResponseEntity.getBody());
+        String apiUrl = String.format("%s?lat=%f&lng=%f&username=%s",
+                externalApiUrlTimeZone, latitude, longitude, "willygodx");
+        ResponseEntity<String> apiResponseEntity = new RestTemplate().getForEntity(apiUrl, String.class);
+        return extractTimeZoneFromResponse(apiResponseEntity.getBody());
     }
 
     public String extractTimeZoneFromResponse(String response) {
-            JsonObject jsonResponse = JsonParser.parseString(response).getAsJsonObject();
-            return jsonResponse.get("timezoneId").getAsString();
+        JsonObject jsonResponse = JsonParser.parseString(response).getAsJsonObject();
+        return jsonResponse.get("timezoneId").getAsString();
     }
 
     public String getApiResponse(RequestDto request) {
-            String apiUrl = String.format("%s?lat=%f&lng=%f&date=%s",
-                    externalApiUrlSunsetSunriseInfo, request.getLatitude(), request.getLongitude(), request.getDate());
-            ResponseEntity<String> apiResponseEntity = new RestTemplate().getForEntity(apiUrl, String.class);
-            return apiResponseEntity.getBody();
+        String apiUrl = String.format("%s?lat=%f&lng=%f&date=%s",
+                externalApiUrlSunsetSunriseInfo, request.getLatitude(), request.getLongitude(), request.getDate());
+        ResponseEntity<String> apiResponseEntity = new RestTemplate().getForEntity(apiUrl, String.class);
+        return apiResponseEntity.getBody();
     }
 
     public ResponseDto extractCoordinatesInfoFromApiResponse(String apiResponse) throws JsonProcessingException {
         JsonNode jsonNode = objectMapper.readTree(apiResponse);
         JsonNode resultsNode = jsonNode.get("results");
 
-        if (resultsNode != null) {
-            LocalTime sunriseTime = parseTime(resultsNode, "sunrise");
-            LocalTime sunsetTime = parseTime(resultsNode, "sunset");
+        LocalTime sunriseTime = parseTime(resultsNode, "sunrise");
+        LocalTime sunsetTime = parseTime(resultsNode, "sunset");
 
-            return new ResponseDto(sunriseTime, sunsetTime);
-
-        } else {
-            throw new ApiNotFoundException("Error while extracting info from api!");
-        }
+        return new ResponseDto(sunriseTime, sunsetTime);
     }
 
     private LocalTime parseTime(JsonNode parentNode, String fieldName) {
         JsonNode timeNode = parentNode.get(fieldName);
 
-        if (timeNode != null) {
-            String timeString = timeNode.asText();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm:ss a");
-            return LocalTime.parse(timeString, formatter);
-        } else {
-            throw new ApiNotFoundException("Error while parsing api response!");
-        }
+        String timeString = timeNode.asText();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm:ss a");
+        return LocalTime.parse(timeString, formatter);
     }
 }

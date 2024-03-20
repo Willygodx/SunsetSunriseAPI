@@ -8,9 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table (name = "country", uniqueConstraints = @UniqueConstraint(columnNames = "name"))
@@ -26,14 +24,6 @@ public class Country {
 
     @Column(name = "name", nullable = true)
     private String name;
-
-    @ManyToMany (cascade = CascadeType.PERSIST)
-    @JoinTable (
-            name = "country_user",
-            joinColumns = @JoinColumn (name = "country_id"),
-            inverseJoinColumns = @JoinColumn (name = "user_id"))
-    @JsonIgnore
-    private Set<User> userSet = new HashSet<>();
 
     @OneToMany (mappedBy = "country", cascade = CascadeType.PERSIST)
     @JsonIgnore

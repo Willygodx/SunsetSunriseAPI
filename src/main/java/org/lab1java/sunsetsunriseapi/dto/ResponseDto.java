@@ -1,5 +1,6 @@
 package org.lab1java.sunsetsunriseapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,8 +13,10 @@ import java.time.LocalTime;
 @Getter
 @Setter
 public class ResponseDto {
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime sunrise;
 
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime sunset;
 
     private String timeZone;

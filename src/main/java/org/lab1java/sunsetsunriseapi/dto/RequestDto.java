@@ -1,5 +1,6 @@
 package org.lab1java.sunsetsunriseapi.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,5 +17,6 @@ public class RequestDto {
 
     private double longitude;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
 }

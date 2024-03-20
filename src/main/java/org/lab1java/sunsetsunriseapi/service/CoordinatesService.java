@@ -12,10 +12,12 @@ import org.lab1java.sunsetsunriseapi.entity.Country;
 import org.lab1java.sunsetsunriseapi.dto.RequestDto;
 import org.lab1java.sunsetsunriseapi.dto.ResponseDto;
 import org.lab1java.sunsetsunriseapi.entity.User;
-import org.lab1java.sunsetsunriseapi.exception.CoordinatesInfoNotFoundException;
-import org.lab1java.sunsetsunriseapi.exception.UserNotFoundException;
+import org.lab1java.sunsetsunriseapi.exception.BadRequestErrorException;
+import org.lab1java.sunsetsunriseapi.exception.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
@@ -38,7 +40,8 @@ public class CoordinatesService {
     private final CountryRepository countryRepository;
 
     private final EntityCache<Integer, Object> cacheMap;
-    private static final String HISTORY_NOT_FOUND_MESSAGE = "History not found!";
+    private static final String COORDINATES_NOT_FOUND_MESSAGE = "Coordinates information not found!";
+    private static final String USER_NOT_FOUND_MESSAGE = "User not found!";
 
     public ResponseDto getCoordinatesInfo(int userId, RequestDto request) throws JsonProcessingException {
 
@@ -54,10 +57,10 @@ public class CoordinatesService {
             }
 
             User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new UserNotFoundException("User not found!"));
-            Set<Country> countrySet = user.getCountrySet();
+                    .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
+            Set<Coordinates> coordinatesSet = user.getCoordinatesSet();
 
-            if (!countrySet.contains(coordinates.getCountry()))
+            if (!coordinatesSet.contains(coordinates))
                 coordinatesSave(userId, getCountryName(request), coordinates);
 
             return new ResponseDto(coordinates.getSunrise(), coordinates.getSunset(), coordinates.getTimeZone(), coordinates.getCountry().getName(), coordinates.getCity());
@@ -73,12 +76,8 @@ public class CoordinatesService {
     private ResponseDto getCheckedResponseFromApi(RequestDto request) throws JsonProcessingException {
         String apiResponse = externalApiService.getApiResponse(request);
         ResponseDto responseDto = externalApiService.extractCoordinatesInfoFromApiResponse(apiResponse);
-        if (responseDto == null)
-            throw new CoordinatesInfoNotFoundException("Response from api not found!");
 
         String timeZone = externalApiService.getTimeZone(request.getLatitude(), request.getLongitude());
-        if (timeZone == null)
-            throw new CoordinatesInfoNotFoundException("Time zone not found!");
 
         ZoneId defaultTimeZone = ZoneId.of("UTC+0");
         ZonedDateTime zonedDateTimeSunrise = ZonedDateTime.of(
@@ -111,7 +110,7 @@ public class CoordinatesService {
     private String getCountryName(RequestDto request) {
         String countryCode = externalApiService.getCountry(request.getLatitude(), request.getLongitude());
         if (countryCode == null)
-            throw new CoordinatesInfoNotFoundException("Country not found!");
+            throw new ResourceNotFoundException("Country not found!");
         String trimmedCode = countryCode.trim();
         return externalApiService.getCountryNameByCode(trimmedCode);
     }
@@ -124,8 +123,8 @@ public class CoordinatesService {
             Optional<Country> optionalCountry = countryRepository.findByName(countryName);
             Country country = optionalCountry.orElseGet(() -> new Country(countryName));
 
-            user.getCountrySet().add(country);
-            country.getUserSet().add(user);
+            user.getCoordinatesSet().add(coordinates);
+            coordinates.getUserSet().add(user);
 
             country.getCoordinatesList().add(coordinates);
             coordinates.setCountry(country);
@@ -133,7 +132,7 @@ public class CoordinatesService {
 
             coordinatesRepository.save(coordinates);
         } else {
-            throw new UserNotFoundException("User not found!");
+            throw new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE);
         }
     }
 
@@ -162,7 +161,7 @@ public class CoordinatesService {
 
                 return coordinatesList;
             } else {
-                throw new CoordinatesInfoNotFoundException(HISTORY_NOT_FOUND_MESSAGE);
+                throw new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE);
             }
         }
     }
@@ -180,18 +179,38 @@ public class CoordinatesService {
 
                 return coordinatesList;
             } else {
-                throw new CoordinatesInfoNotFoundException(HISTORY_NOT_FOUND_MESSAGE);
+                throw new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE);
             }
         }
+    }
+
+    public Page<User> getUsersFromCoordinates(long id, Integer pageNumber, Integer pageSize) {
+        if (pageNumber == null || pageNumber < 0) {
+            pageNumber = 0;
+        }
+
+        if(pageSize == null || pageSize < 1) {
+            pageSize = 10;
+        }
+
+        Coordinates coordinates = coordinatesRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE));
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+
+        return userRepository.findByCoordinatesSetContaining(coordinates, pageable);
+
     }
 
     public Page<CoordinatesDto> getAllCoordinatesInfo(Integer pageNumber, Integer pageSize) {
         if (pageNumber == null || pageNumber < 0) {
             pageNumber = 0;
         }
+
         if(pageSize == null || pageSize < 1) {
             pageSize = 10;
         }
+
         Page<Coordinates> coordinatesPage = coordinatesRepository.findAll(PageRequest.of(pageNumber, pageSize));
 
         return coordinatesPage.map(this::mapToCoordinatesDTO);
@@ -210,41 +229,49 @@ public class CoordinatesService {
         return coordinatesDto;
     }
 
+    public Coordinates updateCoordinatesInfo(Long id, CoordinatesDto updateDto) {
+        Coordinates coordinates = coordinatesRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE));
+
+        try {
+            clearCache(coordinates);
+
+            coordinates.setLatitude(updateDto.getLatitude());
+            coordinates.setLongitude(updateDto.getLongitude());
+            coordinates.setDate(updateDto.getDate());
+            coordinates.setSunrise(updateDto.getSunrise());
+            coordinates.setSunset(updateDto.getSunset());
+            coordinates.setCity(updateDto.getCity());
+            coordinates.setTimeZone(updateDto.getTimeZone());
+
+            coordinatesRepository.save(coordinates);
+            return coordinates;
+        } catch (Exception e) {
+            throw new BadRequestErrorException("This information already exists.");
+        }
+    }
+
+    public void createCoordinatesInfo(RequestDto request) {
+        try {
+            ResponseDto responseDto = getCheckedResponseFromApi(request);
+            Coordinates coordinates = getCoordinatesEntity(request, responseDto);
+            Country country = new Country(responseDto.getCountry());
+            country.getCoordinatesList().add(coordinates);
+            coordinates.setCountry(country);
+
+            clearCache(coordinates);
+            coordinatesRepository.save(coordinates);
+        } catch (Exception e) {
+            throw new BadRequestErrorException("This information already exists.");
+        }
+    }
+
     public void deleteCoordinatesInfoFromDatabase(Long id) {
         Coordinates coordinates = coordinatesRepository.findById(id)
-                .orElseThrow(() -> new CoordinatesInfoNotFoundException(HISTORY_NOT_FOUND_MESSAGE));
+                .orElseThrow(() -> new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE));
 
         clearCache(coordinates);
         coordinatesRepository.deleteById(id);
-    }
-
-    public Coordinates updateCoordinatesInfo(Long id, CoordinatesDto updateDto) {
-        Coordinates coordinates = coordinatesRepository.findById(id)
-                .orElseThrow(() -> new CoordinatesInfoNotFoundException(HISTORY_NOT_FOUND_MESSAGE));
-
-        clearCache(coordinates);
-
-        coordinates.setLatitude(updateDto.getLatitude());
-        coordinates.setLongitude(updateDto.getLongitude());
-        coordinates.setDate(updateDto.getDate());
-        coordinates.setSunrise(updateDto.getSunrise());
-        coordinates.setSunset(updateDto.getSunset());
-        coordinates.setCity(updateDto.getCity());
-        coordinates.setTimeZone(updateDto.getTimeZone());
-
-        coordinatesRepository.save(coordinates);
-        return coordinates;
-    }
-
-    public void createCoordinatesInfo(RequestDto request) throws JsonProcessingException {
-        ResponseDto responseDto = getCheckedResponseFromApi(request);
-        Coordinates coordinates = getCoordinatesEntity(request, responseDto);
-        Country country = new Country(responseDto.getCountry());
-        country.getCoordinatesList().add(coordinates);
-        coordinates.setCountry(country);
-
-        clearCache(coordinates);
-        coordinatesRepository.save(coordinates);
     }
 
     private void clearCache(Coordinates coordinates) {

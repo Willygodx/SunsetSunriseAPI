@@ -2,8 +2,8 @@ package org.lab1java.sunsetsunriseapi.controller;
 
 import lombok.AllArgsConstructor;
 import org.lab1java.sunsetsunriseapi.dto.CountryDto;
+import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.Country;
-import org.lab1java.sunsetsunriseapi.entity.User;
 import org.lab1java.sunsetsunriseapi.service.CountryService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -13,94 +13,76 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Set;
-
 @RestController
 @RequestMapping("/countries")
 @AllArgsConstructor
 public class CountryController {
     private final CountryService countryService;
     private final Logger logger = LoggerFactory.getLogger(CountryController.class);
-    private static final String DELETE_ERROR_MESSAGE = "Error while deleting!";
     private static final String DELETE_SUCCESS_MESSAGE = "Deleted successfully!";
-    private static final String UPDATE_ERROR_MESSAGE = "Error while updating!";
-    private static final String GET_ERROR_MESSAGE = "Error while getting!";
-    private static final String CREATE_ERROR_MESSAGE = "Error while creating!";
     private static final String CREATE_SUCCESS_MESSAGE = "Created successfully!";
 
     @GetMapping("/get/{id}")
     public ResponseEntity<Country> getCountry(@PathVariable int id) {
-        try {
+        logger.info("GET endpoint /countries/get/{id} was called.");
 
-            return new ResponseEntity<>(countryService.getCountryById(id), HttpStatus.OK);
+        Country country = countryService.getCountryById(id);
 
-        } catch (Exception e) {
-            logger.error(GET_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info("Country information was retrieved successfully.");
+        return new ResponseEntity<>(country, HttpStatus.OK);
     }
 
-    @GetMapping("/get-users")
-    public ResponseEntity<Set<User>> getCountryUsers(@RequestParam() String name) {
-        try {
+    @GetMapping("/get-coordinates-info/{countryName}")
+    public ResponseEntity<Page<Coordinates>> getCoordinatesInfoForCountry(@PathVariable String countryName,
+                                                                          @RequestParam(defaultValue = "0") Integer pageNumber,
+                                                                          @RequestParam(defaultValue = "10") Integer pageSize) {
+        logger.info("GET endpoint /countries/get-coordinates-info/{countryName} was called.");
 
-            return new ResponseEntity<>(countryService.getCountryUsers(name), HttpStatus.OK);
+        Page<Coordinates> coordinatesPage = countryService.getCoordinatesInfoForCountry(countryName, pageNumber, pageSize);
 
-        } catch (Exception e) {
-            logger.error(GET_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info("Country's coordinates information was retrieved successfully.");
+        return new ResponseEntity<>(coordinatesPage, HttpStatus.OK);
     }
 
-    @GetMapping("/get-all-countries")
+    @GetMapping("/get-all")
     public ResponseEntity<Page<Country>> getAllCountries(@RequestParam(defaultValue = "0") Integer pageNumber,
                                                          @RequestParam(defaultValue = "10") Integer pageSize) {
-        try {
+        logger.info("GET endpoint /countries/get-all was called.");
 
-            return new ResponseEntity<>(countryService.getAllCountries(pageNumber, pageSize), HttpStatus.OK);
+        Page<Country> countryPage = countryService.getAllCountries(pageNumber, pageSize);
 
-        } catch (Exception e) {
-            logger.error(GET_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info("All countries information was retrieved successfully.");
+        return new ResponseEntity<>(countryPage, HttpStatus.OK);
     }
 
     @PostMapping("/create")
     public ResponseEntity<String> createCountry(@RequestBody CountryDto countryDto) {
-        try {
+        logger.info("GET endpoint /countries/create was called.");
 
-            countryService.createCountry(countryDto);
-            return new ResponseEntity<>(CREATE_SUCCESS_MESSAGE, HttpStatus.CREATED);
+        countryService.createCountry(countryDto);
 
-        } catch (Exception e) {
-            logger.error(CREATE_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        logger.info("Country information was created successfully.");
+        return new ResponseEntity<>(CREATE_SUCCESS_MESSAGE, HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<Country> updateCountry(@PathVariable int id,
                                                  @RequestBody CountryDto countryDto) {
-        try {
+        logger.info("GET endpoint /countries/update/{id} was called.");
 
-            return new ResponseEntity<>(countryService.updateCountry(id, countryDto), HttpStatus.OK);
+        Country country = countryService.updateCountry(id, countryDto);
 
-        } catch (Exception e) {
-            logger.error(UPDATE_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info("Country information was updated successfully.");
+        return new ResponseEntity<>(country, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCountry(@PathVariable int id) {
-        try {
+        logger.info("GET endpoint /countries/delete/{id} was called.");
 
-            countryService.deleteCountryFromDatabase(id);
-            return new ResponseEntity<>(DELETE_SUCCESS_MESSAGE, HttpStatus.NO_CONTENT);
+        countryService.deleteCountryFromDatabase(id);
 
-        } catch (Exception e) {
-            logger.error(DELETE_ERROR_MESSAGE, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        logger.info("Country information was deleted successfully.");
+        return new ResponseEntity<>(DELETE_SUCCESS_MESSAGE, HttpStatus.NO_CONTENT);
     }
 }
