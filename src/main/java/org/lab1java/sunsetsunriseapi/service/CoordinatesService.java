@@ -42,19 +42,13 @@ public class CoordinatesService {
     private final EntityCache<Integer, Object> cacheMap;
     private static final String COORDINATES_NOT_FOUND_MESSAGE = "Coordinates information not found!";
     private static final String USER_NOT_FOUND_MESSAGE = "User not found!";
+    private static final String ALREADY_EXISTS = "This information already exists.";
 
     public ResponseDto getCoordinatesInfo(int userId, RequestDto request) throws JsonProcessingException {
 
         Optional<Coordinates> optionalSunHistory = coordinatesRepository.findByLatitudeAndLongitudeAndDate(request.getLatitude(), request.getLongitude(), request.getDate());
         if (optionalSunHistory.isPresent()) {
             Coordinates coordinates = optionalSunHistory.get();
-
-            if (coordinates.getCountry() == null) {
-                String countryName = getCountryName(request);
-                Country country = new Country(countryName);
-                coordinates.setCountry(country);
-                coordinatesSave(userId, countryName, coordinates);
-            }
 
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
@@ -252,7 +246,7 @@ public class CoordinatesService {
             coordinatesRepository.save(coordinates);
             return coordinates;
         } catch (Exception e) {
-            throw new BadRequestErrorException("This information already exists.");
+            throw new BadRequestErrorException(ALREADY_EXISTS);
         }
     }
 
@@ -260,14 +254,45 @@ public class CoordinatesService {
         try {
             ResponseDto responseDto = getCheckedResponseFromApi(request);
             Coordinates coordinates = getCoordinatesEntity(request, responseDto);
-            Country country = new Country(responseDto.getCountry());
+            String countryName = responseDto.getCountry();
+
+            Optional<Coordinates> existingCoordinates = coordinatesRepository.findByLatitudeAndLongitudeAndDate(coordinates.getLatitude(), coordinates.getLongitude(), coordinates.getDate());
+            if (existingCoordinates.isPresent()) {
+                throw new BadRequestErrorException(ALREADY_EXISTS);
+            }
+
+            Country country = countryRepository.findByName(countryName)
+                    .orElseGet(() -> new Country(countryName));
+
             country.getCoordinatesList().add(coordinates);
             coordinates.setCountry(country);
 
             clearCache(coordinates);
             coordinatesRepository.save(coordinates);
         } catch (Exception e) {
-            throw new BadRequestErrorException("This information already exists.");
+            throw new BadRequestErrorException(ALREADY_EXISTS);
+        }
+    }
+
+    public void createCoordinatesInfoBulk(List<RequestDto> requestDtoList) {
+        if (requestDtoList == null || requestDtoList.isEmpty()) {
+            throw new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE);
+        }
+
+        List<String> errors = requestDtoList.stream()
+                .map(request -> {
+                    try {
+                        createCoordinatesInfo(request);
+                        return null;
+                    } catch (Exception e) {
+                        return e.getMessage();
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
+
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException("Errors occurred during bulk creation: " + String.join("   ||||   ", errors));
         }
     }
 

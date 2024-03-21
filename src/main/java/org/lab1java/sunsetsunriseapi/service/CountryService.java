@@ -70,7 +70,6 @@ public class CountryService {
     public void createCountry(CountryDto countryDto) {
         try {
             Country country = new Country(countryDto.getCountry());
-            cacheMap.remove(Objects.hash(countryDto.getCountry(), 31 * 32));
             countryRepository.save(country);
         } catch (Exception e) {
             throw new BadRequestErrorException("This country already exists!");
