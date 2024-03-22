@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
@@ -53,13 +55,13 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @GetMapping("/get-coordinates/{userName}")
-    public ResponseEntity<Page<Coordinates>> getUserCoordinatesList(@PathVariable String userName,
+    @GetMapping("/get-coordinates/{nickname}")
+    public ResponseEntity<Page<Coordinates>> getUserCoordinatesList(@PathVariable String nickname,
                                                                @RequestParam(defaultValue = "0") Integer pageNumber,
                                                                @RequestParam(defaultValue = "10") Integer pageSize) {
-        logger.info("GET endpoint /users/get-coordinates/{userName} was called.");
+        logger.info("GET endpoint /users/get-coordinates/{nickname} was called.");
 
-        Page<Coordinates> coordinatesPage = userService.getUserCoordinatesListByNickname(userName, pageNumber, pageSize);
+        Page<Coordinates> coordinatesPage = userService.getUserCoordinatesListByNickname(nickname, pageNumber, pageSize);
 
         logger.info("User's coordinates list was retrieved successfully.");
         return new ResponseEntity<>(coordinatesPage, HttpStatus.OK);
@@ -84,6 +86,16 @@ public class UserController {
 
         logger.info("User information was created successfully.");
         return new ResponseEntity<>(CREATE_SUCCESS_MESSAGE, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/create-bulk")
+    public ResponseEntity<String> createUsersBulk(@RequestBody List<UserDto> userDtoList) {
+        logger.info("POST endpoint /users/create-bulk was called.");
+
+        userService.createUsersBulk(userDtoList);
+
+        logger.info("Users array was created successfully.");
+        return new ResponseEntity<>(CREATE_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 
     @PutMapping("/update-by-id/{id}")

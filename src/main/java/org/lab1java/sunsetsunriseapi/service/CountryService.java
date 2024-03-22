@@ -12,6 +12,7 @@ import org.lab1java.sunsetsunriseapi.exception.ResourceNotFoundException;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -73,6 +74,28 @@ public class CountryService {
             countryRepository.save(country);
         } catch (Exception e) {
             throw new BadRequestErrorException("This country already exists!");
+        }
+    }
+
+    public void createCountryBulk(List<CountryDto> countryDtoList) {
+        if (countryDtoList == null || countryDtoList.isEmpty()) {
+            throw new ResourceNotFoundException(COUNTRY_NOT_FOUND_MESSAGE);
+        }
+
+        List<String> errors = countryDtoList.stream()
+                .map(request -> {
+                    try {
+                        createCountry(request);
+                        return null;
+                    } catch (Exception e) {
+                        return e.getMessage();
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
+
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException("Errors occurred during bulk creation: " + String.join("   ||||   ", errors));
         }
     }
 

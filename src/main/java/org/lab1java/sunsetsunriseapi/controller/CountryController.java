@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/countries")
 @AllArgsConstructor
@@ -63,6 +65,16 @@ public class CountryController {
 
         logger.info("Country information was created successfully.");
         return new ResponseEntity<>(CREATE_SUCCESS_MESSAGE, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/create-bulk")
+    public ResponseEntity<String> createCountryBulk(@RequestBody List<CountryDto> countryDtoList) {
+        logger.info("POST endpoint /countries/create-bulk was called.");
+
+        countryService.createCountryBulk(countryDtoList);
+
+        logger.info("Country array was created successfully.");
+        return new ResponseEntity<>(CREATE_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")

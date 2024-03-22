@@ -106,6 +106,28 @@ public class UserService {
         }
     }
 
+    public void createUsersBulk(List<UserDto> userDtoList) {
+        if (userDtoList == null || userDtoList.isEmpty()) {
+            throw new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE);
+        }
+
+        List<String> errors = userDtoList.stream()
+                .map(request -> {
+                    try {
+                        createUser(request);
+                        return null;
+                    } catch (Exception e) {
+                        return e.getMessage();
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
+
+        if (!errors.isEmpty()) {
+            throw new IllegalArgumentException("Errors occurred during bulk creation: " + String.join("   ||||   ", errors));
+        }
+    }
+
     public User updateUserById(int id, UserDto updateDto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));

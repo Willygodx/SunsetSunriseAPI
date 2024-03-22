@@ -97,12 +97,12 @@ public class CoordinatesController {
 
     @PostMapping("/create-bulk")
     public ResponseEntity<String> addCoordinatesInfoBulk(@RequestBody List<RequestDto> requestDtoList) {
-        logger.info("POST endpoint /create-bulk was called.");
+        logger.info("POST endpoint /coordinates/create-bulk was called.");
 
         coordinatesService.createCoordinatesInfoBulk(requestDtoList);
 
         logger.info("Coordinates information array was created successfully.");
-        return new ResponseEntity<>("good", HttpStatus.OK);
+        return new ResponseEntity<>(CREATE_SUCCESS_MESSAGE, HttpStatus.OK);
     }
 
     @PutMapping("/update/{id}")
