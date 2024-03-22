@@ -8,6 +8,7 @@ import org.lab1java.sunsetsunriseapi.dto.CountryDto;
 import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.Country;
 import org.lab1java.sunsetsunriseapi.exception.BadRequestErrorException;
+import org.lab1java.sunsetsunriseapi.exception.InvalidDataException;
 import org.lab1java.sunsetsunriseapi.exception.ResourceNotFoundException;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -69,6 +70,9 @@ public class CountryService {
     }
 
     public void createCountry(CountryDto countryDto) {
+        if (countryDto.getCountry() == null) {
+            throw new InvalidDataException("Invalid country data!");
+        }
         try {
             Country country = new Country(countryDto.getCountry());
             countryRepository.save(country);

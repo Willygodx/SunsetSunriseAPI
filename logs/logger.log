@@ -1,16 +1,32 @@
-2024-03-22 03:31:13.370  WARN 26045 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m382ms).
-[2024-03-22 03:51:36] INFO  - POST endpoint /create-bulk was called.
-[2024-03-22 03:51:36] INFO  - Coordinates information array was created successfully.
-[2024-03-22 03:51:58] INFO  - POST endpoint /create-bulk was called.
-[2024-03-22 03:51:58] ERROR - Duplicate entry 'China' for key 'country.UKllidyp77h6xkeokpbmoy710d4'
-[2024-03-22 03:51:58] ERROR - Duplicate entry 'Russia' for key 'country.UKllidyp77h6xkeokpbmoy710d4'
-[2024-03-22 03:51:58] ERROR - Duplicate entry 'Belarus' for key 'country.UKllidyp77h6xkeokpbmoy710d4'
-[2024-03-22 03:51:58] ERROR - Duplicate entry 'Japan' for key 'country.UKllidyp77h6xkeokpbmoy710d4'
-[2024-03-22 03:51:58] ERROR - Errors occurred during bulk creation: This country already exists!   ||||   This country already exists!   ||||   This country already exists!   ||||   This country already exists!
-[2024-03-22 03:58:29] INFO  - POST endpoint /users/create-bulk was called.
-[2024-03-22 03:58:29] INFO  - Users array was created successfully.
-[2024-03-22 03:58:43] INFO  - POST endpoint /users/create-bulk was called.
-[2024-03-22 03:58:43] ERROR - Duplicate entry 'Leysul92-Kekkil2029@yandex.ru' for key 'user.UKs5t96dj7s1pg52053kca0n1ov'
-[2024-03-22 03:58:43] ERROR - Duplicate entry 'ProLifter2144-Manekij_luyo23@gmail.com' for key 'user.UKs5t96dj7s1pg52053kca0n1ov'
-[2024-03-22 03:58:43] ERROR - Duplicate entry 'FilthyDora854-Pyroskepta8321@yahoo.com' for key 'user.UKs5t96dj7s1pg52053kca0n1ov'
-[2024-03-22 03:58:43] ERROR - Errors occurred during bulk creation: User already exists!   ||||   User already exists!   ||||   User already exists!
+2024-03-22 04:50:02.396  WARN 17516 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=11m38s555ms).
+2024-03-22 08:16:08.957  WARN 17516 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=50m4s885ms).
+2024-03-22 09:23:09.756  WARN 17516 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h7m835ms).
+2024-03-22 10:31:01.619  WARN 17516 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h7m51s866ms).
+2024-03-22 11:36:57.612  WARN 17516 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h5m55s993ms).
+2024-03-22 12:57:15.621  WARN 17516 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h20m18s9ms).
+2024-03-22 14:03:38.575  WARN 17516 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h6m22s953ms).
+2024-03-22 15:10:12.720  WARN 17516 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h6m34s144ms).
+2024-03-22 16:03:33.534  WARN 17516 --- [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=53m20s810ms).
+[2024-03-22 18:46:18] ERROR - JSON parse error: Unexpected character ('}' (code 125)): was expecting double-quote to start field name
+[2024-03-22 18:46:21] INFO  - POST endpoint /users/create was called.
+[2024-03-22 18:46:21] ERROR - Invalid user data!
+[2024-03-22 18:46:27] INFO  - POST endpoint /users/create was called.
+[2024-03-22 18:46:27] INFO  - User information was created successfully.
+[2024-03-22 18:55:48] INFO  - POST endpoint /users/create was called.
+[2024-03-22 18:55:48] ERROR - Invalid user data!
+[2024-03-22 19:08:21] INFO  - POST endpoint /users/create was called.
+[2024-03-22 19:08:21] ERROR - Invalid user data!
+[2024-03-22 19:19:26] INFO  - POST endpoint /coordinates/create-bulk was called.
+[2024-03-22 19:19:29] ERROR - Errors occurred during bulk creation: This information already exists.
+[2024-03-22 19:23:38] INFO  - POST endpoint /coordinates/create-bulk was called.
+[2024-03-22 19:23:39] ERROR - Errors occurred during bulk creation: This information already exists.   ||||   This information already exists.   ||||   This information already exists.
+[2024-03-22 19:24:47] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-22 19:24:48] ERROR - Query did not return a unique result: 2 results were returned
+[2024-03-22 19:24:50] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-22 19:24:50] ERROR - Query did not return a unique result: 2 results were returned
+[2024-03-22 19:24:51] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-22 19:24:51] ERROR - Query did not return a unique result: 2 results were returned
+[2024-03-22 19:24:51] INFO  - GET endpoint /coordinates/get-info/{userId} was called.
+[2024-03-22 19:24:51] ERROR - Query did not return a unique result: 2 results were returned
+[2024-03-22 19:50:59] INFO  - POST endpoint /users/create was called.
+[2024-03-22 19:50:59] ERROR - Invalid user data!

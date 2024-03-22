@@ -3,6 +3,7 @@ package org.lab1java.sunsetsunriseapi.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.lab1java.sunsetsunriseapi.dto.UserDto;
 import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.User;
 import org.lab1java.sunsetsunriseapi.exception.GlobalExceptionHandler;
@@ -21,8 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
@@ -186,8 +186,17 @@ class UserControllerTest {
         Mockito.verifyNoMoreInteractions(userService);
     }
 
+    @Test
+    void createUserTest_Success() {
+        UserDto userDto = new UserDto("Linkong344@gmail.com", "Willygodx");
 
+        ResponseEntity<String> response = userController.createUser(userDto);
 
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals("Created successfully!", response.getBody());
 
+        Mockito.verify(userService, Mockito.times(1)).createUser(userDto);
+        Mockito.verifyNoMoreInteractions(userService);
+    }
 
 }

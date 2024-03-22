@@ -8,6 +8,7 @@ import org.lab1java.sunsetsunriseapi.dto.UserDto;
 import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.User;
 import org.lab1java.sunsetsunriseapi.exception.BadRequestErrorException;
+import org.lab1java.sunsetsunriseapi.exception.InvalidDataException;
 import org.lab1java.sunsetsunriseapi.exception.ResourceNotFoundException;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -98,6 +99,10 @@ public class UserService {
     }
 
     public void createUser(UserDto userDto) {
+        if (userDto.getEmail() == null || userDto.getNickname() == null) {
+            throw new InvalidDataException("Invalid user data!");
+        }
+        
         try {
             User user = new User(userDto.getEmail(), userDto.getNickname());
             userRepository.save(user);

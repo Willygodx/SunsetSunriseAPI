@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({HttpClientErrorException.class, HttpMessageNotReadableException.class,
             MethodArgumentNotValidException.class, MissingServletRequestParameterException.class,
             ConstraintViolationException.class, JsonProcessingException.class, BadRequestErrorException.class,
-            DateTimeParseException.class, IllegalArgumentException.class})
+            DateTimeParseException.class, IllegalArgumentException.class, InvalidDataException.class})
     public ResponseEntity<ExceptionMessage> handleBadRequestErrorException(Exception exception) {
         logger.error(exception.getMessage());
         return new ResponseEntity<>(new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), exception.getMessage()), HttpStatus.BAD_REQUEST);
