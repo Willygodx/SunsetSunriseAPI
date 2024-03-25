@@ -11,4 +11,5 @@ public class SunsetSunriseApiApplication {
         SpringApplication.run(SunsetSunriseApiApplication.class, args);
     }
 
+
 }
