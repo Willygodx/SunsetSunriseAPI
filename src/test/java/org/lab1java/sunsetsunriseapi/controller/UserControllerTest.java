@@ -21,6 +21,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -42,7 +45,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserByIdTest_Success() {
+    void testGetUserById_Success() {
         User user = new User("Linkong344@gmail.com", "Willygodx");
 
         int userId = 1337;
@@ -59,7 +62,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserByIdTest_UserNotFound() throws Exception {
+    void testGetUserById_UserNotFound() throws Exception {
         int userId = 228;
 
         when(userService.getUserById(userId)).thenThrow(new ResourceNotFoundException("User not found"));
@@ -74,7 +77,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserByEmailTest_Success() {
+    void testGetUserByEmail_Success() {
         User user = new User("Linkong344@gmail.com", "Willygodx");
 
         when(userService.getUserByEmail(user.getEmail())).thenReturn(user);
@@ -89,7 +92,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserByEmailTest_UserNotFound() throws Exception {
+    void testGetUserByEmail_UserNotFound() throws Exception {
         String email = "Linkong344@gmail.com";
 
         when(userService.getUserByEmail(email)).thenThrow(new ResourceNotFoundException("User not found"));
@@ -104,7 +107,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserByNicknameTest_Success() {
+    void testGetUserByNickname_Success() {
         User user = new User("Linkong344@gmail.com", "Willygodx");
 
         when(userService.getUserByNickname(user.getNickname())).thenReturn(user);
@@ -119,7 +122,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserByNicknameTest_UserNotFound() throws Exception {
+    void testGetUserByNickname_UserNotFound() throws Exception {
         String nickname = "Willygodx";
 
         when(userService.getUserByNickname(nickname)).thenThrow(new ResourceNotFoundException("User not found"));
@@ -134,7 +137,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserCoordinatesListTest_Success() {
+    void testGetUserCoordinatesList_Success() {
         Page<Coordinates> coordinatesPage = mock(Page.class);
 
         when(userService.getUserCoordinatesListByNickname("Willygodx", 0, 10)).thenReturn(coordinatesPage);
@@ -151,7 +154,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getUserCoordinatesListTest_UserNotFound() throws Exception {
+    void testGetUserCoordinatesList_UserNotFound() throws Exception {
         String nickname = "Anna";
         int pageNumber = 0;
         int pageSize = 10;
@@ -172,7 +175,7 @@ class UserControllerTest {
     }
 
     @Test
-    void getAllUsersTest() {
+    void testGetAllUsers() {
         Page<User> userPage = mock(Page.class);
 
         when(userService.getAllUsers(0, 10)).thenReturn(userPage);
@@ -187,7 +190,7 @@ class UserControllerTest {
     }
 
     @Test
-    void createUserTest_Success() {
+    void testCreateUser() {
         UserDto userDto = new UserDto("Linkong344@gmail.com", "Willygodx");
 
         ResponseEntity<String> response = userController.createUser(userDto);
@@ -198,5 +201,78 @@ class UserControllerTest {
         Mockito.verify(userService, Mockito.times(1)).createUser(userDto);
         Mockito.verifyNoMoreInteractions(userService);
     }
+
+    @Test
+    void testCreateUsersBulk() {
+        List<UserDto> userDtoList = new ArrayList<>();
+        userDtoList.add(new UserDto("Linkong344@gmail.com", "Willygodx"));
+        userDtoList.add(new UserDto("Matthew9827_us@yahoo.com", "PentestGambler12"));
+
+        ResponseEntity<String> response = userController.createUsersBulk(userDtoList);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals("Created successfully!", response.getBody());
+
+        verify(userService, times(1)).createUsersBulk(userDtoList);
+        verifyNoMoreInteractions(userService);
+    }
+
+    @Test
+    void testUpdateUserById() {
+        UserDto updateDto = new UserDto("Linkong344@gmail.com", "Willygodx");
+
+        User updatedUser = new User(updateDto.getEmail(), updateDto.getNickname());
+
+        when(userService.updateUserById(22, updateDto)).thenReturn(updatedUser);
+
+        ResponseEntity<User> responseEntity = userController.updateUserById(22, updateDto);
+
+        verify(userService, times(1)).updateUserById(22, updateDto);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(updatedUser, responseEntity.getBody());
+    }
+
+    @Test
+    void testUpdateUserByEmail() {
+        String email = "Linkong344@gmail.com";
+        UserDto updateDto = new UserDto("enotland34@yandex.ru", "Sombrero");
+
+        User updatedUser = new User(updateDto.getEmail(), updateDto.getNickname());
+        when(userService.updateUserByEmail(email, updateDto)).thenReturn(updatedUser);
+
+        ResponseEntity<User> response = userController.updateUserByEmail(email, updateDto);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedUser, response.getBody());
+        verify(userService, times(1)).updateUserByEmail(email, updateDto);
+    }
+
+    @Test
+    void testUpdateUserByNickname() {
+        String nickname = "Willygodx";
+        UserDto updateDto = new UserDto("enotland34@yandex.ru", "Sombrero");
+
+        User updatedUser = new User(updateDto.getEmail(), updateDto.getNickname());
+        when(userService.updateUserByNickname(nickname, updateDto)).thenReturn(updatedUser);
+
+        ResponseEntity<User> response = userController.updateUserByNickname(nickname, updateDto);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(updatedUser, response.getBody());
+        verify(userService, times(1)).updateUserByNickname(nickname, updateDto);
+    }
+
+    @Test
+    void testDeleteUserById() {
+        int id = 123;
+
+        ResponseEntity<String> response = userController.deleteTimeZoneById(id);
+
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals("Deleted successfully!", response.getBody());
+        verify(userService, times(1)).deleteUserFromDatabaseById(id);
+    }
+
 
 }

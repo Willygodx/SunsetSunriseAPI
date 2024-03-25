@@ -10,6 +10,4 @@ public class SunsetSunriseApiApplication {
     public static void main(String[] args) {
         SpringApplication.run(SunsetSunriseApiApplication.class, args);
     }
-
-
 }
