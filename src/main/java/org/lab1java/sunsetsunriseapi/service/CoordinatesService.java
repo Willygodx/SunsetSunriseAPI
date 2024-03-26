@@ -68,7 +68,7 @@ public class CoordinatesService {
         }
     }
 
-    private ResponseDto getCheckedResponseFromApi(RequestDto request) throws JsonProcessingException {
+    public ResponseDto getCheckedResponseFromApi(RequestDto request) throws JsonProcessingException {
         String apiResponse = externalApiService.getApiResponse(request);
         ResponseDto responseDto = externalApiService.extractCoordinatesInfoFromApiResponse(apiResponse);
 
@@ -102,7 +102,7 @@ public class CoordinatesService {
         return responseDto;
     }
 
-    private String getCountryName(RequestDto request) {
+    public String getCountryName(RequestDto request) {
         String countryCode = externalApiService.getCountry(request.getLatitude(), request.getLongitude());
         if (countryCode == null) {
             throw new ResourceNotFoundException("Country not found!");
@@ -112,7 +112,7 @@ public class CoordinatesService {
         return externalApiService.getCountryNameByCode(trimmedCode);
     }
 
-    private void coordinatesSave(int userId, String countryName, Coordinates coordinates) {
+    public void coordinatesSave(int userId, String countryName, Coordinates coordinates) {
         Optional<User> optionalUser = userRepository.findById(userId);
 
         if (optionalUser.isPresent()) {
@@ -132,7 +132,7 @@ public class CoordinatesService {
         }
     }
 
-    private Coordinates getCoordinatesEntity(RequestDto request, ResponseDto responseDto) {
+    public Coordinates getCoordinatesEntity(RequestDto request, ResponseDto responseDto) {
         Coordinates coordinates = new Coordinates();
         coordinates.setLatitude(request.getLatitude());
         coordinates.setLongitude(request.getLongitude());
