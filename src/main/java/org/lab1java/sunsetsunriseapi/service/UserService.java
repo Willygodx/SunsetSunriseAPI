@@ -70,32 +70,50 @@ public class UserService {
     }
 
     public Page<Coordinates> getUserCoordinatesListByNickname(String nickname, Integer pageNumber, Integer pageSize) {
-        if (pageNumber == null || pageNumber < 0) {
-            pageNumber = 0;
+        int hashCode = Objects.hash(nickname, pageNumber, pageSize, 5 * 34);
+        Object cachedData = cacheMap.get(hashCode);
+
+        if (cachedData != null) {
+            return (Page<Coordinates>) cachedData;
+        } else {
+            if (pageNumber == null || pageNumber < 0) {
+                pageNumber = 0;
+            }
+
+            if (pageSize == null || pageSize < 1) {
+                pageSize = 10;
+            }
+
+            User user = userRepository.findByNickname(nickname)
+                    .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
+
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+            Page<Coordinates> coordinatesPage = coordinatesRepository.findByUserSetContaining(user, pageable);
+
+            cacheMap.put(hashCode, coordinatesPage);
+            return coordinatesPage;
         }
-
-        if (pageSize == null || pageSize < 1) {
-            pageSize = 10;
-        }
-
-        User user = userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
-
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "id"));
-
-        return coordinatesRepository.findByUserSetContaining(user, pageable);
     }
 
     public Page<User> getAllUsers(Integer pageNumber, Integer pageSize) {
-        if (pageNumber == null || pageNumber < 0) {
-            pageNumber = 0;
-        }
+        int hashCode = Objects.hash(pageNumber, pageSize, 6 * 35);
+        Object cachedData = cacheMap.get(hashCode);
 
-        if (pageSize == null || pageSize < 1) {
-            pageSize = 10;
-        }
+        if (cachedData != null) {
+            return (Page<User>) cachedData;
+        } else {
+            if (pageNumber == null || pageNumber < 0) {
+                pageNumber = 0;
+            }
 
-        return userRepository.findAll(PageRequest.of(pageNumber, pageSize));
+            if (pageSize == null || pageSize < 1) {
+                pageSize = 10;
+            }
+            Page<User> userPage = userRepository.findAll(PageRequest.of(pageNumber, pageSize));
+
+            cacheMap.put(hashCode, userPage);
+            return userPage;
+        }
     }
 
     public void createUser(UserDto userDto) {
@@ -105,6 +123,8 @@ public class UserService {
         
         try {
             User user = new User(userDto.getEmail(), userDto.getNickname());
+
+            cacheMap.clear();
             userRepository.save(user);
         } catch (Exception e) {
             throw new BadRequestErrorException(USER_ALREADY_EXISTS_MESSAGE);
@@ -128,6 +148,7 @@ public class UserService {
                 .filter(Objects::nonNull)
                 .toList();
 
+        cacheMap.clear();
         if (!errors.isEmpty()) {
             throw new IllegalArgumentException("Errors occurred during bulk creation: " + String.join("   ||||   ", errors));
         }
@@ -137,12 +158,11 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
         try {
-            clearUserCache(user);
-
             user.setNickname(updateDto.getNickname());
             user.setEmail(updateDto.getEmail());
 
             userRepository.save(user);
+            cacheMap.clear();
             return user;
         } catch (Exception e) {
             throw new BadRequestErrorException(USER_ALREADY_EXISTS_MESSAGE);
@@ -153,12 +173,11 @@ public class UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
         try {
-            clearUserCache(user);
-
             user.setNickname(updateDto.getNickname());
             user.setEmail(updateDto.getEmail());
 
             userRepository.save(user);
+            cacheMap.clear();
             return user;
         } catch (Exception e) {
             throw new BadRequestErrorException(USER_ALREADY_EXISTS_MESSAGE);
@@ -169,12 +188,11 @@ public class UserService {
         User user = userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
        try {
-           clearUserCache(user);
-
            user.setNickname(updateDto.getNickname());
            user.setEmail(updateDto.getEmail());
 
            userRepository.save(user);
+           cacheMap.clear();
            return user;
        } catch (Exception e) {
            throw new BadRequestErrorException(USER_ALREADY_EXISTS_MESSAGE);
@@ -182,16 +200,11 @@ public class UserService {
     }
 
     public void deleteUserFromDatabaseById(int id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
-        clearUserCache(user);
-
-        userRepository.deleteById(id);
-    }
-
-    private void clearUserCache(User user) {
-        cacheMap.remove(Objects.hash(user.getId(), 2 * 31));
-        cacheMap.remove(Objects.hash(user.getEmail(), 3 * 32));
-        cacheMap.remove(Objects.hash(user.getNickname(), 4 * 33));
+        if (userRepository.existsById(id)) {
+            cacheMap.clear();
+            userRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE);
+        }
     }
 }

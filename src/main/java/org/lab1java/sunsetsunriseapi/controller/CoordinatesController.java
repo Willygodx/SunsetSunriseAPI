@@ -43,23 +43,27 @@ public class CoordinatesController {
     }
 
     @GetMapping("/get-info-sunrise-hour/{hour}")
-    public ResponseEntity<List<Coordinates>> getCoordinatesInfoBySunriseStartingHour(@PathVariable int hour) {
+    public ResponseEntity<Page<Coordinates>> getCoordinatesInfoBySunriseStartingHour(@PathVariable int hour,
+                                                                                     @RequestParam(defaultValue = "0") Integer pageNumber,
+                                                                                     @RequestParam(defaultValue = "10") Integer pageSize) {
         logger.info("GET endpoint /coordinates/get-info-sunrise-hour/{hour} was called.");
 
-        List<Coordinates> coordinatesList = coordinatesService.getCoordinatesInfoBySunriseStartingHour(hour);
+        Page<Coordinates> coordinatesPage = coordinatesService.getCoordinatesInfoBySunriseStartingHour(hour, pageNumber, pageSize);
 
         logger.info(GET_SUCCESS_MESSAGE);
-        return new ResponseEntity<>(coordinatesList, HttpStatus.OK);
+        return new ResponseEntity<>(coordinatesPage, HttpStatus.OK);
     }
 
     @GetMapping("/get-info-sunset-hour/{hour}")
-    public ResponseEntity<List<Coordinates>> getCoordinatesInfoBySunsetStartingHour(@PathVariable int hour) {
+    public ResponseEntity<Page<Coordinates>> getCoordinatesInfoBySunsetStartingHour(@PathVariable int hour,
+                                                                                    @RequestParam(defaultValue = "0") Integer pageNumber,
+                                                                                    @RequestParam(defaultValue = "10") Integer pageSize) {
         logger.info("GET endpoint /coordinates/get-info-sunset-hour/{hour} was called.");
 
-        List<Coordinates> coordinatesList = coordinatesService.getCoordinatesInfoBySunsetStartingHour(hour);
+        Page<Coordinates> coordinatesPage = coordinatesService.getCoordinatesInfoBySunsetStartingHour(hour, pageNumber, pageSize);
 
         logger.info(GET_SUCCESS_MESSAGE);
-        return new ResponseEntity<>(coordinatesList, HttpStatus.OK);
+        return new ResponseEntity<>(coordinatesPage, HttpStatus.OK);
     }
 
     @GetMapping("/get-users/{id}")

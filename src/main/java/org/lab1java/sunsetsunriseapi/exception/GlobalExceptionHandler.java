@@ -25,8 +25,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({HttpClientErrorException.class, HttpMessageNotReadableException.class,
             MethodArgumentNotValidException.class, MissingServletRequestParameterException.class,
             ConstraintViolationException.class, JsonProcessingException.class, BadRequestErrorException.class,
-            DateTimeParseException.class, IllegalArgumentException.class, InvalidDataException.class})
-    public ResponseEntity<ExceptionMessage> handleBadRequestErrorException(Exception exception) {
+            DateTimeParseException.class, IllegalArgumentException.class, InvalidDataException.class, MethodArgumentTypeMismatchException.class,
+            })
+    public ResponseEntity<ExceptionMessage> handleBadRequestException(Exception exception) {
         logger.error(exception.getMessage());
         return new ResponseEntity<>(new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), exception.getMessage()), HttpStatus.BAD_REQUEST);
     }
@@ -37,14 +38,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ExceptionMessage(HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler({ResourceNotFoundException.class})
-    public ResponseEntity<ExceptionMessage> handleResourceNotFoundException(RuntimeException exception) {
-        logger.error(exception.getMessage());
-        return new ResponseEntity<>(new ExceptionMessage(HttpStatus.NOT_FOUND.value(), exception.getMessage()), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<ExceptionMessage> handleNoHandlerFoundException(NoHandlerFoundException exception) {
+    @ExceptionHandler({ResourceNotFoundException.class, NoHandlerFoundException.class})
+    public ResponseEntity<ExceptionMessage> handleNotFoundException(Exception exception) {
         logger.error(exception.getMessage());
         return new ResponseEntity<>(new ExceptionMessage(HttpStatus.NOT_FOUND.value(), exception.getMessage()), HttpStatus.NOT_FOUND);
     }
@@ -53,11 +48,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionMessage> handleMethodNotAllowed(Exception exception) {
         logger.error(exception.getMessage());
         return new ResponseEntity<>(new ExceptionMessage(HttpStatus.METHOD_NOT_ALLOWED.value(), exception.getMessage()), HttpStatus.METHOD_NOT_ALLOWED);
-    }
-
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ExceptionMessage> handleMethodArgumentTypeMismatchException(Exception exception) {
-        logger.error(exception.getMessage());
-        return new ResponseEntity<>(new ExceptionMessage(HttpStatus.BAD_REQUEST.value(), "Invalid input!"), HttpStatus.BAD_REQUEST);
     }
 }

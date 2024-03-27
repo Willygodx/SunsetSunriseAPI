@@ -74,13 +74,14 @@ class CoordinatesControllerTest {
         String timeZone = "Europe/London";
         String city = "London";
         coordinatesList.add(new Coordinates(latitude, longitude, date, sunrise, sunset, timeZone, city));
-        when(coordinatesService.getCoordinatesInfoBySunriseStartingHour(hour)).thenReturn(coordinatesList);
+        Page<Coordinates> coordinatesPage = new PageImpl<>(coordinatesList, PageRequest.of(0, 10), coordinatesList.size());
+        when(coordinatesService.getCoordinatesInfoBySunriseStartingHour(hour, 0, 10)).thenReturn(coordinatesPage);
 
-        ResponseEntity<List<Coordinates>> response = coordinatesController.getCoordinatesInfoBySunriseStartingHour(hour);
+        ResponseEntity<Page<Coordinates>> response = coordinatesController.getCoordinatesInfoBySunriseStartingHour(hour, 0, 10);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(coordinatesList, response.getBody());
-        verify(coordinatesService, times(1)).getCoordinatesInfoBySunriseStartingHour(hour);
+        assertEquals(coordinatesPage, response.getBody());
+        verify(coordinatesService, times(1)).getCoordinatesInfoBySunriseStartingHour(hour, 0, 10);
     }
 
     @Test
@@ -96,13 +97,14 @@ class CoordinatesControllerTest {
         String timeZone = "Europe/London";
         String city = "London";
         coordinatesList.add(new Coordinates(latitude, longitude, date, sunrise, sunset, timeZone, city));
-        when(coordinatesService.getCoordinatesInfoBySunsetStartingHour(hour)).thenReturn(coordinatesList);
+        Page<Coordinates> coordinatesPage = new PageImpl<>(coordinatesList, PageRequest.of(0, 10), coordinatesList.size());
+        when(coordinatesService.getCoordinatesInfoBySunsetStartingHour(hour, 0, 10)).thenReturn(coordinatesPage);
 
-        ResponseEntity<List<Coordinates>> response = coordinatesController.getCoordinatesInfoBySunsetStartingHour(hour);
+        ResponseEntity<Page<Coordinates>> response = coordinatesController.getCoordinatesInfoBySunsetStartingHour(hour, 0, 10);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(coordinatesList, response.getBody());
-        verify(coordinatesService, times(1)).getCoordinatesInfoBySunsetStartingHour(hour);
+        assertEquals(coordinatesPage, response.getBody());
+        verify(coordinatesService, times(1)).getCoordinatesInfoBySunsetStartingHour(hour, 0, 10);
     }
 
     @Test

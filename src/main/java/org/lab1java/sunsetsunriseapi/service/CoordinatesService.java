@@ -144,75 +144,101 @@ public class CoordinatesService {
         return coordinates;
     }
 
-    public List<Coordinates> getCoordinatesInfoBySunriseStartingHour(int hour) {
-        int hashCode = Objects.hash(hour, 61 * 32);
+    public Page<Coordinates> getCoordinatesInfoBySunriseStartingHour(int hour, Integer pageNumber, Integer pageSize) {
+        int hashCode = Objects.hash(hour, pageNumber, pageSize, 61 * 32);
         Object cachedData = cacheMap.get(hashCode);
 
         if (cachedData != null) {
-            return (List<Coordinates>) cachedData;
+            return (Page<Coordinates>) cachedData;
         } else {
-            List<Coordinates> coordinatesList = coordinatesRepository.findBySunriseStartingHour(hour);
-            if (!coordinatesList.isEmpty()) {
-                cacheMap.put(hashCode, coordinatesList);
 
-                return coordinatesList;
-            } else {
-                throw new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE);
+            if (pageNumber == null || pageNumber < 0) {
+                pageNumber = 0;
             }
+
+            if (pageSize == null || pageSize < 1) {
+                pageSize = 10;
+            }
+
+            Page<Coordinates> coordinatesPage = coordinatesRepository.findBySunriseStartingHour(hour, PageRequest.of(pageNumber, pageSize));
+            cacheMap.put(hashCode, coordinatesPage);
+
+            return coordinatesPage;
         }
     }
 
-    public List<Coordinates> getCoordinatesInfoBySunsetStartingHour(int hour) {
-        int hashCode = Objects.hash(hour, 62 * 33);
+    public Page<Coordinates> getCoordinatesInfoBySunsetStartingHour(int hour, Integer pageNumber, Integer pageSize) {
+        int hashCode = Objects.hash(hour, pageNumber, pageSize, 62 * 33);
         Object cachedData = cacheMap.get(hashCode);
 
         if (cachedData != null) {
-            return (List<Coordinates>) cachedData;
+            return (Page<Coordinates>) cachedData;
         } else {
-            List<Coordinates> coordinatesList = coordinatesRepository.findBySunsetStartingHour(hour);
-            if (!coordinatesList.isEmpty()) {
-                cacheMap.put(hashCode, coordinatesList);
 
-                return coordinatesList;
-            } else {
-                throw new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE);
+            if (pageNumber == null || pageNumber < 0) {
+                pageNumber = 0;
             }
+
+            if (pageSize == null || pageSize < 1) {
+                pageSize = 10;
+            }
+
+            Page<Coordinates> coordinatesPage = coordinatesRepository.findBySunsetStartingHour(hour, PageRequest.of(pageNumber, pageSize));
+            cacheMap.put(hashCode, coordinatesPage);
+
+            return coordinatesPage;
         }
     }
 
     public Page<User> getUsersFromCoordinates(long id, Integer pageNumber, Integer pageSize) {
-        if (pageNumber == null || pageNumber < 0) {
-            pageNumber = 0;
+        int hashCode = Objects.hash(id, pageNumber, pageSize, 63 * 34);
+        Object cachedData = cacheMap.get(hashCode);
+
+        if (cachedData != null) {
+            return (Page<User>) cachedData;
+        } else {
+            if (pageNumber == null || pageNumber < 0) {
+                pageNumber = 0;
+            }
+
+            if (pageSize == null || pageSize < 1) {
+                pageSize = 10;
+            }
+
+            Coordinates coordinates = coordinatesRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE));
+
+            Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+            Page<User> pageUser = userRepository.findByCoordinatesSetContaining(coordinates, pageable);
+            cacheMap.put(hashCode, pageUser);
+
+            return pageUser;
         }
-
-        if (pageSize == null || pageSize < 1) {
-            pageSize = 10;
-        }
-
-        Coordinates coordinates = coordinatesRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE));
-
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "id"));
-
-        return userRepository.findByCoordinatesSetContaining(coordinates, pageable);
-
     }
 
     public Page<CoordinatesDto> getAllCoordinatesInfo(Integer pageNumber, Integer pageSize) {
-        if (pageNumber == null || pageNumber < 0) {
-            pageNumber = 0;
+        int hashCode = Objects.hash(pageNumber, pageSize, 64 * 35);
+        Object cachedData = cacheMap.get(hashCode);
+
+        if (cachedData != null) {
+            return (Page<CoordinatesDto>) cachedData;
+        } else {
+            if (pageNumber == null || pageNumber < 0) {
+                pageNumber = 0;
+            }
+
+            if (pageSize == null || pageSize < 1) {
+                pageSize = 10;
+            }
+
+            Page<CoordinatesDto> coordinatesPage = coordinatesRepository.findAll(PageRequest.of(pageNumber, pageSize)).map(this::mapToCoordinatesDTO);
+            cacheMap.put(hashCode, coordinatesPage);
+
+            return coordinatesPage;
         }
-
-        if (pageSize == null || pageSize < 1) {
-            pageSize = 10;
-        }
-
-        Page<Coordinates> coordinatesPage = coordinatesRepository.findAll(PageRequest.of(pageNumber, pageSize));
-
-        return coordinatesPage.map(this::mapToCoordinatesDTO);
     }
 
-    private CoordinatesDto mapToCoordinatesDTO(Coordinates coordinates) {
+    public CoordinatesDto mapToCoordinatesDTO(Coordinates coordinates) {
         CoordinatesDto coordinatesDto = new CoordinatesDto();
         coordinatesDto.setLatitude(coordinates.getLatitude());
         coordinatesDto.setLongitude(coordinates.getLongitude());
@@ -230,7 +256,6 @@ public class CoordinatesService {
                 .orElseThrow(() -> new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE));
 
         try {
-            clearCache(coordinates);
 
             Country country = new Country(updateDto.getCountry());
             coordinates.setLatitude(updateDto.getLatitude());
@@ -244,6 +269,8 @@ public class CoordinatesService {
             country.getCoordinatesList().add(coordinates);
             coordinates.setCountry(country);
             coordinatesRepository.save(coordinates);
+
+            cacheMap.clear();
             return coordinates;
         } catch (Exception e) {
             throw new BadRequestErrorException(ALREADY_EXISTS);
@@ -252,6 +279,7 @@ public class CoordinatesService {
 
     public void createCoordinatesInfo(RequestDto request) {
         try {
+
             ResponseDto responseDto = getCheckedResponseFromApi(request);
             Coordinates coordinates = getCoordinatesEntity(request, responseDto);
             String countryName = responseDto.getCountry();
@@ -267,8 +295,9 @@ public class CoordinatesService {
             country.getCoordinatesList().add(coordinates);
             coordinates.setCountry(country);
 
-            clearCache(coordinates);
             coordinatesRepository.save(coordinates);
+
+            cacheMap.clear();
         } catch (Exception e) {
             throw new BadRequestErrorException(ALREADY_EXISTS);
         }
@@ -291,22 +320,18 @@ public class CoordinatesService {
                 .filter(Objects::nonNull)
                 .toList();
 
+        cacheMap.clear();
         if (!errors.isEmpty()) {
             throw new IllegalArgumentException("Errors occurred during bulk creation: " + String.join("   ||||   ", errors));
         }
     }
 
     public void deleteCoordinatesInfoFromDatabase(Long id) {
-        Coordinates coordinates = coordinatesRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE));
-
-        clearCache(coordinates);
-        coordinatesRepository.deleteById(id);
+        if (coordinatesRepository.existsById(id)) {
+            cacheMap.clear();
+            coordinatesRepository.deleteById(id);
+        } else {
+            throw new ResourceNotFoundException(COORDINATES_NOT_FOUND_MESSAGE);
+        }
     }
-
-    private void clearCache(Coordinates coordinates) {
-        cacheMap.remove(Objects.hash(coordinates.getSunset().getHour(), 61 * 32));
-        cacheMap.remove(Objects.hash(coordinates.getSunrise().getHour(), 62 * 33));
-    }
-
 }

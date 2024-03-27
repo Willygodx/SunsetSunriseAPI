@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,10 +18,10 @@ public interface CoordinatesRepository extends JpaRepository<Coordinates, Long> 
     Page<Coordinates> findByCountry(Country country, PageRequest pageRequest);
 
     @Query("SELECT sh FROM Coordinates sh WHERE HOUR(sh.sunrise) = :hour")
-    List<Coordinates> findBySunriseStartingHour(int hour);
+    Page<Coordinates> findBySunriseStartingHour(int hour, Pageable pageable);
 
     @Query("SELECT sh FROM Coordinates sh WHERE HOUR(sh.sunset) = :hour")
-    List<Coordinates> findBySunsetStartingHour(int hour);
+    Page<Coordinates> findBySunsetStartingHour(int hour, Pageable pageable);
 
     Page<Coordinates> findByUserSetContaining(User user, Pageable pageable);
 }

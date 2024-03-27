@@ -42,31 +42,55 @@ public class CountryService {
     }
 
     public Page<Coordinates> getCoordinatesInfoForCountry(String countryName, Integer pageNumber, Integer pageSize) {
-        if (pageNumber == null || pageNumber < 0) {
-            pageNumber = 0;
+        int hashCode = Objects.hash(countryName, pageNumber, pageSize, 31 * 32);
+        Object cachedData = cacheMap.get(hashCode);
+
+        if (cachedData != null) {
+            return (Page<Coordinates>) cachedData;
+        } else {
+            if (pageNumber == null || pageNumber < 0) {
+                pageNumber = 0;
+            }
+
+            if (pageSize == null || pageSize < 1) {
+                pageSize = 10;
+            }
+
+            Country country = new Country(countryName);
+
+            if (country.getName().isEmpty()) {
+                throw new ResourceNotFoundException(COUNTRY_NOT_FOUND_MESSAGE);
+            }
+
+            PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+            Page<Coordinates> coordinatesPage = coordinatesRepository.findByCountry(country, pageRequest);
+
+            cacheMap.put(hashCode, coordinatesPage);
+            return coordinatesPage;
         }
-
-        if (pageSize == null || pageSize < 1) {
-            pageSize = 10;
-        }
-
-        Country country = countryRepository.findByName(countryName)
-                .orElseThrow(() -> new ResourceNotFoundException(COUNTRY_NOT_FOUND_MESSAGE));
-
-        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
-
-        return coordinatesRepository.findByCountry(country, pageRequest);
     }
 
     public Page<Country> getAllCountries(Integer pageNumber, Integer pageSize) {
-        if (pageNumber == null || pageNumber < 0) {
-            pageNumber = 0;
-        }
+        int hashCode = Objects.hash(pageNumber, pageSize, 32 * 33);
+        Object cachedData = cacheMap.get(hashCode);
 
-        if (pageSize == null || pageSize < 1) {
-            pageSize = 10;
+        if (cachedData != null) {
+            return (Page<Country>) cachedData;
+        } else {
+
+            if (pageNumber == null || pageNumber < 0) {
+                pageNumber = 0;
+            }
+
+            if (pageSize == null || pageSize < 1) {
+                pageSize = 10;
+            }
+            Page<Country> countryPage = countryRepository.findAll(PageRequest.of(pageNumber, pageSize));
+
+            cacheMap.put(hashCode, countryPage);
+            return countryPage;
         }
-        return countryRepository.findAll(PageRequest.of(pageNumber, pageSize));
     }
 
     public void createCountry(CountryDto countryDto) {
@@ -75,6 +99,8 @@ public class CountryService {
         }
         try {
             Country country = new Country(countryDto.getCountry());
+
+            cacheMap.clear();
             countryRepository.save(country);
         } catch (Exception e) {
             throw new BadRequestErrorException("This country already exists!");
@@ -98,6 +124,7 @@ public class CountryService {
                 .filter(Objects::nonNull)
                 .toList();
 
+        cacheMap.clear();
         if (!errors.isEmpty()) {
             throw new IllegalArgumentException("Errors occurred during bulk creation: " + String.join("   ||||   ", errors));
         }
@@ -107,11 +134,10 @@ public class CountryService {
         Country country = countryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(COUNTRY_NOT_FOUND_MESSAGE));
         try {
-            cacheMap.remove(Objects.hash(id, 30 * 31));
-
             country.setName(updateDto.getCountry());
-            countryRepository.save(country);
 
+            countryRepository.save(country);
+            cacheMap.clear();
             return country;
         } catch (Exception e) {
             throw new BadRequestErrorException("This country already exists!");
@@ -120,7 +146,7 @@ public class CountryService {
 
     public void deleteCountryFromDatabase(int id) {
         if (countryRepository.existsById(id)) {
-            cacheMap.remove(Objects.hash(id, 30 * 31));
+            cacheMap.clear();
             countryRepository.deleteById(id);
         } else {
             throw new ResourceNotFoundException(COUNTRY_NOT_FOUND_MESSAGE);
