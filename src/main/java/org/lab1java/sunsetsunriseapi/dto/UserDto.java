@@ -5,12 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Data Transfer Object (DTO) for User.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 public class UserDto {
-    private String email;
+  private String email;
 
-    private String nickname;
+  private String nickname;
 }

@@ -18,54 +18,54 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ApiServiceTest {
-    @Mock
-    private ObjectMapper objectMapper;
+  @Mock
+  private ObjectMapper objectMapper;
 
-    @InjectMocks
-    private ApiService apiService;
+  @InjectMocks
+  private ApiService apiService;
 
-    @Test
-    void testGetCountryNameByCode_Success() {
-        String countryCode = "US";
-        String expectedCountryName = "United States";
+  @Test
+  void testGetCountryNameByCode_Success() {
+    String countryCode = "US";
+    String expectedCountryName = "United States";
 
-        String actualCountryName = apiService.getCountryNameByCode(countryCode);
+    String actualCountryName = apiService.getCountryNameByCode(countryCode);
 
-        assertEquals(expectedCountryName, actualCountryName);
-    }
+    assertEquals(expectedCountryName, actualCountryName);
+  }
 
-    @Test
-    void testGetCountryNameByCode_WithSpaces() {
-        String countryCodeWithSpaces = " US ";
-        String expectedCountryName = "United States";
+  @Test
+  void testGetCountryNameByCode_WithSpaces() {
+    String countryCodeWithSpaces = " US ";
+    String expectedCountryName = "United States";
 
-        String actualCountryName = apiService.getCountryNameByCode(countryCodeWithSpaces);
+    String actualCountryName = apiService.getCountryNameByCode(countryCodeWithSpaces);
 
-        assertEquals(expectedCountryName, actualCountryName);
-    }
+    assertEquals(expectedCountryName, actualCountryName);
+  }
 
-    @Test
-    void testExtractTimeZoneFromResponse() {
-        String response = "{\"timezoneId\":\"America/New_York\"}";
-        String expectedTimeZone = "America/New_York";
+  @Test
+  void testExtractTimeZoneFromResponse() {
+    String response = "{\"timezoneId\":\"America/New_York\"}";
+    String expectedTimeZone = "America/New_York";
 
-        String actualTimeZone = apiService.extractTimeZoneFromResponse(response);
+    String actualTimeZone = apiService.extractTimeZoneFromResponse(response);
 
-        assertEquals(expectedTimeZone, actualTimeZone);
-    }
+    assertEquals(expectedTimeZone, actualTimeZone);
+  }
 
-    @Test
-    void testExtractCoordinatesInfoFromApiResponse() throws JsonProcessingException {
-        String apiResponse = "{\"results\":{\"sunrise\":\"6:00:00 AM\",\"sunset\":\"6:00:00 PM\"}}";
-        JsonNode jsonNode = new ObjectMapper().readTree(apiResponse);
-        when(objectMapper.readTree(anyString())).thenReturn(jsonNode);
+  @Test
+  void testExtractCoordinatesInfoFromApiResponse() throws JsonProcessingException {
+    String apiResponse = "{\"results\":{\"sunrise\":\"6:00:00 AM\",\"sunset\":\"6:00:00 PM\"}}";
+    JsonNode jsonNode = new ObjectMapper().readTree(apiResponse);
+    when(objectMapper.readTree(anyString())).thenReturn(jsonNode);
 
-        ResponseDto expectedDto = new ResponseDto(LocalTime.of(6, 0), LocalTime.of(18, 0));
+    ResponseDto expectedDto = new ResponseDto(LocalTime.of(6, 0), LocalTime.of(18, 0));
 
-        ResponseDto actualDto = apiService.extractCoordinatesInfoFromApiResponse(apiResponse);
+    ResponseDto actualDto = apiService.extractCoordinatesInfoFromApiResponse(apiResponse);
 
-        assertEquals(expectedDto.getSunrise(), actualDto.getSunrise());
-        assertEquals(expectedDto.getSunset(), actualDto.getSunset());
-    }
+    assertEquals(expectedDto.getSunrise(), actualDto.getSunrise());
+    assertEquals(expectedDto.getSunset(), actualDto.getSunset());
+  }
 
 }
