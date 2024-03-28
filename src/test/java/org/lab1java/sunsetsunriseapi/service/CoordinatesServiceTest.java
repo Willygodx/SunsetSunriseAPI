@@ -421,7 +421,7 @@ class CoordinatesServiceTest {
 
 
   @Test
-  void testCreateCoordinatesInfo_AlreadyExists() throws JsonProcessingException {
+  void testCreateCoordinatesInfo_CountryNotFound() throws JsonProcessingException {
     RequestDto requestDto = new RequestDto(43.117122, 131.896018, LocalDate.of(2024, 3, 26));
 
     when(externalApiService.getApiResponse(requestDto)).thenReturn("apiResponse");
@@ -436,4 +436,50 @@ class CoordinatesServiceTest {
     assertEquals("Country not found!", exception.getMessage());
   }
 
+  @Test
+  void testCreateCoordinatesInfo_AlreadyExists() throws JsonProcessingException {
+    RequestDto requestDto = new RequestDto(43.117122, 131.896018, LocalDate.of(2024, 3, 26));
+    Coordinates coordinates =
+        new Coordinates(43.117122, 131.896018, LocalDate.of(2024, 3, 26), LocalTime.of(7, 3, 7),
+            LocalTime.of(19, 32, 57), "Asia/Vladivostok", "Vladivostok");
+
+    when(externalApiService.getApiResponse(requestDto)).thenReturn("apiResponse");
+    when(externalApiService.extractCoordinatesInfoFromApiResponse("apiResponse"))
+        .thenReturn(
+            new ResponseDto(LocalTime.of(7, 3, 7), LocalTime.of(19, 32, 57), "Asia/Vladivostok",
+                "Russia", "Vladivostok"));
+    when(externalApiService.getTimeZone(43.117122, 131.896018)).thenReturn("Asia/Vladivostok");
+    when(coordinatesRepository.findByLatitudeAndLongitudeAndDate(43.117122, 131.896018,
+        LocalDate.of(2024, 3, 26)))
+        .thenReturn(Optional.of(coordinates));
+    when(externalApiService.getCountry(requestDto.getLatitude(),
+        requestDto.getLongitude())).thenReturn("RU\r\n");
+    when(externalApiService.getCountryNameByCode("RU")).thenReturn("Russia");
+
+    BadRequestErrorException exception = assertThrows(BadRequestErrorException.class,
+        () -> coordinatesService.createCoordinatesInfo(requestDto));
+    assertEquals("This information already exists.", exception.getMessage());
+  }
+
+  @Test
+  void testCreateCoordinatesInfoBulk() throws JsonProcessingException {
+    List<RequestDto> requestDtoList = new ArrayList<>();
+    requestDtoList.add(new RequestDto(43.117122, 131.896018, LocalDate.of(2024, 3, 26)));
+    requestDtoList.add(new RequestDto(40.7128, -74.0060, LocalDate.of(2024, 3, 27)));
+
+    for (RequestDto requestDto : requestDtoList) {
+      ResponseDto responseDto = new ResponseDto(LocalTime.of(7, 3, 7), LocalTime.of(19, 32, 57), "Asia/Vladivostok", "Russia", "Vladivostok");
+      when(externalApiService.getApiResponse(requestDto)).thenReturn("apiResponse");
+      when(externalApiService.extractCoordinatesInfoFromApiResponse("apiResponse")).thenReturn(responseDto);
+      when(externalApiService.getTimeZone(requestDto.getLatitude(), requestDto.getLongitude())).thenReturn("Asia/Vladivostok");
+      when(coordinatesRepository.findByLatitudeAndLongitudeAndDate(anyDouble(), anyDouble(), any())).thenReturn(Optional.empty());
+      when(externalApiService.getCountry(requestDto.getLatitude(),
+          requestDto.getLongitude())).thenReturn("RU\r\n");
+      when(externalApiService.getCountryNameByCode("RU")).thenReturn("Russia");
+    }
+
+    coordinatesService.createCoordinatesInfoBulk(requestDtoList);
+
+    verify(coordinatesRepository, times(requestDtoList.size())).save(any());
+  }
 }
