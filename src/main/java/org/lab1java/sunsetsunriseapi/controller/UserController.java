@@ -93,10 +93,8 @@ public class UserController {
    */
   @GetMapping("/get-coordinates/{nickname}")
   public ResponseEntity<Page<Coordinates>> getUserCoordinatesList(@PathVariable String nickname,
-                                                                  @RequestParam(defaultValue = "0")
-                                                                  Integer pageNumber,
-                                                                  @RequestParam(defaultValue = "10")
-                                                                  Integer pageSize) {
+                                              @RequestParam(defaultValue = "0") Integer pageNumber,
+                                              @RequestParam(defaultValue = "10") Integer pageSize) {
     logger.info("GET endpoint /users/get-coordinates/{nickname} was called.");
 
     Page<Coordinates> coordinatesPage =

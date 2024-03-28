@@ -118,10 +118,8 @@ public class CoordinatesController {
    */
   @GetMapping("/get-users/{id}")
   public ResponseEntity<Page<User>> getUsersFromCoordinates(@PathVariable long id,
-                                                            @RequestParam(defaultValue = "0")
-                                                            Integer pageNumber,
-                                                            @RequestParam(defaultValue = "10")
-                                                            Integer pageSize) {
+                                              @RequestParam(defaultValue = "0") Integer pageNumber,
+                                              @RequestParam(defaultValue = "10") Integer pageSize) {
     logger.info("GET endpoint /coordinates/get-users/{id} was called.");
 
     Page<User> userPage = coordinatesService.getUsersFromCoordinates(id, pageNumber, pageSize);
@@ -139,8 +137,8 @@ public class CoordinatesController {
    */
   @GetMapping("/get-all-coordinates-info")
   public ResponseEntity<Page<CoordinatesDto>> getAllCoordinateInfo(
-                                            @RequestParam(defaultValue = "0") Integer pageNumber,
-                                            @RequestParam(defaultValue = "10") Integer pageSize) {
+                                              @RequestParam(defaultValue = "0") Integer pageNumber,
+                                              @RequestParam(defaultValue = "10") Integer pageSize) {
     logger.info("GET endpoint /coordinates/get-all-coordinates-info was called.");
 
     Page<CoordinatesDto> coordinatesDtoPage =
