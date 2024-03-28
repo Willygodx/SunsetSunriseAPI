@@ -10,6 +10,7 @@ import org.lab1java.sunsetsunriseapi.dao.UserRepository;
 import org.lab1java.sunsetsunriseapi.dto.CoordinatesDto;
 import org.lab1java.sunsetsunriseapi.dto.RequestDto;
 import org.lab1java.sunsetsunriseapi.dto.ResponseDto;
+import org.lab1java.sunsetsunriseapi.dto.UserDto;
 import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.Country;
 import org.lab1java.sunsetsunriseapi.entity.User;
@@ -316,5 +317,32 @@ class CoordinatesServiceTest {
         doThrow(new RuntimeException()).when(coordinatesRepository).save(coordinates);
 
         assertThrows(BadRequestErrorException.class, () -> coordinatesService.updateCoordinatesInfo(1L, updateDto));
+    }
+
+    @Test
+    void testCreateCoordinatesInfoBulk_NullList() {
+        assertThrows(ResourceNotFoundException.class, () -> coordinatesService.createCoordinatesInfoBulk(null));
+    }
+
+    @Test
+    void testCreateCoordinatesInfoBulk_EmptyList() {
+        List<RequestDto> requestDtoList = new ArrayList<>();
+
+        assertThrows(ResourceNotFoundException.class, () -> coordinatesService.createCoordinatesInfoBulk(requestDtoList));
+    }
+
+    @Test
+    void testDeleteCoordinatesInfoFromDatabase_UserFound() {
+        when(coordinatesRepository.existsById(1L)).thenReturn(true);
+        coordinatesService.deleteCoordinatesInfoFromDatabase(1L);
+
+        verify(coordinatesRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void testDeleteCoordinatesInfoFromDatabase_CoordinatesNotFound() {
+        when(coordinatesRepository.existsById(1L)).thenReturn(false);
+
+        assertThrows(ResourceNotFoundException.class, () -> coordinatesService.deleteCoordinatesInfoFromDatabase(1L));
     }
 }
