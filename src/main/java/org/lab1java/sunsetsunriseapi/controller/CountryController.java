@@ -6,6 +6,7 @@ import org.lab1java.sunsetsunriseapi.dto.CountryDto;
 import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.Country;
 import org.lab1java.sunsetsunriseapi.service.CountryService;
+import org.lab1java.sunsetsunriseapi.service.RequestCounterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class CountryController {
   private final CountryService countryService;
+  private RequestCounterService counterService;
   private final Logger logger = LoggerFactory.getLogger(CountryController.class);
   private static final String DELETE_SUCCESS_MESSAGE = "Deleted successfully!";
   private static final String CREATE_SUCCESS_MESSAGE = "Created successfully!";
@@ -41,6 +43,7 @@ public class CountryController {
    */
   @GetMapping("/get/{id}")
   public ResponseEntity<Country> getCountry(@PathVariable int id) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /countries/get/{id} was called.");
 
     Country country = countryService.getCountryById(id);
@@ -62,6 +65,7 @@ public class CountryController {
                                               @PathVariable String countryName,
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
                                               @RequestParam(defaultValue = "10") Integer pageSize) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /countries/get-coordinates-info/{countryName} was called.");
 
     Page<Coordinates> coordinatesPage =
@@ -82,6 +86,7 @@ public class CountryController {
   public ResponseEntity<Page<Country>> getAllCountries(
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
                                               @RequestParam(defaultValue = "10") Integer pageSize) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /countries/get-all was called.");
 
     Page<Country> countryPage = countryService.getAllCountries(pageNumber, pageSize);
@@ -98,6 +103,7 @@ public class CountryController {
    */
   @PostMapping("/create")
   public ResponseEntity<String> createCountry(@RequestBody CountryDto countryDto) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /countries/create was called.");
 
     countryService.createCountry(countryDto);
@@ -114,6 +120,7 @@ public class CountryController {
    */
   @PostMapping("/create-bulk")
   public ResponseEntity<String> createCountryBulk(@RequestBody List<CountryDto> countryDtoList) {
+    counterService.requestIncrement();
     logger.info("POST endpoint /countries/create-bulk was called.");
 
     countryService.createCountryBulk(countryDtoList);
@@ -132,6 +139,7 @@ public class CountryController {
   @PutMapping("/update/{id}")
   public ResponseEntity<Country> updateCountry(@PathVariable int id,
                                                @RequestBody CountryDto countryDto) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /countries/update/{id} was called.");
 
     Country country = countryService.updateCountry(id, countryDto);
@@ -148,6 +156,7 @@ public class CountryController {
    */
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<String> deleteCountry(@PathVariable int id) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /countries/delete/{id} was called.");
 
     countryService.deleteCountryFromDatabase(id);

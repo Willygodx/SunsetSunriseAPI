@@ -10,6 +10,7 @@ import org.lab1java.sunsetsunriseapi.dto.ResponseDto;
 import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.User;
 import org.lab1java.sunsetsunriseapi.service.CoordinatesService;
+import org.lab1java.sunsetsunriseapi.service.RequestCounterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -33,11 +34,18 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class CoordinatesController {
   private final CoordinatesService coordinatesService;
+  private RequestCounterService counterService;
   private final Logger logger = LoggerFactory.getLogger(CoordinatesController.class);
   private static final String DELETE_SUCCESS_MESSAGE = "Deleted successfully!";
   private static final String CREATE_SUCCESS_MESSAGE = "Created successfully!";
   private static final String GET_SUCCESS_MESSAGE =
       "Coordinates information was retrieved successfully.";
+
+  @GetMapping("/get-request-count")
+  public String getRequestCount() {
+    int totalRequestCount = counterService.getRequestCount();
+    return "Requests count: " + totalRequestCount;
+  }
 
   /**
    * Retrieves coordinates information for a specific user at a given date and location.
@@ -55,6 +63,7 @@ public class CoordinatesController {
                                                         @RequestParam() Double longitude,
                                                         @RequestParam() String date)
       throws JsonProcessingException {
+    counterService.requestIncrement();
     logger.info("GET endpoint /coordinates/get-info/{userId} was called.");
 
     RequestDto request = new RequestDto(latitude, longitude, LocalDate.parse(date));
@@ -77,6 +86,7 @@ public class CoordinatesController {
                                               @PathVariable int hour,
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
                                               @RequestParam(defaultValue = "10") Integer pageSize) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /coordinates/get-info-sunrise-hour/{hour} was called.");
 
     Page<Coordinates> coordinatesPage =
@@ -99,6 +109,7 @@ public class CoordinatesController {
                                               @PathVariable int hour,
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
                                               @RequestParam(defaultValue = "10") Integer pageSize) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /coordinates/get-info-sunset-hour/{hour} was called.");
 
     Page<Coordinates> coordinatesPage =
@@ -120,6 +131,7 @@ public class CoordinatesController {
   public ResponseEntity<Page<User>> getUsersFromCoordinates(@PathVariable long id,
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
                                               @RequestParam(defaultValue = "10") Integer pageSize) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /coordinates/get-users/{id} was called.");
 
     Page<User> userPage = coordinatesService.getUsersFromCoordinates(id, pageNumber, pageSize);
@@ -139,6 +151,7 @@ public class CoordinatesController {
   public ResponseEntity<Page<CoordinatesDto>> getAllCoordinateInfo(
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
                                               @RequestParam(defaultValue = "10") Integer pageSize) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /coordinates/get-all-coordinates-info was called.");
 
     Page<CoordinatesDto> coordinatesDtoPage =
@@ -157,6 +170,7 @@ public class CoordinatesController {
   @PostMapping("/create")
   public ResponseEntity<String> addCoordinatesInfo(@RequestBody RequestDto requestDto)
       throws JsonProcessingException {
+    counterService.requestIncrement();
     logger.info("POST endpoint /coordinates/create was called.");
 
     coordinatesService.createCoordinatesInfo(requestDto);
@@ -174,6 +188,7 @@ public class CoordinatesController {
   @PostMapping("/create-bulk")
   public ResponseEntity<String> addCoordinatesInfoBulk(
                                                     @RequestBody List<RequestDto> requestDtoList) {
+    counterService.requestIncrement();
     logger.info("POST endpoint /coordinates/create-bulk was called.");
 
     coordinatesService.createCoordinatesInfoBulk(requestDtoList);
@@ -192,6 +207,7 @@ public class CoordinatesController {
   @PutMapping("/update/{id}")
   public ResponseEntity<Coordinates> updateCoordinatesInfo(@PathVariable Long id,
                                                            @RequestBody CoordinatesDto updateDto) {
+    counterService.requestIncrement();
     logger.info("PUT endpoint /coordinates/update/{id} was called.");
 
     Coordinates coordinates = coordinatesService.updateCoordinatesInfo(id, updateDto);
@@ -208,6 +224,7 @@ public class CoordinatesController {
    */
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<String> deleteCoordinatesInfo(@PathVariable Long id) {
+    counterService.requestIncrement();
     logger.info("DELETE endpoint /coordinates/delete/{id} was called.");
 
     coordinatesService.deleteCoordinatesInfoFromDatabase(id);

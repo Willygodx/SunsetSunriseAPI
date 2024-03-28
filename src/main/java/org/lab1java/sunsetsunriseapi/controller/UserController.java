@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.lab1java.sunsetsunriseapi.dto.UserDto;
 import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.User;
+import org.lab1java.sunsetsunriseapi.service.RequestCounterService;
 import org.lab1java.sunsetsunriseapi.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class UserController {
   private final UserService userService;
+  private RequestCounterService counterService;
   private final Logger logger = LoggerFactory.getLogger(UserController.class);
   private static final String DELETE_SUCCESS_MESSAGE = "Deleted successfully!";
   private static final String CREATE_SUCCESS_MESSAGE = "Created successfully!";
@@ -43,6 +45,7 @@ public class UserController {
    */
   @GetMapping("/get-by-id/{id}")
   public ResponseEntity<User> getUserById(@PathVariable int id) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /users/get-by-id/{id} was called.");
 
     User user = userService.getUserById(id);
@@ -59,6 +62,7 @@ public class UserController {
    */
   @GetMapping("/get-by-email/{email}")
   public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /users/get-by-email/{email} was called.");
 
     User user = userService.getUserByEmail(email);
@@ -75,6 +79,7 @@ public class UserController {
    */
   @GetMapping("/get-by-nickname/{nickname}")
   public ResponseEntity<User> getUserByNickname(@PathVariable String nickname) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /users/get-by-nickname/{nickname} was called.");
 
     User user = userService.getUserByNickname(nickname);
@@ -95,6 +100,7 @@ public class UserController {
   public ResponseEntity<Page<Coordinates>> getUserCoordinatesList(@PathVariable String nickname,
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
                                               @RequestParam(defaultValue = "10") Integer pageSize) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /users/get-coordinates/{nickname} was called.");
 
     Page<Coordinates> coordinatesPage =
@@ -115,6 +121,7 @@ public class UserController {
   public ResponseEntity<Page<User>> getAllUsers(
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
                                               @RequestParam(defaultValue = "10") Integer pageSize) {
+    counterService.requestIncrement();
     logger.info("GET endpoint /users/get-all-users was called.");
 
     Page<User> userPage = userService.getAllUsers(pageNumber, pageSize);
@@ -131,6 +138,7 @@ public class UserController {
    */
   @PostMapping("/create")
   public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
+    counterService.requestIncrement();
     logger.info("POST endpoint /users/create was called.");
 
     userService.createUser(userDto);
@@ -147,6 +155,7 @@ public class UserController {
    */
   @PostMapping("/create-bulk")
   public ResponseEntity<String> createUsersBulk(@RequestBody List<UserDto> userDtoList) {
+    counterService.requestIncrement();
     logger.info("POST endpoint /users/create-bulk was called.");
 
     userService.createUsersBulk(userDtoList);
@@ -165,6 +174,7 @@ public class UserController {
   @PutMapping("/update-by-id/{id}")
   public ResponseEntity<User> updateUserById(@PathVariable int id,
                                              @RequestBody UserDto updateDto) {
+    counterService.requestIncrement();
     logger.info("PUT endpoint /users/update-by-id/{id} was called.");
 
     User user = userService.updateUserById(id, updateDto);
@@ -183,6 +193,7 @@ public class UserController {
   @PutMapping("/update-by-email/{email}")
   public ResponseEntity<User> updateUserByEmail(@PathVariable String email,
                                                 @RequestBody UserDto updateDto) {
+    counterService.requestIncrement();
     logger.info("PUT endpoint /users/update-by-email/{email} was called.");
 
     User user = userService.updateUserByEmail(email, updateDto);
@@ -201,6 +212,7 @@ public class UserController {
   @PutMapping("/update-by-nickname/{nickname}")
   public ResponseEntity<User> updateUserByNickname(@PathVariable String nickname,
                                                    @RequestBody UserDto updateDto) {
+    counterService.requestIncrement();
     logger.info("PUT endpoint /users/update-by-nickname/{nickname} was called.");
 
     User user = userService.updateUserByNickname(nickname, updateDto);
@@ -217,6 +229,7 @@ public class UserController {
    */
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<String> deleteTimeZoneById(@PathVariable int id) {
+    counterService.requestIncrement();
     logger.info("DELETE endpoint /users/delete/{id} was called.");
 
     userService.deleteUserFromDatabaseById(id);
