@@ -1,6 +1,7 @@
 package org.lab1java.sunsetsunriseapi.exception;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +20,8 @@ class GlobalExceptionHandlerTest {
     String errorMessage = "error";
     BadRequestErrorException exception = new BadRequestErrorException(errorMessage);
 
-    ResponseEntity<ExceptionMessage> responseEntity = globalExceptionHandler.handleBadRequestException(exception);
+    ResponseEntity<ExceptionMessage> responseEntity =
+        globalExceptionHandler.handleBadRequestException(exception);
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
   }
@@ -29,7 +31,8 @@ class GlobalExceptionHandlerTest {
     String errorMessage = "error";
     RuntimeException exception = new RuntimeException(errorMessage);
 
-    ResponseEntity<ExceptionMessage> responseEntity = globalExceptionHandler.handleInternalServerErrorException(exception);
+    ResponseEntity<ExceptionMessage> responseEntity =
+        globalExceptionHandler.handleInternalServerErrorException(exception);
 
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
   }
@@ -37,9 +40,11 @@ class GlobalExceptionHandlerTest {
   @Test
   void testHandleMethodNotAllowed() {
     String errorMessage = "error";
-    HttpRequestMethodNotSupportedException exception = new HttpRequestMethodNotSupportedException(errorMessage);
+    HttpRequestMethodNotSupportedException exception =
+        new HttpRequestMethodNotSupportedException(errorMessage);
 
-    ResponseEntity<ExceptionMessage> responseEntity = globalExceptionHandler.handleMethodNotAllowed(exception);
+    ResponseEntity<ExceptionMessage> responseEntity =
+        globalExceptionHandler.handleMethodNotAllowed(exception);
 
     assertEquals(HttpStatus.METHOD_NOT_ALLOWED, responseEntity.getStatusCode());
   }

@@ -496,11 +496,16 @@ class CoordinatesServiceTest {
     requestDtoList.add(new RequestDto(40.7128, -74.0060, LocalDate.of(2024, 3, 27)));
 
     for (RequestDto requestDto : requestDtoList) {
-      ResponseDto responseDto = new ResponseDto(LocalTime.of(7, 3, 7), LocalTime.of(19, 32, 57), "Asia/Vladivostok", "Russia", "Vladivostok");
+      ResponseDto responseDto =
+          new ResponseDto(LocalTime.of(7, 3, 7), LocalTime.of(19, 32, 57), "Asia/Vladivostok",
+              "Russia", "Vladivostok");
       when(externalApiService.getApiResponse(requestDto)).thenReturn("apiResponse");
-      when(externalApiService.extractCoordinatesInfoFromApiResponse("apiResponse")).thenReturn(responseDto);
-      when(externalApiService.getTimeZone(requestDto.getLatitude(), requestDto.getLongitude())).thenReturn("Asia/Vladivostok");
-      when(coordinatesRepository.findByLatitudeAndLongitudeAndDate(anyDouble(), anyDouble(), any())).thenReturn(Optional.empty());
+      when(externalApiService.extractCoordinatesInfoFromApiResponse("apiResponse")).thenReturn(
+          responseDto);
+      when(externalApiService.getTimeZone(requestDto.getLatitude(),
+          requestDto.getLongitude())).thenReturn("Asia/Vladivostok");
+      when(coordinatesRepository.findByLatitudeAndLongitudeAndDate(anyDouble(), anyDouble(),
+          any())).thenReturn(Optional.empty());
       when(externalApiService.getCountry(requestDto.getLatitude(),
           requestDto.getLongitude())).thenReturn("RU\r\n");
       when(externalApiService.getCountryNameByCode("RU")).thenReturn("Russia");
