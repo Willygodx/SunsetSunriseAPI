@@ -8,6 +8,7 @@ import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.User;
 import org.lab1java.sunsetsunriseapi.exception.GlobalExceptionHandler;
 import org.lab1java.sunsetsunriseapi.exception.ResourceNotFoundException;
+import org.lab1java.sunsetsunriseapi.service.RequestCounterService;
 import org.lab1java.sunsetsunriseapi.service.UserService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,6 +30,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
+  @Mock
+  private RequestCounterService requestCounterService;
   @Mock
   private UserService userService;
 
@@ -145,8 +148,6 @@ class UserControllerTest {
 
     when(userService.getUserCoordinatesListByNickname("Willygodx", 0, 10)).thenReturn(
         coordinatesPage);
-
-    UserController userController = new UserController(userService);
 
     ResponseEntity<Page<Coordinates>> response =
         userController.getUserCoordinatesList("Willygodx", 0, 10);

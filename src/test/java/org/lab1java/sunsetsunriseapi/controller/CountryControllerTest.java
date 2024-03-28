@@ -6,6 +6,7 @@ import org.lab1java.sunsetsunriseapi.dto.CountryDto;
 import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.Country;
 import org.lab1java.sunsetsunriseapi.service.CountryService;
+import org.lab1java.sunsetsunriseapi.service.RequestCounterService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -22,6 +23,8 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CountryControllerTest {
+  @Mock
+  private RequestCounterService requestCounterService;
   @Mock
   private CountryService countryService;
 

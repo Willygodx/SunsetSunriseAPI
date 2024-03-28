@@ -9,6 +9,7 @@ import org.lab1java.sunsetsunriseapi.dto.ResponseDto;
 import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.User;
 import org.lab1java.sunsetsunriseapi.service.CoordinatesService;
+import org.lab1java.sunsetsunriseapi.service.RequestCounterService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -33,6 +34,9 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
 class CoordinatesControllerTest {
+  @Mock
+  private RequestCounterService requestCounterService;
+
   @Mock
   private CoordinatesService coordinatesService;
 

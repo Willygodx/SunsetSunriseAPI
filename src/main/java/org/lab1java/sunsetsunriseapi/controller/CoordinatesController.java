@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class CoordinatesController {
   private final CoordinatesService coordinatesService;
-  private RequestCounterService counterService;
+  private final RequestCounterService counterService;
   private final Logger logger = LoggerFactory.getLogger(CoordinatesController.class);
   private static final String DELETE_SUCCESS_MESSAGE = "Deleted successfully!";
   private static final String CREATE_SUCCESS_MESSAGE = "Created successfully!";
