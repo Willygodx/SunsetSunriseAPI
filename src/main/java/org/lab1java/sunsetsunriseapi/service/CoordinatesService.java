@@ -392,31 +392,28 @@ public class CoordinatesService {
    * @throws BadRequestErrorException if coordinates information already
    *                                  exists or an error occurs during creation
    */
-  public void createCoordinatesInfo(RequestDto request) {
-    try {
-      ResponseDto responseDto = getCheckedResponseFromApi(request);
-      Coordinates coordinates = getCoordinatesEntity(request, responseDto);
-      String countryName = responseDto.getCountry();
+  public void createCoordinatesInfo(RequestDto request) throws JsonProcessingException {
+    ResponseDto responseDto = getCheckedResponseFromApi(request);
+    Coordinates coordinates = getCoordinatesEntity(request, responseDto);
+    String countryName = responseDto.getCountry();
 
-      Optional<Coordinates> existingCoordinates =
-          coordinatesRepository.findByLatitudeAndLongitudeAndDate(coordinates.getLatitude(),
-              coordinates.getLongitude(), coordinates.getDate());
-      if (existingCoordinates.isPresent()) {
-        throw new BadRequestErrorException(ALREADY_EXISTS);
-      }
+    Optional<Coordinates> existingCoordinates =
+        coordinatesRepository.findByLatitudeAndLongitudeAndDate(coordinates.getLatitude(),
+            coordinates.getLongitude(), coordinates.getDate());
 
-      Country country = countryRepository.findByName(countryName)
-          .orElseGet(() -> new Country(countryName));
-
-      country.getCoordinatesList().add(coordinates);
-      coordinates.setCountry(country);
-
-      coordinatesRepository.save(coordinates);
-
-      cacheMap.clear();
-    } catch (Exception e) {
+    if (existingCoordinates.isPresent()) {
       throw new BadRequestErrorException(ALREADY_EXISTS);
     }
+
+    Country country = countryRepository.findByName(countryName)
+        .orElseGet(() -> new Country(countryName));
+
+    country.getCoordinatesList().add(coordinates);
+    coordinates.setCountry(country);
+
+    coordinatesRepository.save(coordinates);
+
+    cacheMap.clear();
   }
 
   /**

@@ -383,4 +383,57 @@ class CoordinatesServiceTest {
     assertThrows(ResourceNotFoundException.class,
         () -> coordinatesService.deleteCoordinatesInfoFromDatabase(1L));
   }
+
+  @Test
+  void testCreateCoordinatesInfo() throws JsonProcessingException {
+    RequestDto requestDto = new RequestDto(43.117122, 131.896018, LocalDate.of(2024, 3, 26));
+    ResponseDto responseDto =
+        new ResponseDto(LocalTime.of(7, 3, 7), LocalTime.of(19, 32, 57), "Asia/Vladivostok",
+            "Russia", "Vladivostok");
+    Country country = new Country("Russia");
+
+    when(externalApiService.getApiResponse(requestDto)).thenReturn(
+        "{\"results\":{\"sunrise\":\"9:03:07 PM\",\"sunset\":\"9:32:57 AM\",\"solar_noon\":\"3:18:02 AM\",\"day_length\":\"12:29:50\",\"civil_twilight_begin\":\"8:36:04 PM\",\"civil_twilight_end\":\"9:59:59 AM\",\"nautical_twilight_begin\":\"8:02:28 PM\",\"nautical_twilight_end\":\"10:33:36 AM\",\"astronomical_twilight_begin\":\"7:27:51 PM\",\"astronomical_twilight_end\":\"11:08:12 AM\"},\"status\":\"OK\",\"tzid\":\"UTC\"}");
+    when(externalApiService.extractCoordinatesInfoFromApiResponse(anyString())).thenReturn(
+        responseDto);
+    when(externalApiService.getTimeZone(43.117122, 131.896018)).thenReturn("Asia/Vladivostok");
+
+    when(coordinatesRepository.findByLatitudeAndLongitudeAndDate(43.117122, 131.896018,
+        LocalDate.of(2024, 3, 26)))
+        .thenReturn(Optional.empty());
+    when(countryRepository.findByName("Russia")).thenReturn(Optional.of(country));
+    when(externalApiService.getCountry(requestDto.getLatitude(),
+        requestDto.getLongitude())).thenReturn("RU\r\n");
+    when(externalApiService.getCountryNameByCode("RU")).thenReturn("Russia");
+
+
+    coordinatesService.createCoordinatesInfo(requestDto);
+
+    verify(externalApiService).getApiResponse(requestDto);
+    verify(externalApiService).extractCoordinatesInfoFromApiResponse(anyString());
+    verify(externalApiService).getTimeZone(43.117122, 131.896018);
+    verify(coordinatesRepository).findByLatitudeAndLongitudeAndDate(43.117122, 131.896018,
+        LocalDate.of(2024, 3, 26));
+    verify(countryRepository).findByName("Russia");
+    verify(externalApiService).getCountry(requestDto.getLatitude(), requestDto.getLongitude());
+    verify(externalApiService).getCountryNameByCode("RU");
+  }
+
+
+  @Test
+  void testCreateCoordinatesInfo_AlreadyExists() throws JsonProcessingException {
+    RequestDto requestDto = new RequestDto(43.117122, 131.896018, LocalDate.of(2024, 3, 26));
+
+    when(externalApiService.getApiResponse(requestDto)).thenReturn("apiResponse");
+    when(externalApiService.extractCoordinatesInfoFromApiResponse("apiResponse"))
+        .thenReturn(
+            new ResponseDto(LocalTime.of(7, 3, 7), LocalTime.of(19, 32, 57), "Asia/Vladivostok",
+                "Russia", "Vladivostok"));
+    when(externalApiService.getTimeZone(43.117122, 131.896018)).thenReturn("Asia/Vladivostok");
+
+    ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class,
+        () -> coordinatesService.createCoordinatesInfo(requestDto));
+    assertEquals("Country not found!", exception.getMessage());
+  }
+
 }

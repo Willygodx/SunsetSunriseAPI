@@ -157,7 +157,8 @@ public class CoordinatesController {
    * @return ResponseEntity indicating the success of the operation
    */
   @PostMapping("/create")
-  public ResponseEntity<String> addCoordinatesInfo(@RequestBody RequestDto requestDto) {
+  public ResponseEntity<String> addCoordinatesInfo(@RequestBody RequestDto requestDto)
+      throws JsonProcessingException {
     logger.info("POST endpoint /coordinates/create was called.");
 
     coordinatesService.createCoordinatesInfo(requestDto);

@@ -1,0 +1,17 @@
+[2024-03-28 20:50:08] INFO  - GET endpoint /users/get-by-id/{id} was called.
+[2024-03-28 20:50:08] ERROR - User not found!
+[2024-03-28 20:50:23] ERROR - No endpoint GET /users/get-b.
+[2024-03-28 20:50:43] ERROR - No endpoint GET /u.
+[2024-03-28 20:51:53] INFO  - POST endpoint /users/create was called.
+[2024-03-28 20:51:53] ERROR - User already exists!
+[2024-03-28 20:52:27] INFO  - POST endpoint /users/create was called.
+[2024-03-28 20:52:27] INFO  - User information was created successfully.
+[2024-03-28 21:01:32] INFO  - GET endpoint /users/get-by-id/{id} was called.
+[2024-03-28 21:01:32] ERROR - User not found!
+[2024-03-28 21:02:43] INFO  - GET endpoint /users/get-by-id/{id} was called.
+[2024-03-28 21:02:43] ERROR - User not found!
+[2024-03-28 21:03:11] INFO  - GET endpoint /users/get-by-id/{id} was called.
+[2024-03-28 21:03:11] ERROR - User not found!
+[2024-03-28 21:04:38] INFO  - GET endpoint /users/get-by-id/{id} was called.
+[2024-03-28 21:04:38] ERROR - User not found!
+[2024-03-28 21:05:11] INFO  - GET endpoint /users/get-by-id/{id} was called.

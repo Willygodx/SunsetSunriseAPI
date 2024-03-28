@@ -164,7 +164,7 @@ class CoordinatesControllerTest {
   }
 
   @Test
-  void testAddCoordinatesInfo() {
+  void testAddCoordinatesInfo() throws JsonProcessingException {
     RequestDto requestDto = new RequestDto(51.508530, -0.125740, LocalDate.parse("2024-03-20"));
 
     ResponseEntity<String> response = coordinatesController.addCoordinatesInfo(requestDto);
