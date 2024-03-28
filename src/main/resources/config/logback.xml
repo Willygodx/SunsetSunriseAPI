@@ -1,0 +1,23 @@
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/logger.log</file>
+        <encoder>
+            <pattern>[%d{yyyy-MM-dd HH:mm:ss}] %-5level - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.lab1java.sunsetsunriseapi.controller" level="INFO" additivity="false">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <logger name="org.lab1java.sunsetsunriseapi.exception.GlobalExceptionHandler" level="INFO" additivity="false">
+        <appender-ref ref="FILE" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>

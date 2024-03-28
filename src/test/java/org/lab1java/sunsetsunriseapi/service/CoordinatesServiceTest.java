@@ -10,7 +10,6 @@ import org.lab1java.sunsetsunriseapi.dao.UserRepository;
 import org.lab1java.sunsetsunriseapi.dto.CoordinatesDto;
 import org.lab1java.sunsetsunriseapi.dto.RequestDto;
 import org.lab1java.sunsetsunriseapi.dto.ResponseDto;
-import org.lab1java.sunsetsunriseapi.dto.UserDto;
 import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.Country;
 import org.lab1java.sunsetsunriseapi.entity.User;
@@ -332,7 +331,7 @@ class CoordinatesServiceTest {
     }
 
     @Test
-    void testDeleteCoordinatesInfoFromDatabase_UserFound() {
+    void testDeleteCoordinatesInfoFromDatabase_CoordinatesFound() {
         when(coordinatesRepository.existsById(1L)).thenReturn(true);
         coordinatesService.deleteCoordinatesInfoFromDatabase(1L);
 
