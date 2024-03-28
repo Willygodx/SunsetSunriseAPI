@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
@@ -268,7 +269,7 @@ class CoordinatesServiceTest {
   }
 
   @Test
-  void testGetAllCoordinatesInfo() {
+  void testGetAllCoordinatesInfo_Cached() {
     Page<CoordinatesDto> cachedCoordinatesPage =
         new PageImpl<>(Collections.singletonList(new CoordinatesDto()));
     when(cacheMap.get(Objects.hash(0, 10, 64 * 35))).thenReturn(cachedCoordinatesPage);
@@ -278,6 +279,33 @@ class CoordinatesServiceTest {
     assertNotNull(result);
     assertEquals(cachedCoordinatesPage, result);
     verify(coordinatesRepository, never()).findAll(any(Pageable.class));
+  }
+
+  @Test
+  void testGetAllCoordinatesInfo_NotCached() {
+    int pageNumber = 1;
+    int pageSize = 20;
+    PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+    Page<Coordinates> coordinatesPage = mock(Page.class);
+    when(coordinatesRepository.findAll(pageRequest)).thenReturn(coordinatesPage);
+
+    Page<CoordinatesDto> result = coordinatesService.getAllCoordinatesInfo(pageNumber, pageSize);
+
+    assertEquals(coordinatesPage.map(this::mapToCoordinatesDto), result);
+    verify(coordinatesRepository).findAll(pageRequest);
+  }
+
+  private CoordinatesDto mapToCoordinatesDto(Coordinates coordinates) {
+    CoordinatesDto coordinatesDto = new CoordinatesDto();
+    coordinatesDto.setLatitude(coordinates.getLatitude());
+    coordinatesDto.setLongitude(coordinates.getLongitude());
+    coordinatesDto.setDate(coordinates.getDate());
+    coordinatesDto.setSunrise(coordinates.getSunrise());
+    coordinatesDto.setSunset(coordinates.getSunset());
+    coordinatesDto.setTimeZone(coordinates.getTimeZone());
+    coordinatesDto.setCity(coordinates.getCity());
+    coordinatesDto.setCountry(coordinates.getCountry().getName());
+    return coordinatesDto;
   }
 
   @Test
