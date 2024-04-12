@@ -38,13 +38,29 @@ public class User {
 
   private String nickname;
 
+  @JsonIgnore
+  private String password;
+
   @ManyToMany(mappedBy = "userSet", cascade = CascadeType.PERSIST)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JsonIgnore
   private Set<Coordinates> coordinatesSet;
 
-  public User(String email, String nickname) {
+  /**
+   * Constructs a new User with the specified email, nickname, password.
+   *
+   * @param email  user's email
+   * @param nickname user's nickname
+   * @param password      user's password
+   */
+  public User(String email, String nickname, String password) {
     this.email = email;
     this.nickname = nickname;
+    this.password = password;
+  }
+
+  public void removeCoordinates(Coordinates coordinates) {
+    this.coordinatesSet.remove(coordinates);
+    coordinates.getUserSet().remove(this);
   }
 }

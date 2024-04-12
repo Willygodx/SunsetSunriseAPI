@@ -34,6 +34,7 @@ import static org.mockito.Mockito.*;
 class CoordinatesServiceTest {
   @Mock
   private EntityCache<Integer, Object> cacheMap;
+
   @Mock
   private CoordinatesRepository coordinatesRepository;
 
@@ -51,7 +52,7 @@ class CoordinatesServiceTest {
 
   @Test
   void testGetCoordinatesInfo() throws Exception {
-    User user = new User("Linkong344@gmail.com", "Willygodx");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
     RequestDto request = new RequestDto(43.117122, 131.896018, LocalDate.of(2024, 3, 26));
     ResponseDto expectedResponse =
         new ResponseDto(LocalTime.of(7, 3, 7), LocalTime.of(19, 32, 57), "Asia/Vladivostok",
@@ -109,7 +110,7 @@ class CoordinatesServiceTest {
 
   @Test
   void testCoordinatesSave_UserExists_CountryExists() {
-    User user = new User("Linkong344@gmail.com", "Willygodx");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
     user.setId(1);
     Coordinates coordinates =
         new Coordinates(10.0, 20.0, LocalDate.now(), LocalTime.now(), LocalTime.now(), "UTC+0",

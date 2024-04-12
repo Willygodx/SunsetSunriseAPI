@@ -40,7 +40,7 @@ class UserServiceTest {
 
   @Test
   void testGetUserById_UserInCache() {
-    User cachedUser = new User("Linkong344@gmail.com", "Willygodx");
+    User cachedUser = new User("Linkong344@gmail.com", "Willygodx", "12345");
     when(cacheMap.get(Objects.hash(1, 2 * 31))).thenReturn(cachedUser);
 
     User result = userService.getUserById(1);
@@ -52,7 +52,7 @@ class UserServiceTest {
 
   @Test
   void testGetUserById_UserNotInCache() {
-    User userFromDatabase = new User("Linkong344@gmail.com", "Willygodx");
+    User userFromDatabase = new User("Linkong344@gmail.com", "Willygodx", "12345");
     when(cacheMap.get(Objects.hash(1, 2 * 31))).thenReturn(null);
     when(userRepository.findById(1)).thenReturn(Optional.of(userFromDatabase));
 
@@ -73,7 +73,7 @@ class UserServiceTest {
 
   @Test
   void testGetUserByEmail_UserInCache() {
-    User cachedUser = new User("Linkong344@gmail.com", "Willygodx");
+    User cachedUser = new User("Linkong344@gmail.com", "Willygodx", "12345");
     when(cacheMap.get(Objects.hash("Linkong344@gmail.com", 3 * 32))).thenReturn(cachedUser);
 
     User result = userService.getUserByEmail("Linkong344@gmail.com");
@@ -85,7 +85,7 @@ class UserServiceTest {
 
   @Test
   void testGetUserByEmail_UserNotInCache() {
-    User userFromDatabase = new User("Linkong344@gmail.com", "Willygodx");
+    User userFromDatabase = new User("Linkong344@gmail.com", "Willygodx", "12345");
     when(cacheMap.get(Objects.hash("Linkong344@gmail.com", 3 * 32))).thenReturn(null);
     when(userRepository.findByEmail("Linkong344@gmail.com")).thenReturn(
         Optional.of(userFromDatabase));
@@ -108,7 +108,7 @@ class UserServiceTest {
 
   @Test
   void testGetUserByNickname_UserInCache() {
-    User cachedUser = new User("Linkong344@gmail.com", "Willygodx");
+    User cachedUser = new User("Linkong344@gmail.com", "Willygodx", "12345");
     when(cacheMap.get(Objects.hash("Willygodx", 4 * 33))).thenReturn(cachedUser);
 
     User result = userService.getUserByNickname("Willygodx");
@@ -120,7 +120,7 @@ class UserServiceTest {
 
   @Test
   void testGetUserByNickname_UserNotInCache() {
-    User userFromDatabase = new User("Linkong344@gmail.com", "Willygodx");
+    User userFromDatabase = new User("Linkong344@gmail.com", "Willygodx", "12345");
     when(cacheMap.get(Objects.hash("Willygodx", 4 * 33))).thenReturn(null);
     when(userRepository.findByNickname("Willygodx")).thenReturn(Optional.of(userFromDatabase));
 
@@ -140,44 +140,27 @@ class UserServiceTest {
   }
 
   @Test
-  void testGetUserCoordinatesListByNickname_DataInCache() {
-    Page<Coordinates> cachedCoordinatesPage =
-        new PageImpl<>(Collections.singletonList(new Coordinates()));
-    when(cacheMap.get(Objects.hash("Willygodx", 0, 10, 5 * 34))).thenReturn(cachedCoordinatesPage);
-
-    Page<Coordinates> result = userService.getUserCoordinatesListByNickname("Willygodx", 0, 10);
-
-    assertNotNull(result);
-    assertEquals(cachedCoordinatesPage, result);
-    verify(userRepository, never()).findByNickname(anyString());
-    verify(coordinatesRepository, never()).findByUserSetContaining(any(User.class),
-        any(Pageable.class));
-  }
-
-  @Test
   void testGetUserCoordinatesListByNickname_DataNotInCache() {
-    User user = new User("Linkong344@gmail.com", "Willygodx");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
+    user.setId(1);
     Page<Coordinates> coordinatesPage =
         new PageImpl<>(Collections.singletonList(new Coordinates()));
-    when(cacheMap.get(Objects.hash("Willygodx", 0, 10, 5 * 34))).thenReturn(null);
-    when(userRepository.findByNickname("Willygodx")).thenReturn(Optional.of(user));
+    when(userRepository.findById(1)).thenReturn(Optional.of(user));
     when(coordinatesRepository.findByUserSetContaining(eq(user), any(Pageable.class))).thenReturn(
         coordinatesPage);
 
-    Page<Coordinates> result = userService.getUserCoordinatesListByNickname("Willygodx", 0, 10);
+    Page<Coordinates> result = userService.getUserCoordinatesListById(1, 0, 10);
 
     assertNotNull(result);
     assertEquals(coordinatesPage, result);
-    verify(cacheMap, times(1)).put(Objects.hash("Willygodx", 0, 10, 5 * 34), coordinatesPage);
   }
 
   @Test
   void testGetUserCoordinatesListByNickname_UserNotFound() {
-    when(cacheMap.get(Objects.hash("Willygodx", 0, 10, 5 * 34))).thenReturn(null);
-    when(userRepository.findByNickname("Willygodx")).thenReturn(Optional.empty());
+    when(userRepository.findById(1)).thenReturn(Optional.empty());
 
     assertThrows(ResourceNotFoundException.class,
-        () -> userService.getUserCoordinatesListByNickname("Willygodx", 0, 10));
+        () -> userService.getUserCoordinatesListById(1, 0, 10));
   }
 
   @Test
@@ -207,7 +190,7 @@ class UserServiceTest {
 
   @Test
   void testCreateUser_Success() {
-    UserDto userDto = new UserDto("Linkong344@gmail.com", "Willygodx");
+    UserDto userDto = new UserDto("Linkong344@gmail.com", "Willygodx", "12345");
 
     userService.createUser(userDto);
 
@@ -216,15 +199,15 @@ class UserServiceTest {
 
   @Test
   void testCreateUser_InvalidData() {
-    UserDto userDto = new UserDto(null, "Willygodx");
+    UserDto userDto = new UserDto(null, "Willygodx", "12345");
 
     assertThrows(InvalidDataException.class, () -> userService.createUser(userDto));
   }
 
   @Test
   void testCreateUser_Failure() {
-    UserDto userDto = new UserDto("Linkong344@gmail.com", "Willygodx");
-    User user = new User("Linkong344@gmail.com", "Willygodx");
+    UserDto userDto = new UserDto("Linkong344@gmail.com", "Willygodx", "12345");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
 
     doThrow(new RuntimeException()).when(userRepository).save(user);
 
@@ -234,8 +217,8 @@ class UserServiceTest {
   @Test
   void testCreateUsersBulk_Success() {
     List<UserDto> userDtoList = new ArrayList<>();
-    userDtoList.add(new UserDto("Linkong344@gmail.com", "Willygodx"));
-    userDtoList.add(new UserDto("Enotland34@yandex.ru", "JohnDoe"));
+    userDtoList.add(new UserDto("Linkong344@gmail.com", "Willygodx", "12345"));
+    userDtoList.add(new UserDto("Enotland34@yandex.ru", "JohnDoe", "12345"));
 
     userService.createUsersBulk(userDtoList);
 
@@ -256,7 +239,7 @@ class UserServiceTest {
 
   @Test
   void testUpdateUserById_Success() {
-    User user = new User("Linkong344@gmail.com", "Willygodx");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
     UserDto updateDto = mock(UserDto.class);
 
     when(userRepository.findById(1)).thenReturn(Optional.of(user));
@@ -273,7 +256,7 @@ class UserServiceTest {
 
   @Test
   void testUpdateUserById_UserNotFound() {
-    UserDto updateDto = new UserDto("Linkong344@gmail.com", "Willygodx");
+    UserDto updateDto = new UserDto("Linkong344@gmail.com", "Willygodx", "12345");
 
     when(userRepository.findById(1)).thenReturn(Optional.empty());
 
@@ -282,8 +265,8 @@ class UserServiceTest {
 
   @Test
   void testUpdateUserById_Failure() {
-    User user = new User("Linkong344@gmail.com", "Willygodx");
-    UserDto updateDto = new UserDto("Enotland34@yandex.ru", "JohnDoe");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
+    UserDto updateDto = new UserDto("Enotland34@yandex.ru", "JohnDoe", "12345");
 
     when(userRepository.findById(1)).thenReturn(Optional.of(user));
     doThrow(new RuntimeException()).when(userRepository).save(user);
@@ -293,7 +276,7 @@ class UserServiceTest {
 
   @Test
   void testUpdateUserByNickname_Success() {
-    User user = new User("Linkong344@gmail.com", "Willygodx");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
     UserDto updateDto = mock(UserDto.class);
 
     when(userRepository.findByNickname("Willygodx")).thenReturn(Optional.of(user));
@@ -310,7 +293,7 @@ class UserServiceTest {
 
   @Test
   void testUpdateUserByNickname_UserNotFound() {
-    UserDto updateDto = new UserDto("Linkong344@gmail.com", "Willygodx");
+    UserDto updateDto = new UserDto("Linkong344@gmail.com", "Willygodx", "12345");
 
     when(userRepository.findByNickname("Willygodx")).thenReturn(Optional.empty());
 
@@ -320,8 +303,8 @@ class UserServiceTest {
 
   @Test
   void testUpdateUserByNickname_Failure() {
-    User user = new User("Linkong344@gmail.com", "Willygodx");
-    UserDto updateDto = new UserDto("Enotland34@yandex.ru", "JohnDoe");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
+    UserDto updateDto = new UserDto("Enotland34@yandex.ru", "JohnDoe", "12345");
 
     when(userRepository.findByNickname("Willygodx")).thenReturn(Optional.of(user));
     doThrow(new RuntimeException()).when(userRepository).save(user);
@@ -332,7 +315,7 @@ class UserServiceTest {
 
   @Test
   void testUpdateUserByEmail_Success() {
-    User user = new User("Linkong344@gmail.com", "Willygodx");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
     UserDto updateDto = mock(UserDto.class);
 
     when(userRepository.findByEmail("Linkong344@gmail.com")).thenReturn(Optional.of(user));
@@ -349,7 +332,7 @@ class UserServiceTest {
 
   @Test
   void testUpdateUserByEmail_UserNotFound() {
-    UserDto updateDto = new UserDto("Linkong344@gmail.com", "Willygodx");
+    UserDto updateDto = new UserDto("Linkong344@gmail.com", "Willygodx", "12345");
 
     when(userRepository.findByEmail("Linkong344@gmail.com")).thenReturn(Optional.empty());
 
@@ -359,8 +342,8 @@ class UserServiceTest {
 
   @Test
   void testUpdateUserByEmail_Failure() {
-    User user = new User("Linkong344@gmail.com", "Willygodx");
-    UserDto updateDto = new UserDto("Enotland34@yandex.ru", "JohnDoe");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
+    UserDto updateDto = new UserDto("Enotland34@yandex.ru", "JohnDoe", "12345");
 
     when(userRepository.findByEmail("Linkong344@gmail.com")).thenReturn(Optional.of(user));
     doThrow(new RuntimeException()).when(userRepository).save(user);

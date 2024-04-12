@@ -128,8 +128,8 @@ class CoordinatesControllerTest {
     int pageNumber = 0;
     int pageSize = 10;
     List<User> userList = new ArrayList<>();
-    userList.add(new User("Linkong344@gmail.com", "Willygodx"));
-    userList.add(new User("Enotland34@yandex.ru", "Sombrero2312"));
+    userList.add(new User("Linkong344@gmail.com", "Willygodx", "1234"));
+    userList.add(new User("Enotland34@yandex.ru", "Sombrero2312", "12345"));
     Page<User> userPage =
         new PageImpl<>(userList, PageRequest.of(pageNumber, pageSize), userList.size());
     when(coordinatesService.getUsersFromCoordinates(id, pageNumber, pageSize)).thenReturn(userPage);

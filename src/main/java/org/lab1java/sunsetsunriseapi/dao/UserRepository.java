@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
   Optional<User> findById(int id);
 
   Page<User> findByCoordinatesSetContaining(Coordinates coordinates, Pageable pageable);
+
+  Optional<User> findByNicknameAndPassword(String nickname, String password);
 }

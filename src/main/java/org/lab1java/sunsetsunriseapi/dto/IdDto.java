@@ -6,16 +6,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Data Transfer Object (DTO) for User.
+ * Data Transfer Object (DTO) for Id.
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserDto {
-  private String email;
+public class IdDto {
 
-  private String nickname;
-
-  private String password;
+  private Integer id;
 }

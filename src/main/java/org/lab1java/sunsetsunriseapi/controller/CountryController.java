@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ public class CountryController {
    * @param id the ID of the country
    * @return ResponseEntity containing the country information
    */
+  @CrossOrigin
   @GetMapping("/get/{id}")
   public ResponseEntity<Country> getCountry(@PathVariable int id) {
     counterService.requestIncrement();
@@ -60,6 +62,7 @@ public class CountryController {
    * @param pageSize the size of each page for pagination
    * @return ResponseEntity containing a page of coordinates information for the country
    */
+  @CrossOrigin
   @GetMapping("/get-coordinates-info/{countryName}")
   public ResponseEntity<Page<Coordinates>> getCoordinatesInfoForCountry(
                                               @PathVariable String countryName,
@@ -82,6 +85,7 @@ public class CountryController {
    * @param pageSize the size of each page for pagination
    * @return ResponseEntity containing a page of country information
    */
+  @CrossOrigin
   @GetMapping("/get-all")
   public ResponseEntity<Page<Country>> getAllCountries(
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
@@ -101,6 +105,7 @@ public class CountryController {
    * @param countryDto the DTO containing the country information to be created
    * @return ResponseEntity indicating the success of the operation
    */
+  @CrossOrigin
   @PostMapping("/create")
   public ResponseEntity<String> createCountry(@RequestBody CountryDto countryDto) {
     counterService.requestIncrement();
@@ -118,6 +123,7 @@ public class CountryController {
    * @param countryDtoList the list of DTOs containing the country information to be created
    * @return ResponseEntity indicating the success of the operation
    */
+  @CrossOrigin
   @PostMapping("/create-bulk")
   public ResponseEntity<String> createCountryBulk(@RequestBody List<CountryDto> countryDtoList) {
     counterService.requestIncrement();
@@ -136,6 +142,7 @@ public class CountryController {
    * @param countryDto the DTO containing the updated country information
    * @return ResponseEntity containing the updated country information
    */
+  @CrossOrigin
   @PutMapping("/update/{id}")
   public ResponseEntity<Country> updateCountry(@PathVariable int id,
                                                @RequestBody CountryDto countryDto) {
@@ -154,6 +161,7 @@ public class CountryController {
    * @param id the ID of the country to delete
    * @return ResponseEntity indicating the success of the operation
    */
+  @CrossOrigin
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<String> deleteCountry(@PathVariable int id) {
     counterService.requestIncrement();

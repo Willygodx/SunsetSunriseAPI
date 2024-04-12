@@ -49,7 +49,7 @@ class UserControllerTest {
 
   @Test
   void testGetUserById_Success() {
-    User user = new User("Linkong344@gmail.com", "Willygodx");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
 
     int userId = 1337;
 
@@ -82,7 +82,7 @@ class UserControllerTest {
 
   @Test
   void testGetUserByEmail_Success() {
-    User user = new User("Linkong344@gmail.com", "Willygodx");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
 
     when(userService.getUserByEmail(user.getEmail())).thenReturn(user);
 
@@ -113,7 +113,7 @@ class UserControllerTest {
 
   @Test
   void testGetUserByNickname_Success() {
-    User user = new User("Linkong344@gmail.com", "Willygodx");
+    User user = new User("Linkong344@gmail.com", "Willygodx", "12345");
 
     when(userService.getUserByNickname(user.getNickname())).thenReturn(user);
 
@@ -146,30 +146,30 @@ class UserControllerTest {
   void testGetUserCoordinatesList_Success() {
     Page<Coordinates> coordinatesPage = mock(Page.class);
 
-    when(userService.getUserCoordinatesListByNickname("Willygodx", 0, 10)).thenReturn(
+    when(userService.getUserCoordinatesListById(1, 0, 10)).thenReturn(
         coordinatesPage);
 
     ResponseEntity<Page<Coordinates>> response =
-        userController.getUserCoordinatesList("Willygodx", 0, 10);
+        userController.getUserCoordinatesList(1, 0, 10);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
     assertEquals(coordinatesPage, response.getBody());
 
     Mockito.verify(userService, Mockito.times(1))
-        .getUserCoordinatesListByNickname("Willygodx", 0, 10);
+        .getUserCoordinatesListById(1, 0, 10);
     Mockito.verifyNoMoreInteractions(userService);
   }
 
   @Test
   void testGetUserCoordinatesList_UserNotFound() throws Exception {
-    String nickname = "Anna";
+    int id = 1;
     int pageNumber = 0;
     int pageSize = 10;
 
-    when(userService.getUserCoordinatesListByNickname(nickname, pageNumber, pageSize))
+    when(userService.getUserCoordinatesListById(1, pageNumber, pageSize))
         .thenThrow(new ResourceNotFoundException("User not found"));
 
-    mockMvc.perform(MockMvcRequestBuilders.get("/users/get-coordinates/{nickname}", nickname)
+    mockMvc.perform(MockMvcRequestBuilders.get("/users/get-coordinates/{id}", id)
             .param("pageNumber", String.valueOf(pageNumber))
             .param("pageSize", String.valueOf(pageSize)))
         .andExpect(MockMvcResultMatchers.status().isNotFound())
@@ -177,7 +177,7 @@ class UserControllerTest {
         .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("User not found"));
 
     Mockito.verify(userService, Mockito.times(1))
-        .getUserCoordinatesListByNickname(nickname, pageNumber, pageSize);
+        .getUserCoordinatesListById(1, pageNumber, pageSize);
     Mockito.verifyNoMoreInteractions(userService);
   }
 
@@ -198,7 +198,7 @@ class UserControllerTest {
 
   @Test
   void testCreateUser() {
-    UserDto userDto = new UserDto("Linkong344@gmail.com", "Willygodx");
+    UserDto userDto = new UserDto("Linkong344@gmail.com", "Willygodx", "12345");
 
     ResponseEntity<String> response = userController.createUser(userDto);
 
@@ -212,8 +212,8 @@ class UserControllerTest {
   @Test
   void testCreateUsersBulk() {
     List<UserDto> userDtoList = new ArrayList<>();
-    userDtoList.add(new UserDto("Linkong344@gmail.com", "Willygodx"));
-    userDtoList.add(new UserDto("Matthew9827_us@yahoo.com", "PentestGambler12"));
+    userDtoList.add(new UserDto("Linkong344@gmail.com", "Willygodx", "12345"));
+    userDtoList.add(new UserDto("Matthew9827_us@yahoo.com", "PentestGambler12", "12345"));
 
     ResponseEntity<String> response = userController.createUsersBulk(userDtoList);
 
@@ -226,9 +226,9 @@ class UserControllerTest {
 
   @Test
   void testUpdateUserById() {
-    UserDto updateDto = new UserDto("Linkong344@gmail.com", "Willygodx");
+    UserDto updateDto = new UserDto("Linkong344@gmail.com", "Willygodx", "12345");
 
-    User updatedUser = new User(updateDto.getEmail(), updateDto.getNickname());
+    User updatedUser = new User(updateDto.getEmail(), updateDto.getNickname(), updateDto.getPassword());
 
     when(userService.updateUserById(22, updateDto)).thenReturn(updatedUser);
 
@@ -243,9 +243,9 @@ class UserControllerTest {
   @Test
   void testUpdateUserByEmail() {
     String email = "Linkong344@gmail.com";
-    UserDto updateDto = new UserDto("enotland34@yandex.ru", "Sombrero");
+    UserDto updateDto = new UserDto("enotland34@yandex.ru", "Sombrero", "12345");
 
-    User updatedUser = new User(updateDto.getEmail(), updateDto.getNickname());
+    User updatedUser = new User(updateDto.getEmail(), updateDto.getNickname(), updateDto.getPassword());
     when(userService.updateUserByEmail(email, updateDto)).thenReturn(updatedUser);
 
     ResponseEntity<User> response = userController.updateUserByEmail(email, updateDto);
@@ -258,9 +258,9 @@ class UserControllerTest {
   @Test
   void testUpdateUserByNickname() {
     String nickname = "Willygodx";
-    UserDto updateDto = new UserDto("enotland34@yandex.ru", "Sombrero");
+    UserDto updateDto = new UserDto("enotland34@yandex.ru", "Sombrero", "12345");
 
-    User updatedUser = new User(updateDto.getEmail(), updateDto.getNickname());
+    User updatedUser = new User(updateDto.getEmail(), updateDto.getNickname(), updateDto.getPassword());
     when(userService.updateUserByNickname(nickname, updateDto)).thenReturn(updatedUser);
 
     ResponseEntity<User> response = userController.updateUserByNickname(nickname, updateDto);
@@ -274,7 +274,7 @@ class UserControllerTest {
   void testDeleteUserById() {
     int id = 123;
 
-    ResponseEntity<String> response = userController.deleteTimeZoneById(id);
+    ResponseEntity<String> response = userController.deleteUserById(id);
 
     assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
     assertEquals("Deleted successfully!", response.getBody());

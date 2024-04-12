@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service class that provides operations related to users.
@@ -99,38 +100,27 @@ public class UserService {
   /**
    * Retrieves a page of coordinates associated with a user by their nickname.
    *
-   * @param nickname   the nickname of the user
+   * @param userId     the nickname of the user
    * @param pageNumber the page number (zero-based) of the result set to retrieve
    * @param pageSize   the number of items per page
    * @return a page of coordinates associated with the user
    * @throws ResourceNotFoundException if the user with the given nickname is not found
    */
-  public Page<Coordinates> getUserCoordinatesListByNickname(String nickname, Integer pageNumber,
+  public Page<Coordinates> getUserCoordinatesListById(int userId, Integer pageNumber,
                                                             Integer pageSize) {
-    int hashCode = Objects.hash(nickname, pageNumber, pageSize, 5 * 34);
-    Object cachedData = cacheMap.get(hashCode);
-
-    if (cachedData != null) {
-      return (Page<Coordinates>) cachedData;
-    } else {
-      if (pageNumber == null || pageNumber < 0) {
-        pageNumber = 0;
-      }
-
-      if (pageSize == null || pageSize < 1) {
-        pageSize = 10;
-      }
-
-      User user = userRepository.findByNickname(nickname)
-          .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
-
-      Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "id"));
-      Page<Coordinates> coordinatesPage =
-          coordinatesRepository.findByUserSetContaining(user, pageable);
-
-      cacheMap.put(hashCode, coordinatesPage);
-      return coordinatesPage;
+    if (pageNumber == null || pageNumber < 0) {
+      pageNumber = 0;
     }
+
+    if (pageSize == null || pageSize < 1) {
+      pageSize = 10;
+    }
+
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
+
+    Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.ASC, "id"));
+    return coordinatesRepository.findByUserSetContaining(user, pageable);
   }
 
   /**
@@ -165,8 +155,8 @@ public class UserService {
    * Creates a new user.
    *
    * @param userDto the user data to create
-   * @throws InvalidDataException        if the user data is invalid
-   * @throws BadRequestErrorException    if the user already exists
+   * @throws InvalidDataException     if the user data is invalid
+   * @throws BadRequestErrorException if the user already exists
    */
   public void createUser(UserDto userDto) {
     if (userDto.getEmail() == null || userDto.getNickname() == null) {
@@ -174,7 +164,7 @@ public class UserService {
     }
 
     try {
-      User user = new User(userDto.getEmail(), userDto.getNickname());
+      User user = new User(userDto.getEmail(), userDto.getNickname(), userDto.getPassword());
 
       cacheMap.clear();
       userRepository.save(user);
@@ -188,7 +178,7 @@ public class UserService {
    *
    * @param userDtoList The list of UserDto objects representing the users to be created.
    * @throws ResourceNotFoundException If the userDtoList is null or empty.
-   * @throws IllegalArgumentException If errors occur during bulk creation.
+   * @throws IllegalArgumentException  If errors occur during bulk creation.
    */
   public void createUsersBulk(List<UserDto> userDtoList) {
     if (userDtoList == null || userDtoList.isEmpty()) {
@@ -228,8 +218,7 @@ public class UserService {
     User user = userRepository.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
     try {
-      user.setNickname(updateDto.getNickname());
-      user.setEmail(updateDto.getEmail());
+      formUserFromDto(updateDto, user);
 
       userRepository.save(user);
       cacheMap.clear();
@@ -253,8 +242,7 @@ public class UserService {
     User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
     try {
-      user.setNickname(updateDto.getNickname());
-      user.setEmail(updateDto.getEmail());
+      formUserFromDto(updateDto, user);
 
       userRepository.save(user);
       cacheMap.clear();
@@ -278,8 +266,7 @@ public class UserService {
     User user = userRepository.findByNickname(nickname)
         .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
     try {
-      user.setNickname(updateDto.getNickname());
-      user.setEmail(updateDto.getEmail());
+      formUserFromDto(updateDto, user);
 
       userRepository.save(user);
       cacheMap.clear();
@@ -302,5 +289,50 @@ public class UserService {
     } else {
       throw new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE);
     }
+  }
+
+  /**
+   * Validates the login credentials provided by a user.
+   *
+   * @param nickname The nickname of the user attempting to log in.
+   * @param password The password associated with the user's account.
+   * @return The ID of the user if login is successful.
+   * @throws ResourceNotFoundException If the provided nickname and password combination
+   *                                   does not match any existing user in the repository.
+   */
+  public int checkLogin(String nickname, String password) {
+    User user = userRepository.findByNicknameAndPassword(nickname, password)
+        .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
+    return user.getId();
+  }
+
+  /**
+   * Deletes the coordinates information associated with a specific user.
+   *
+   * @param userId        The ID of the user whose coordinates information is to be deleted.
+   * @param coordinatesId The ID of the coordinates information to be deleted.
+   * @throws ResourceNotFoundException    If either the user or the coordinates information
+   *                                       associated with the given IDs are not found.
+   * @throws BadRequestErrorException      If the provided coordinates information does not
+   *                                       belong to the specified user.
+   */
+  @Transactional
+  public void deleteUsersCoordinatesInformation(int userId, long coordinatesId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_MESSAGE));
+    Coordinates coordinates = coordinatesRepository.findById(coordinatesId)
+        .orElseThrow(() -> new ResourceNotFoundException("Coordinates info not found!"));
+    if (user.getCoordinatesSet().contains(coordinates)) {
+      user.removeCoordinates(coordinates);
+      userRepository.save(user);
+    } else {
+      throw new BadRequestErrorException("bad request");
+    }
+  }
+
+  private void formUserFromDto(UserDto updateDto, User user) {
+    user.setNickname(updateDto.getNickname());
+    user.setEmail(updateDto.getEmail());
+    user.setPassword(updateDto.getPassword());
   }
 }

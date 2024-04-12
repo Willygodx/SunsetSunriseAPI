@@ -35,7 +35,6 @@ import lombok.Setter;
 public class Coordinates {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @JsonIgnore
   private Long id;
 
   private double latitude;
