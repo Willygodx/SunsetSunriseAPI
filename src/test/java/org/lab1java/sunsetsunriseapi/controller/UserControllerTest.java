@@ -3,6 +3,8 @@ package org.lab1java.sunsetsunriseapi.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.lab1java.sunsetsunriseapi.dto.IdDto;
+import org.lab1java.sunsetsunriseapi.dto.LoginDto;
 import org.lab1java.sunsetsunriseapi.dto.UserDto;
 import org.lab1java.sunsetsunriseapi.entity.Coordinates;
 import org.lab1java.sunsetsunriseapi.entity.User;
@@ -280,6 +282,4 @@ class UserControllerTest {
     assertEquals("Deleted successfully!", response.getBody());
     verify(userService, times(1)).deleteUserFromDatabaseById(id);
   }
-
-
 }

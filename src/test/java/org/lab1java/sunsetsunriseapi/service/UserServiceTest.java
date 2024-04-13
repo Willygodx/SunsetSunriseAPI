@@ -1,5 +1,6 @@
 package org.lab1java.sunsetsunriseapi.service;
 
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.lab1java.sunsetsunriseapi.cache.EntityCache;
@@ -365,5 +366,71 @@ class UserServiceTest {
     when(userRepository.existsById(1)).thenReturn(false);
 
     assertThrows(ResourceNotFoundException.class, () -> userService.deleteUserFromDatabaseById(1));
+  }
+
+  @Test
+  void testDeleteUsersCoordinatesInformation_UserNotFound() {
+    int userId = 1;
+    long coordinatesId = 1;
+    when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+    assertThrows(ResourceNotFoundException.class,
+        () -> userService.deleteUsersCoordinatesInformation(userId, coordinatesId));
+    verify(userRepository, times(1)).findById(userId);
+    verifyNoInteractions(coordinatesRepository);
+  }
+
+  @Test
+  void testDeleteUsersCoordinatesInformation_CoordinatesNotFound() {
+    int userId = 1;
+    long coordinatesId = 1;
+    User user = new User();
+    when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+    when(coordinatesRepository.findById(coordinatesId)).thenReturn(Optional.empty());
+
+    assertThrows(ResourceNotFoundException.class,
+        () -> userService.deleteUsersCoordinatesInformation(userId, coordinatesId));
+    verify(userRepository, times(1)).findById(userId);
+    verify(coordinatesRepository, times(1)).findById(coordinatesId);
+  }
+
+  @Test
+  @Transactional
+  void testDeleteUsersCoordinatesInformation_CoordinatesNotBelongToUser() {
+    int userId = 1;
+    long coordinatesId = 1;
+    User user = new User();
+    Coordinates coordinates = new Coordinates();
+    when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+    when(coordinatesRepository.findById(coordinatesId)).thenReturn(Optional.of(coordinates));
+
+    assertThrows(NullPointerException.class,
+        () -> userService.deleteUsersCoordinatesInformation(userId, coordinatesId));
+    verify(userRepository, times(1)).findById(userId);
+    verify(coordinatesRepository, times(1)).findById(coordinatesId);
+  }
+
+  @Test
+  void testCheckLogin_Success() {
+    String nickname = "testUser";
+    String password = "testPassword";
+    int userId = 1;
+    User user = new User();
+    user.setId(userId);
+    when(userRepository.findByNicknameAndPassword(nickname, password)).thenReturn(Optional.of(user));
+
+    int result = userService.checkLogin(nickname, password);
+
+    assertEquals(userId, result);
+  }
+
+  @Test
+  void testCheckLogin_UserNotFound() {
+    String nickname = "testUser";
+    String password = "testPassword";
+    when(userRepository.findByNicknameAndPassword(nickname, password)).thenReturn(Optional.empty());
+
+    assertThrows(ResourceNotFoundException.class,
+        () -> userService.checkLogin(nickname, password));
   }
 }

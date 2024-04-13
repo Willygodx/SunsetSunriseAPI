@@ -24,12 +24,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller class for handling coordinate-related endpoints.
  */
+@CrossOrigin(origins = {"http://localhost:3000"},
+    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
+    allowedHeaders = {"Authorization", "Content-Type"})
 @RestController
 @RequestMapping("/coordinates")
 @AllArgsConstructor
@@ -42,7 +46,6 @@ public class CoordinatesController {
   private static final String GET_SUCCESS_MESSAGE =
       "Coordinates information was retrieved successfully.";
 
-  @CrossOrigin
   @GetMapping("/get-request-count")
   public String getRequestCount() {
     int totalRequestCount = counterService.getRequestCount();
@@ -59,7 +62,6 @@ public class CoordinatesController {
    * @return ResponseEntity containing the coordinates information
    * @throws JsonProcessingException if there is an issue processing JSON data
    */
-  @CrossOrigin
   @GetMapping("/get-info/{userId}")
   public ResponseEntity<ResponseDto> getCoordinatesInfo(@PathVariable int userId,
                                                         @RequestParam() Double latitude,
@@ -84,7 +86,6 @@ public class CoordinatesController {
    * @param pageSize the size of each page for pagination
    * @return ResponseEntity containing a page of coordinates information
    */
-  @CrossOrigin
   @GetMapping("/get-info-sunrise-hour/{hour}")
   public ResponseEntity<Page<Coordinates>> getCoordinatesInfoBySunriseStartingHour(
                                               @PathVariable int hour,
@@ -108,7 +109,6 @@ public class CoordinatesController {
    * @param pageSize the size of each page for pagination
    * @return ResponseEntity containing a page of coordinates information
    */
-  @CrossOrigin
   @GetMapping("/get-info-sunset-hour/{hour}")
   public ResponseEntity<Page<Coordinates>> getCoordinatesInfoBySunsetStartingHour(
                                               @PathVariable int hour,
@@ -132,7 +132,6 @@ public class CoordinatesController {
    * @param pageSize the size of each page for pagination
    * @return ResponseEntity containing a page of user information
    */
-  @CrossOrigin
   @GetMapping("/get-users/{id}")
   public ResponseEntity<Page<User>> getUsersFromCoordinates(@PathVariable long id,
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
@@ -153,7 +152,6 @@ public class CoordinatesController {
    * @param pageSize the size of each page for pagination
    * @return ResponseEntity containing a page of coordinates information
    */
-  @CrossOrigin
   @GetMapping("/get-all-coordinates-info")
   public ResponseEntity<Page<CoordinatesDto>> getAllCoordinateInfo(
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
@@ -174,7 +172,6 @@ public class CoordinatesController {
    * @param requestDto the DTO containing the coordinates information to be created
    * @return ResponseEntity indicating the success of the operation
    */
-  @CrossOrigin
   @PostMapping("/create")
   public ResponseEntity<String> addCoordinatesInfo(@RequestBody RequestDto requestDto)
       throws JsonProcessingException {
@@ -193,7 +190,6 @@ public class CoordinatesController {
    * @param requestDtoList the list of DTOs containing the coordinates information to be created
    * @return ResponseEntity indicating the success of the operation
    */
-  @CrossOrigin
   @PostMapping("/create-bulk")
   public ResponseEntity<String> addCoordinatesInfoBulk(
                                                     @RequestBody List<RequestDto> requestDtoList) {
@@ -213,7 +209,6 @@ public class CoordinatesController {
    * @param updateDto the DTO containing the updated coordinates information
    * @return ResponseEntity containing the updated coordinates information
    */
-  @CrossOrigin
   @PutMapping("/update/{id}")
   public ResponseEntity<Coordinates> updateCoordinatesInfo(@PathVariable Long id,
                                                            @RequestBody CoordinatesDto updateDto) {
@@ -232,7 +227,6 @@ public class CoordinatesController {
    * @param id the ID of the coordinates to delete
    * @return ResponseEntity indicating the success of the operation
    */
-  @CrossOrigin
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<String> deleteCoordinatesInfo(@PathVariable Long id) {
     counterService.requestIncrement();

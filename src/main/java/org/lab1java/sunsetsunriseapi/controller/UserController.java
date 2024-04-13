@@ -22,12 +22,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller class for handling user-related endpoints.
  */
+@CrossOrigin(origins = {"http://localhost:3000"},
+    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
+    allowedHeaders = {"Authorization", "Content-Type"})
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
@@ -46,7 +50,6 @@ public class UserController {
    * @param id the ID of the user to retrieve
    * @return ResponseEntity containing the user information
    */
-  @CrossOrigin
   @GetMapping("/get-by-id/{id}")
   public ResponseEntity<User> getUserById(@PathVariable int id) {
     counterService.requestIncrement();
@@ -64,7 +67,6 @@ public class UserController {
    * @param email the email of the user to retrieve
    * @return ResponseEntity containing the user information
    */
-  @CrossOrigin
   @GetMapping("/get-by-email/{email}")
   public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
     counterService.requestIncrement();
@@ -82,7 +84,6 @@ public class UserController {
    * @param nickname the nickname of the user to retrieve
    * @return ResponseEntity containing the user information
    */
-  @CrossOrigin
   @GetMapping("/get-by-nickname/{nickname}")
   public ResponseEntity<User> getUserByNickname(@PathVariable String nickname) {
     counterService.requestIncrement();
@@ -102,7 +103,6 @@ public class UserController {
    * @param pageSize the size of each page for pagination
    * @return ResponseEntity containing a page of coordinates
    */
-  @CrossOrigin
   @GetMapping("/get-coordinates/{userId}")
   public ResponseEntity<Page<Coordinates>> getUserCoordinatesList(@PathVariable int userId,
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
@@ -124,7 +124,6 @@ public class UserController {
    * @param pageSize the size of each page for pagination
    * @return ResponseEntity containing a page of users
    */
-  @CrossOrigin
   @GetMapping("/get-all-users")
   public ResponseEntity<Page<User>> getAllUsers(
                                               @RequestParam(defaultValue = "0") Integer pageNumber,
@@ -144,7 +143,6 @@ public class UserController {
    * @param userDto the DTO containing the user information to be created
    * @return ResponseEntity indicating the success of the operation
    */
-  @CrossOrigin
   @PostMapping("/create")
   public ResponseEntity<String> createUser(@RequestBody UserDto userDto) {
     counterService.requestIncrement();
@@ -162,7 +160,6 @@ public class UserController {
    * @param userDtoList the list of DTOs containing the user information to be created
    * @return ResponseEntity indicating the success of the operation
    */
-  @CrossOrigin
   @PostMapping("/create-bulk")
   public ResponseEntity<String> createUsersBulk(@RequestBody List<UserDto> userDtoList) {
     counterService.requestIncrement();
@@ -181,7 +178,6 @@ public class UserController {
    * @param updateDto the DTO containing the updated user information
    * @return ResponseEntity containing the updated user information
    */
-  @CrossOrigin
   @PutMapping("/update-by-id/{id}")
   public ResponseEntity<User> updateUserById(@PathVariable int id,
                                              @RequestBody UserDto updateDto) {
@@ -201,7 +197,6 @@ public class UserController {
    * @param updateDto the DTO containing the updated user information
    * @return ResponseEntity containing the updated user information
    */
-  @CrossOrigin
   @PutMapping("/update-by-email/{email}")
   public ResponseEntity<User> updateUserByEmail(@PathVariable String email,
                                                 @RequestBody UserDto updateDto) {
@@ -221,7 +216,6 @@ public class UserController {
    * @param updateDto the DTO containing the updated user information
    * @return ResponseEntity containing the updated user information
    */
-  @CrossOrigin
   @PutMapping("/update-by-nickname/{nickname}")
   public ResponseEntity<User> updateUserByNickname(@PathVariable String nickname,
                                                    @RequestBody UserDto updateDto) {
@@ -240,7 +234,6 @@ public class UserController {
    * @param id the ID of the user to delete
    * @return ResponseEntity indicating the success of the operation
    */
-  @CrossOrigin
   @DeleteMapping("/delete/{id}")
   public ResponseEntity<String> deleteUserById(@PathVariable int id) {
     counterService.requestIncrement();
@@ -259,7 +252,6 @@ public class UserController {
    * @param coordinatesId The ID of the coordinates information to be deleted.
    * @return ResponseEntity indicating successful deletion of coordinates information.
    */
-  @CrossOrigin
   @DeleteMapping("delete-coordinates")
   public ResponseEntity<String> deleteUsersCoordinatesInfo(@RequestParam int userId,
                                                            @RequestParam long coordinatesId) {
@@ -278,7 +270,6 @@ public class UserController {
    * @param loginDto The DTO containing the user's login credentials (nickname and password).
    * @return ResponseEntity containing the ID of the logged-in user if successful.
    */
-  @CrossOrigin
   @PostMapping("/login")
   public ResponseEntity<IdDto> userLogin(@RequestBody LoginDto loginDto) {
     counterService.requestIncrement();
