@@ -34,4 +34,5 @@ build/
 
 mvnw
 mvnw.cmd
-/logs
+logs/
+mysql-data
