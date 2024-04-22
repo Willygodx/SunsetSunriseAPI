@@ -1,5 +1,0 @@
-services:
-  - name: sunsetsunrise
-    env: java
-    buildCommand: mvn package
-    startCommand: java -jar target/SunsetSunriseAPI-0.0.1-SNAPSHOT.jar
