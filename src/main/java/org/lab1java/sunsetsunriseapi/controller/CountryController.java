@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller class for handling country-related endpoints.
  */
-@CrossOrigin(origins = {"http://localhost:3000"},
+@CrossOrigin(origins = {"http://localhost:3000", "https://frontend-react-liard.vercel.app"},
     methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
     allowedHeaders = {"Authorization", "Content-Type"})
 @RestController
