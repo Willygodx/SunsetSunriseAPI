@@ -40,4 +40,4 @@ jobs:
           mvn clean package
       - name: Deploy to Hosting
         run: |
-          rsync -avz -e "ssh -i ~/.ssh/id_rsa" target/SunsetSunriseAPI-0.0.1-SNAPSHOT.jar Willygodx@sunsetsunriseapi-1.onrender.com:/app
+          rsync -avz -e "ssh -i /Users/willygodx/.ssh/id_rsa" /Users/willygodx/IdeaProjects/SunsetSunriseAPI/target/SunsetSunriseAPI-0.0.1-SNAPSHOT.jar Willygodx@sunsetsunriseapi-1.onrender.com:/app
