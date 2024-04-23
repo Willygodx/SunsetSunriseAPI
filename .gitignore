@@ -36,3 +36,4 @@ mvnw
 mvnw.cmd
 logs/
 mysql-data
+frontend-react
