@@ -7,7 +7,7 @@
         </encoder>
     </appender>
 
-    <logger name="org.lab1java.sunsetsunriseapi.controller" level="INFO" additivity="false">
+    <logger name="org.core.sunsetsunrise.controller" level="INFO" additivity="false">
         <appender-ref ref="FILE" />
         <appender-ref ref="CONSOLE" />
     </logger>

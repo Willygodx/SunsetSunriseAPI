@@ -22,7 +22,7 @@ public class SwaggerConfig {
   public Docket api() {
     return new Docket(DocumentationType.SWAGGER_2)
         .select()
-        .apis(RequestHandlerSelectors.basePackage("org.lab1java.sunsetsunriseapi.controller"))
+        .apis(RequestHandlerSelectors.basePackage("org.core.sunsetsunrise.controller"))
         .paths(PathSelectors.any())
         .build();
   }
