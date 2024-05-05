@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller class for handling coordinate-related endpoints.
  */
-@CrossOrigin(origins = {"http://localhost:3000", "https://sunset-sunrise.vercel.app"},
+@CrossOrigin(origins = {"http://localhost:3000", "https://sunset-sunrise-service.vercel.app"},
     methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
     allowedHeaders = {"Authorization", "Content-Type"})
 @RestController
