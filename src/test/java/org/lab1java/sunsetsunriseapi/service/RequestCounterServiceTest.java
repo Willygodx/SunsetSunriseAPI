@@ -2,6 +2,7 @@ package org.lab1java.sunsetsunriseapi.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.core.sunsetsunrise.service.RequestCounterService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,15 +1,16 @@
 package org.lab1java.sunsetsunriseapi.controller;
 
+import org.core.sunsetsunrise.controller.UserController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lab1java.sunsetsunriseapi.dto.UserDto;
-import org.lab1java.sunsetsunriseapi.entity.Coordinates;
-import org.lab1java.sunsetsunriseapi.entity.User;
-import org.lab1java.sunsetsunriseapi.exception.GlobalExceptionHandler;
-import org.lab1java.sunsetsunriseapi.exception.ResourceNotFoundException;
-import org.lab1java.sunsetsunriseapi.service.RequestCounterService;
-import org.lab1java.sunsetsunriseapi.service.UserService;
+import org.core.sunsetsunrise.dto.UserDto;
+import org.core.sunsetsunrise.entity.Coordinates;
+import org.core.sunsetsunrise.entity.User;
+import org.core.sunsetsunrise.exception.GlobalExceptionHandler;
+import org.core.sunsetsunrise.exception.ResourceNotFoundException;
+import org.core.sunsetsunrise.service.RequestCounterService;
+import org.core.sunsetsunrise.service.UserService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;

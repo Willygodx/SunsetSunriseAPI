@@ -2,6 +2,9 @@ package org.lab1java.sunsetsunriseapi.exception;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.core.sunsetsunrise.exception.BadRequestErrorException;
+import org.core.sunsetsunrise.exception.ExceptionMessage;
+import org.core.sunsetsunrise.exception.GlobalExceptionHandler;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

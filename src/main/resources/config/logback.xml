@@ -12,7 +12,7 @@
         <appender-ref ref="CONSOLE" />
     </logger>
 
-    <logger name="org.lab1java.sunsetsunriseapi.exception.GlobalExceptionHandler" level="INFO" additivity="false">
+    <logger name="org.core.sunsetsunrise.exception.GlobalExceptionHandler" level="INFO" additivity="false">
         <appender-ref ref="FILE" />
         <appender-ref ref="CONSOLE" />
     </logger>
