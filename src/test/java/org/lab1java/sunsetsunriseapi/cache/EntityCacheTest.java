@@ -1,5 +1,6 @@
 package org.lab1java.sunsetsunriseapi.cache;
 
+import org.core.sunsetsunrise.cache.EntityCache;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

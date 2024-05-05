@@ -1,12 +1,13 @@
 package org.lab1java.sunsetsunriseapi.controller;
 
+import org.core.sunsetsunrise.controller.CountryController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lab1java.sunsetsunriseapi.dto.CountryDto;
-import org.lab1java.sunsetsunriseapi.entity.Coordinates;
-import org.lab1java.sunsetsunriseapi.entity.Country;
-import org.lab1java.sunsetsunriseapi.service.CountryService;
-import org.lab1java.sunsetsunriseapi.service.RequestCounterService;
+import org.core.sunsetsunrise.dto.CountryDto;
+import org.core.sunsetsunrise.entity.Coordinates;
+import org.core.sunsetsunrise.entity.Country;
+import org.core.sunsetsunrise.service.CountryService;
+import org.core.sunsetsunrise.service.RequestCounterService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;

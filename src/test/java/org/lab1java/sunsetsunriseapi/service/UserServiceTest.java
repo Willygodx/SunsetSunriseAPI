@@ -1,17 +1,18 @@
 package org.lab1java.sunsetsunriseapi.service;
 
 import jakarta.transaction.Transactional;
+import org.core.sunsetsunrise.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lab1java.sunsetsunriseapi.cache.EntityCache;
-import org.lab1java.sunsetsunriseapi.dao.CoordinatesRepository;
-import org.lab1java.sunsetsunriseapi.dao.UserRepository;
-import org.lab1java.sunsetsunriseapi.dto.UserDto;
-import org.lab1java.sunsetsunriseapi.entity.Coordinates;
-import org.lab1java.sunsetsunriseapi.entity.User;
-import org.lab1java.sunsetsunriseapi.exception.BadRequestErrorException;
-import org.lab1java.sunsetsunriseapi.exception.InvalidDataException;
-import org.lab1java.sunsetsunriseapi.exception.ResourceNotFoundException;
+import org.core.sunsetsunrise.cache.EntityCache;
+import org.core.sunsetsunrise.dao.CoordinatesRepository;
+import org.core.sunsetsunrise.dao.UserRepository;
+import org.core.sunsetsunrise.dto.UserDto;
+import org.core.sunsetsunrise.entity.Coordinates;
+import org.core.sunsetsunrise.entity.User;
+import org.core.sunsetsunrise.exception.BadRequestErrorException;
+import org.core.sunsetsunrise.exception.InvalidDataException;
+import org.core.sunsetsunrise.exception.ResourceNotFoundException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;

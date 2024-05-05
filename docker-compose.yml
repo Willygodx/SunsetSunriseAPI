@@ -36,8 +36,8 @@ services:
     restart: on-failure
 
   frontend-react:
-    container_name: ../frontend-react
-    build: ./frontend
+    container_name: frontend
+    build: ../frontend-react
     ports:
       - "3000:3000"
 

@@ -1,11 +1,13 @@
 package org.lab1java.sunsetsunriseapi.dto;
 
 import java.util.Objects;
+import org.core.sunsetsunrise.dto.IdDto;
+import org.core.sunsetsunrise.dto.LoginDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lab1java.sunsetsunriseapi.controller.UserController;
-import org.lab1java.sunsetsunriseapi.service.RequestCounterService;
-import org.lab1java.sunsetsunriseapi.service.UserService;
+import org.core.sunsetsunrise.controller.UserController;
+import org.core.sunsetsunrise.service.RequestCounterService;
+import org.core.sunsetsunrise.service.UserService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;

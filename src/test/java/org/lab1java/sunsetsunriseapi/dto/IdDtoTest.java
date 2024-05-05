@@ -1,5 +1,6 @@
 package org.lab1java.sunsetsunriseapi.dto;
 
+import org.core.sunsetsunrise.dto.IdDto;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

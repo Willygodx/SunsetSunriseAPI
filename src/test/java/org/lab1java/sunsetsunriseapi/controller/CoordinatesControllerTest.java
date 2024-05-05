@@ -1,15 +1,16 @@
 package org.lab1java.sunsetsunriseapi.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.core.sunsetsunrise.controller.CoordinatesController;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.lab1java.sunsetsunriseapi.dto.CoordinatesDto;
-import org.lab1java.sunsetsunriseapi.dto.RequestDto;
-import org.lab1java.sunsetsunriseapi.dto.ResponseDto;
-import org.lab1java.sunsetsunriseapi.entity.Coordinates;
-import org.lab1java.sunsetsunriseapi.entity.User;
-import org.lab1java.sunsetsunriseapi.service.CoordinatesService;
-import org.lab1java.sunsetsunriseapi.service.RequestCounterService;
+import org.core.sunsetsunrise.dto.CoordinatesDto;
+import org.core.sunsetsunrise.dto.RequestDto;
+import org.core.sunsetsunrise.dto.ResponseDto;
+import org.core.sunsetsunrise.entity.Coordinates;
+import org.core.sunsetsunrise.entity.User;
+import org.core.sunsetsunrise.service.CoordinatesService;
+import org.core.sunsetsunrise.service.RequestCounterService;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
