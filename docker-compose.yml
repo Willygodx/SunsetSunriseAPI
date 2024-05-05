@@ -37,7 +37,7 @@ services:
 
   frontend-react:
     container_name: frontend
-    build: ../frontend-react
+    build: ../sunset-sunrise-client
     ports:
       - "3000:3000"
 
