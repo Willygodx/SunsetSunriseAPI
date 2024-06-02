@@ -1,6 +1,6 @@
-# Sunset and Sunrise API application
+# Sunset and Sunrise application
 
-This repository contains a simple REST API application that provides sunset and sunrise information based on latitude, longitude and date.
+This repository contains a simple REST API application that provides ability to get sunset and sunrise time by latitude, longitude and date.
 
 ## Table of Contents
 
@@ -9,9 +9,9 @@ This repository contains a simple REST API application that provides sunset and 
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
-- [Usage](#usage)
-- [Endpoints](#endpoints)
-- [Configuration](#configuration)
+- [Swagger-Documentation](#swagger-documentation)
+- [Docker](#docker)
+- [Contributing](#contributing)
 
 ## Introduction
 
@@ -41,7 +41,7 @@ Make sure you have the following installed:
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/Willygodx/SunsetSunriseAPI
+    git clone https://github.com/Willygodx/SunsetSunriseService
     ```
 
 2. Build the project:
@@ -53,36 +53,48 @@ Make sure you have the following installed:
 3. Run the application:
 
     ```bash
-    java -jar target/SunsetSunriseAPI-0.0.1-SNAPSHOT.jar
+    java -jar target/SunsetSunriseService-0.0.1-SNAPSHOT.jar
     ```
 
 The application will start on `http://localhost:8080`.
 
-## Usage
+## Swagger-Documentation
 
-### Endpoints
-
-- **Get sunrise and sunset time by latitude, longitude and date:**
-  
-  ```http
-  GET /sunset-sunrise/get-info?latitude=YOUR_LATITUDE&longitude=YOUR_LONGITUDE&date=YOUR_DATE
+```bash
+  http://localhost:8080/swagger-ui.html
   ```
+Swagger allows development team to visualize and interact with the API's resources without having any of the implementation logic in place.
 
-  Retrieves sunrise and sunset time information for the specified lat, lng and date.
+![swagger_img_1.png](src/main/resources/readme images/swagger_img_1.png)
+![swagger_img_2.png](src/main/resources/readme images/swagger_img_2.png)
+![swagger_img_3.png](src/main/resources/readme images/swagger_img_3.png)
 
-  Example:
-  ```http
-  GET /sunset-sunrise/get-info?latitude=51.508530&longitude=-0.125740&date=2024-02-19
-  ```
+Instead of 8080 you have to write port where application is started.
 
-### Configuration
+## Docker
 
-The application uses the [Sunrise Sunset API](https://sunrise-sunset.org) to fetch data. You need to obtain an API URL (https://api.sunrise-sunset.org/json) and configure it in the `application.properties` file.
 
-```properties
-# application.properties
+1. Clone repositories:
+    ```bash
+    git clone https://github.com/Willygodx/SunsetSunriseService.git
+    git clone https://github.com/Willygodx/sunset-sunrise-client.git
+    ```
+   
+2. Modify the docker-compose.yml file (build:):
 
-# Sunrise Sunset API URL
-external.api.url=https://api.sunrise-sunset.org/json
-```
+![docker_img_1.png](src/main/resources/readme images/docker_img_1.png)
+![docker_img_2.png](src/main/resources/readme images/docker_img_2.png)
+
+3. Build and run the application:
+
+- Open a terminal in the SunsetSunriseService directory.
+- Run the following command:
+  ```bash
+  docker-compose up
+    ```
+  This will build and run the containers with database, backend application and frontend application.
+
+## Contributing
+
+Contributions are welcome! If you find any issues or have improvements to suggest, feel free to open an issue or create a pull request.
 
