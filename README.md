@@ -65,9 +65,9 @@ The application will start on `http://localhost:8080`.
   ```
 Swagger allows development team to visualize and interact with the API's resources without having any of the implementation logic in place.
 
-![swagger_img_1.png](src/main/resources/readme images/swagger_img_1.png)
-![swagger_img_2.png](src/main/resources/readme images/swagger_img_2.png)
-![swagger_img_3.png](src/main/resources/readme images/swagger_img_3.png)
+![swagger_img_1.png](src/main/resources/readme_images/swagger_img_1.png)
+![swagger_img_2.png](src/main/resources/readme_images/swagger_img_2.png)
+![swagger_img_3.png](src/main/resources/readme_images/swagger_img_3.png)
 
 Instead of 8080 you have to write port where application is started.
 
@@ -82,8 +82,8 @@ Instead of 8080 you have to write port where application is started.
    
 2. Modify the docker-compose.yml file (build:):
 
-![docker_img_1.png](src/main/resources/readme images/docker_img_1.png)
-![docker_img_2.png](src/main/resources/readme images/docker_img_2.png)
+![docker_img_1.png](src/main/resources/readme_images/docker_img_1.png)
+![docker_img_2.png](src/main/resources/readme_images/docker_img_2.png)
 
 3. Build and run the application:
 
